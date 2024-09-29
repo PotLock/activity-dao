@@ -2,9 +2,14 @@ import React from 'react';
 import { Box, CircularProgress, keyframes } from '@mui/material';
 
 const runningAnimation = keyframes`
-  0% { transform: translateY(0); }
+  0% { transform: translateX(-20px); }
+  50% { transform: translateX(20px); }
+  100% { transform: translateX(-20px); }
+`;
+
+const bounceAnimation = keyframes`
+  0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
 `;
 
 const Loader: React.FC = () => {
@@ -26,7 +31,7 @@ const Loader: React.FC = () => {
       <Box
         sx={{
           position: 'relative',
-          width: '100px',
+          width: '150px',
           height: '100px',
           display: 'flex',
           alignItems: 'center',
@@ -39,12 +44,21 @@ const Loader: React.FC = () => {
           sx={{
             position: 'absolute',
             color: 'primary.main',
+            animation: 'spin 2s linear infinite',
+            '@keyframes spin': {
+              '0%': {
+                transform: 'rotate(0deg)',
+              },
+              '100%': {
+                transform: 'rotate(360deg)',
+              },
+            },
           }}
         />
         <Box
           sx={{
             fontSize: '48px',
-            animation: `${runningAnimation} 0.5s ease-in-out infinite`,
+            animation: `${runningAnimation} 2s linear infinite, ${bounceAnimation} 0.5s ease-in-out infinite`,
           }}
         >
           🏃

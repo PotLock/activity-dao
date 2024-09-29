@@ -83,6 +83,9 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
         ${mode === 'explore' ? `
           width: calc(50% - 1.33rem); // Wider cards for explore mode
         ` : ''}
+        @media screen and (max-width: 768px) {
+          width: 100% !important; // Full width on mobile for both modes
+        }
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

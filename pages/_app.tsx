@@ -3,7 +3,6 @@ import Head from "next/head";
 import type { AppProps } from "next/app";
 import { ThemeProvider, createTheme } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-
 import createGlobalStyle from "./styles/global";
 
 createGlobalStyle();
