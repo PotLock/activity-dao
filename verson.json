@@ -16,6 +16,11 @@
         "permanent": true
       },
       {
+        "source": "/discord",
+        "destination": "https://discord.com/invite/mmEv99x9QK",
+        "permanent": true
+      },
+      {
         "source": "/figma",
         "destination": "https://www.figma.com/design/bMBfA2d7favfAUDo1FsIqS/ActivityDAO?t=CAundS3IYzh4Pf9W-0",
         "permanent": true
