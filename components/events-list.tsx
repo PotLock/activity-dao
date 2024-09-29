@@ -7,7 +7,7 @@ export type EventsListType = {
   className?: string;
 };
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event }: { event: { date: string; name: string; location: string; link: string; image: string } }) => {
   const eventDate = parseISO(event.date);
   const day = format(eventDate, "dd");
   const month = format(eventDate, "MMM").toUpperCase();

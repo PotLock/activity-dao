@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
 import FrameComponent3 from "../components/frame-component3";
-import SearchFilter from "../components/search-filter";
+// import SearchFilter from "../components/search-filter";
 import Pagination from "../components/pagination";
 import NAVBAR from "../components/n-a-v-b-a-r";
 
@@ -189,7 +189,7 @@ const Desktop1: NextPage = () => {
               </h1>
             </div>
           </div>
-          <SearchFilter />
+          {/* <SearchFilter /> */}
           <div
             className={css`
               align-self: stretch;

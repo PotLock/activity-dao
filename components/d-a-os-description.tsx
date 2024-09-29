@@ -192,6 +192,11 @@ const DAOCard = ({ dao }: { dao: DAO }) => {
   );
 };
 
+// Add this type definition
+type DAOsDescriptionType = {
+  className?: string;
+};
+
 const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredDAOs, setFilteredDAOs] = useState(daoData);
