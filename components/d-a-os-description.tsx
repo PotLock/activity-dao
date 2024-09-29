@@ -11,9 +11,11 @@ import {
   InputLabel, 
   ListItemText, 
   OutlinedInput,
+  Button,
   FormControl // Add this import
 } from "@mui/material";
 import daoData from "../data/daos.json";
+import { FaTwitter, FaGithub } from "react-icons/fa";
 
 const pastelColors = [
   '#FFB3BA', '#BAFFC9', '#BAE1FF', '#FFFFBA', '#FFDFBA', '#E0BBE4'
@@ -44,9 +46,11 @@ type DAO = {
   description: string;
   maturity: string[];
   tags: string[];
+  twitter?: string; // Add this optional field
+  github?: string; // Add this optional field
 };
 
-const DAOCard = ({ dao }: { dao: DAO }) => {
+const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const maturityTags = dao.maturity.slice(-3).reverse();
@@ -74,6 +78,9 @@ const DAOCard = ({ dao }: { dao: DAO }) => {
         ${isHovered && `
           background-color: var(--color-yellow-64);
         `}
+        ${mode === 'explore' ? `
+          width: calc(50% - 1.33rem); // Wider cards for explore mode
+        ` : ''}
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -188,6 +195,55 @@ const DAOCard = ({ dao }: { dao: DAO }) => {
       >
         {dao.description}
       </div>
+      {mode === 'explore' && (
+        <div className={css`
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          width: 100%;
+          margin-top: 1rem;
+          gap: 1rem;
+        `}> 
+          {dao.twitter && (
+            <a 
+              href={dao.twitter}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={css`
+                color: #1DA1F2;
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                font-size: 0.9rem;
+                &:hover {
+                  text-decoration: underline;
+                }
+              `}
+            >
+              <FaTwitter/>
+            </a>
+          )}
+          {dao.github && (
+            <a 
+              href={dao.github}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={css`
+                color: #333;
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                font-size: 0.9rem;
+                &:hover {
+                  text-decoration: underline;
+                }
+              `}
+            >
+              <FaGithub />
+            </a>
+          )}
+        </div>
+      )}
     </div>
   );
 };
@@ -195,9 +251,10 @@ const DAOCard = ({ dao }: { dao: DAO }) => {
 // Add this type definition
 type DAOsDescriptionType = {
   className?: string;
+  mode: 'explore' | 'home';
 };
 
-const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" }) => {
+const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode = "home" }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredDAOs, setFilteredDAOs] = useState(daoData);
   const [selectedMaturity, setSelectedMaturity] = useState<string[]>([]);
@@ -242,6 +299,109 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" }) => {
         className,
       ].join(" ")}
     >
+          <div
+      className={[
+        css`
+          align-self: stretch;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+          gap: var(--gap-3xs);
+          text-align: center;
+          font-size: var(--font-size-21xl);
+          color: var(--wwwgetminjiapp-black);
+          font-family: var(--font-dynapuff);
+        `,
+        className,
+      ].join(" ")}
+    >
+      <div
+        className={css`
+          align-self: stretch;
+          height: 1.813rem;
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: flex-start;
+          padding: 0rem var(--padding-517xl);
+          box-sizing: border-box;
+        `}
+      >
+        <Button
+          className={css`
+            align-self: stretch;
+            flex: 1;
+            white-space: nowrap;
+            min-width: fit-content;
+          `}
+          disableElevation
+          variant="contained"
+          sx={{
+            textTransform: "none",
+            color: "#000",
+            fontSize: "12px",
+            background: "#facc15",
+            borderRadius: "4683.1px",
+            padding: "6px 16px",
+            "&:hover": {
+              background: "#facc15",
+              boxShadow: "none",
+            },
+            "&:active": {
+              background: "#facc15",
+              boxShadow: "none",
+            },
+            "&:focus": {
+              background: "#facc15",
+              boxShadow: "none",
+            },
+            cursor: "default",
+          }}
+        >
+          DAOs
+        </Button>
+      </div>
+      <h1
+        className={css`
+          margin: 0;
+          align-self: stretch;
+          position: relative;
+          font-size: inherit;
+          line-height: 3.844rem;
+          font-weight: 600;
+          font-family: inherit;
+          @media screen and (max-width: 1050px) {
+            font-size: var(--font-size-13xl);
+            line-height: 3.063rem;
+          }
+          @media screen and (max-width: 450px) {
+            font-size: var(--font-size-5xl);
+            line-height: 2.313rem;
+          }
+        `}
+      >
+        Real-Life Activity DAOs 🌟
+      </h1>
+      <h3
+        className={css`
+          margin: 0;
+          align-self: stretch;
+          position: relative;
+          font-size: var(--font-size-5xl);
+          line-height: 2.469rem;
+          font-weight: 400;
+          font-family: var(--font-hanken-grotesk);
+          @media screen and (max-width: 450px) {
+            font-size: var(--font-size-lgi);
+            line-height: 2rem;
+          }
+        `}
+      >
+        Browse the most up to date directory of different activity DAOs and get
+        moving today!
+      </h3>
+    </div>
       <div className={css`
         display: flex;
         flex-direction: row;
@@ -328,7 +488,7 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" }) => {
       >
         {filteredDAOs.length > 0 ? (
           filteredDAOs.map((dao, index) => (
-            <DAOCard key={index} dao={dao} />
+            <DAOCard key={index} dao={dao} mode={mode} />
           ))
         ) : (
           <div className={css`

@@ -327,8 +327,8 @@ const Desktop: NextPage = () => {
               gap: var(--gap-11xl);
             `}
           >
-            <DAOsHeader />
-            <DAOsDescription />
+            {/* <DAOsHeader /> */}
+            <DAOsDescription mode="home" />
           </div>
           {/* <div
             className={css`

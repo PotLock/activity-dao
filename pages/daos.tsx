@@ -2,8 +2,8 @@ import type { NextPage } from "next";
 import { css } from "@emotion/css";
 import NAVBAR from "../components/n-a-v-b-a-r";
 import Footer from "../components/Footer";
-
-const Starter: NextPage = () => {
+import DAOsDescription from "../components/d-a-os-description";
+const DAOs: NextPage = () => {
   return (
     <div
       className={css`
@@ -37,9 +37,7 @@ const Starter: NextPage = () => {
           align-items: center;
           padding: 2rem;
         `}
-      > {/* Add this opening angle bracket */}
-        <h1>Starter Page</h1>
-        <p>Add your content here.</p>
+      >            <DAOsDescription mode="explore" />
       </main>
 
       {/* Footer */}
@@ -48,4 +46,4 @@ const Starter: NextPage = () => {
   );
 };
 
-export default Starter;
+export default DAOs;
