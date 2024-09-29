@@ -229,9 +229,20 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
             className={css`
               align-self: stretch;
               height: 2.5rem;
-              transition: transform 0.3s ease-in-out;
+              transition: all 0.3s ease;
               &:hover {
-                transform: scale(1.05);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                animation: rainbow-glow 3s linear infinite;
+              }
+              @keyframes rainbow-glow {
+                0% { box-shadow: 0 0 10px #ff0000; }
+                14% { box-shadow: 0 0 10px #ff7f00; }
+                28% { box-shadow: 0 0 10px #ffff00; }
+                42% { box-shadow: 0 0 10px #00ff00; }
+                57% { box-shadow: 0 0 10px #0000ff; }
+                71% { box-shadow: 0 0 10px #8b00ff; }
+                85% { box-shadow: 0 0 10px #ff00ff; }
+                100% { box-shadow: 0 0 10px #ff0000; }
               }
             `}
             startIcon={

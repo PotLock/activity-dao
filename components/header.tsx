@@ -25,6 +25,20 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
           @media screen and (max-width: 768px) {
             padding: 1rem; // Add padding for mobile
           }
+
+          @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+          }
+
+          @keyframes underline {
+            0% { width: 0; }
+            100% { width: 100%; }
+          }
+
+          img[src$=".svg"] {
+            animation: bounce 2s ease-in-out infinite;
+          }
         `,
         className,
       ].join(" ")}
@@ -215,6 +229,21 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                     @media screen and (max-width: 750px) {
                       max-width: var(--width-472);
                     }
+                    transition: all 0.3s ease;
+                    &:hover {
+                      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                      animation: rainbow-glow 3s linear infinite;
+                    }
+                    @keyframes rainbow-glow {
+                      0% { box-shadow: 0 0 10px #ff0000; }
+                      14% { box-shadow: 0 0 10px #ff7f00; }
+                      28% { box-shadow: 0 0 10px #ffff00; }
+                      42% { box-shadow: 0 0 10px #00ff00; }
+                      57% { box-shadow: 0 0 10px #0000ff; }
+                      71% { box-shadow: 0 0 10px #8b00ff; }
+                      85% { box-shadow: 0 0 10px #ff00ff; }
+                      100% { box-shadow: 0 0 10px #ff0000; }
+                    }
                   `}
                 >
                   <div
@@ -300,26 +329,80 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                     line-height: 2.688rem;
                   }
                   @media screen and (max-width: 768px) {
-                    font-size: var(--font-size-xl); // Smaller font on mobile
+                    font-size: var(--font-size-xl);
                     line-height: 2.5rem;
-                    width: 100%; // Full width on mobile
+                    width: 100%;
+                  }
+
+                  .emoji {
+                    display: inline-block;
+                    animation: surf 3s ease-in-out infinite;
+                  }
+
+                  .emoji:nth-of-type(2) {
+                    animation-delay: 0.2s;
+                  }
+
+                  .emoji:nth-of-type(3) {
+                    animation-delay: 0.4s;
+                  }
+
+                  @keyframes surf {
+                    0%, 100% { transform: translateY(0) rotate(0deg); }
+                    25% { transform: translateY(-5px) rotate(-5deg); }
+                    50% { transform: translateY(0) rotate(0deg); }
+                    75% { transform: translateY(-5px) rotate(5deg); }
+                  }
+
+                  .activity-based {
+                    position: relative;
+                    display: inline-block;
+                    animation: tickle 2s ease-in-out infinite, rainbow-glow 5s linear infinite;
+                  }
+
+                  .activity-based::before,
+                  .activity-based::after {
+                    content: '✨';
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    font-size: 0.5em;
+                    animation: sparkle 1.5s ease-in-out infinite;
+                  }
+
+                  .activity-based::before {
+                    left: -1em;
+                  }
+
+                  .activity-based::after {
+                    right: -1em;
+                  }
+
+                  @keyframes tickle {
+                    0%, 100% { transform: translateY(0); }
+                    25% { transform: translateY(-2px) rotate(-1deg); }
+                    50% { transform: translateY(0) rotate(1deg); }
+                    75% { transform: translateY(2px) rotate(-1deg); }
+                  }
+
+                  @keyframes sparkle {
+                    0%, 100% { opacity: 0; transform: translateY(-50%) scale(0.8); }
+                    50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+                  }
+
+                  @keyframes rainbow-glow {
+                    0% { text-shadow: 0 0 10px #ff0000; }
+                    14% { text-shadow: 0 0 10px #ff7f00; }
+                    28% { text-shadow: 0 0 10px #ffff00; }
+                    42% { text-shadow: 0 0 10px #00ff00; }
+                    57% { text-shadow: 0 0 10px #0000ff; }
+                    71% { text-shadow: 0 0 10px #8b00ff; }
+                    85% { text-shadow: 0 0 10px #ff00ff; }
+                    100% { text-shadow: 0 0 10px #ff0000; }
                   }
                 `}
               >
-                <span
-                  className={css`
-                    font-weight: 600;
-                  `}
-                >{` bootstrap 💸 the proliferation 🚀 of activity-based `}</span>
-                <span className={css``}>🏄</span>
-                <span
-                  className={css`
-                    font-weight: 600;
-                  `}
-                >
-                  {" "}
-                  communities
-                </span>
+                bootstrap <span className="emoji">💸</span> the proliferation <span className="emoji">🚀</span> of <span className="activity-based">activity-based</span> <span className="emoji">🏄</span> communities
               </h1>
               <h3
                 className={css`
@@ -341,8 +424,32 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                     line-height: 1.5rem;
                     width: 100%; // Full width on mobile
                   }
+
+                  .dope {
+                    position: relative;
+                    font-weight: bold;
+                    animation: bold-unbold 2s infinite;
+                  }
+
+                  .dope::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    bottom: -2px;
+                    width: 0;
+                    height: 2px;
+                    background-color: yellow;
+                    animation: underline 2s ease-in-out infinite;
+                  }
+
+                  @keyframes bold-unbold {
+                    0%, 100% { font-weight: bold; }
+                    50% { font-weight: normal; }
+                  }
                 `}
-              >{`the movement to have community run & funded ecosystems around every dope activity`}</h3>
+              >
+                the movement to have community run & funded ecosystems around every <span className="dope">dope</span> activity
+              </h3>
               <div
                 className={css`
                   width: 31.375rem;
@@ -407,21 +514,6 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                       @media screen and (max-width: 768px) {
                         width: 100%;
                       }
-                      &:hover {
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                        border-width: 2px !important;
-                        animation: rainbow-glow 3s linear infinite;
-                      }
-                      @keyframes rainbow-glow {
-                        0% { box-shadow: 0 0 5px #ff0000; }
-                        14% { box-shadow: 0 0 5px #ff7f00; }
-                        28% { box-shadow: 0 0 5px #ffff00; }
-                        42% { box-shadow: 0 0 5px #00ff00; }
-                        57% { box-shadow: 0 0 5px #0000ff; }
-                        71% { box-shadow: 0 0 5px #8b00ff; }
-                        85% { box-shadow: 0 0 5px #ff00ff; }
-                        100% { box-shadow: 0 0 5px #ff0000; }
-                      }
                     `}
                     startIcon={
                       <img width="24px" height="24px" src="/notebook.svg" />
@@ -435,8 +527,9 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                       borderColor: "#000",
                       borderRadius: "9999px",
                       "&:hover": { 
+                        color: "#fff",
+                        backgroundColor: "#000",
                         borderColor: "#000",
-                        borderWidth: "2px",
                       },
                       height: 60,
                     }}
