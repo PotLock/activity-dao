@@ -17,6 +17,7 @@ import {
 import daoData from "../data/daos.json";
 import { FaTwitter, FaGithub } from "react-icons/fa";
 import CardSkeleton from './card-skeleton';
+import { Button as MuiButton } from "@mui/material"; // Rename to avoid conflict
 
 const pastelColors = [
   '#FFB3BA', '#BAFFC9', '#BAE1FF', '#FFFFBA', '#FFDFBA', '#E0BBE4'
@@ -255,7 +256,7 @@ type DAOsDescriptionType = {
   mode: 'explore' | 'home';
 };
 
-const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode = "home" }) => {
+const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode = "explore" }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredDAOs, setFilteredDAOs] = useState(daoData);
   const [selectedMaturity, setSelectedMaturity] = useState<string[]>([]);
@@ -283,6 +284,10 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
     setIsLoading(false);
   }, [searchTerm, selectedMaturity, selectedTags]);
 
+  const handleSubmitDAO = () => {
+    window.open('https://github.com/PotLock/activity-dao/edit/main/data/daos.json', '_blank');
+  };
+
   return (
     <div
       className={[
@@ -298,6 +303,9 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
           font-size: var(--font-size-5xl);
           color: var(--color-azure-47);
           font-family: var(--font-alexandria);
+          ${mode === 'explore' ? `
+            padding-top: 5rem; // Add additional padding for explore mode
+          ` : ''}
         `,
         className,
       ].join(" ")}
@@ -319,52 +327,54 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
         className,
       ].join(" ")}
     >
-      <div
-        className={css`
-          align-self: stretch;
-          height: 1.813rem;
-          display: flex;
-          flex-direction: row;
-          align-items: flex-start;
-          justify-content: flex-start;
-          padding: 0rem var(--padding-517xl);
-          box-sizing: border-box;
-        `}
-      >
-        <Button
+      {mode === 'home' && (
+        <div
           className={css`
             align-self: stretch;
-            flex: 1;
-            white-space: nowrap;
-            min-width: fit-content;
+            height: 1.813rem;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 0rem var(--padding-517xl);
+            box-sizing: border-box;
           `}
-          disableElevation
-          variant="contained"
-          sx={{
-            textTransform: "none",
-            color: "#000",
-            fontSize: "12px",
-            background: "#facc15",
-            borderRadius: "4683.1px",
-            padding: "6px 16px",
-            "&:hover": {
-              background: "#facc15",
-              boxShadow: "none",
-            },
-            "&:active": {
-              background: "#facc15",
-              boxShadow: "none",
-            },
-            "&:focus": {
-              background: "#facc15",
-              boxShadow: "none",
-            },
-            cursor: "default",
-          }}
         >
-          DAOs
-        </Button>
-      </div>
+          <Button
+            className={css`
+              align-self: stretch;
+              flex: 1;
+              white-space: nowrap;
+              min-width: fit-content;
+            `}
+            disableElevation
+            variant="contained"
+            sx={{
+              textTransform: "none",
+              color: "#000",
+              fontSize: "12px",
+              background: "#facc15",
+              borderRadius: "4683.1px",
+              padding: "6px 16px",
+              "&:hover": {
+                background: "#facc15",
+                boxShadow: "none",
+              },
+              "&:active": {
+                background: "#facc15",
+                boxShadow: "none",
+              },
+              "&:focus": {
+                background: "#facc15",
+                boxShadow: "none",
+              },
+              cursor: "default",
+            }}
+          >
+            DAOs
+          </Button>
+        </div>
+      )}
       <h1
         className={css`
           margin: 0;
@@ -411,10 +421,10 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
         gap: 1rem;
         margin-bottom: 2rem;
         align-items: center;
-        width: 100%; // Make the row stretch full width
+        width: 100%;
       `}>
         <TextField
-          style={{ flex: 6 }}
+          style={{ flex: mode === 'explore' ? 5 : 6 }}
           variant="outlined"
           placeholder="Search DAOs"
           value={searchTerm}
@@ -466,10 +476,32 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
         </FormControl>
       </div>
       <div className={css`
-        font-size: var(--font-size-5xl);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
         margin-bottom: 1rem;
       `}>
-        {filteredDAOs.length} of {daoData.length}
+        <div className={css`
+          font-size: var(--font-size-5xl);
+        `}>
+          {filteredDAOs.length} of {daoData.length}
+        </div>
+        {mode === 'explore' && (
+          <MuiButton
+            variant="contained"
+            onClick={handleSubmitDAO}
+            sx={{
+              backgroundColor: "#facc15",
+              color: "#000",
+              '&:hover': {
+                backgroundColor: "#facc15",
+              },
+            }}
+          >
+            Submit DAO
+          </MuiButton>
+        )}
       </div>
       <div
         className={css`
