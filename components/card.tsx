@@ -13,13 +13,7 @@ const cardData = [
     imageSrc: "/active-card-explore.png",
     imageAlt: "Explore activities illustration",
   },
-  {
-    title: "Fund the Activity",
-    description: "Support and sustain the activities you love by contributing to their growth and creating thriving ecosystems.",
-    emoji: "💰",
-    imageSrc: "/active-card-fund.png",
-    imageAlt: "Fund activity illustration",
-  },
+
   {
     title: "Find An Event IRL",
     description: "Engage in diverse and exciting experiences. Whether it's sports, arts, or something entirely new, immerse yourself in activities that foster meaningful connections and personal growth.",
@@ -33,6 +27,13 @@ const cardData = [
     emoji: "🏆",
     imageSrc: "/active-card-proof.png",
     imageAlt: "Prove activity illustration",
+  },
+  {
+    title: "Fund the Activity",
+    description: "Support and sustain the activities you love by contributing to their growth and creating thriving ecosystems.",
+    emoji: "💰",
+    imageSrc: "/active-card-fund.png",
+    imageAlt: "Fund activity illustration",
   },
 ];
 
@@ -66,6 +67,12 @@ const Card: NextPage<CardType> = ({ className = "" }) => {
               font-family: var(--font-aclonica);
               @media screen and (max-width: 450px) {
                 flex: 1;
+              }
+              transition: background-color 0.3s ease, border 0.3s ease; // Add transition for smooth effect
+              border: 2px solid transparent; // Add transparent border initially
+              &:hover {
+                background-color: #F0E6FF; // Lighter purple pastel color
+                border-color: var(--color-darkslateblue-300); // Use the current purple color for border
               }
             `,
             className,

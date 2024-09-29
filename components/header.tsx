@@ -396,15 +396,31 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                   href="https://potlock.notion.site/ActivityDAO-Handbook-2979c91a779e46659a5646438af3324c"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ textDecoration: 'none', width: '100%' }} // Full width anchor on mobile
+                  style={{ textDecoration: 'none', width: '100%' }}
                 >
                   <Button
                     className={css`
                       height: 3.75rem;
                       flex: 1;
                       min-width: 12.563rem;
+                      transition: all 0.3s ease;
                       @media screen and (max-width: 768px) {
-                        width: 100%; // Full width button on mobile
+                        width: 100%;
+                      }
+                      &:hover {
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        border-width: 2px !important;
+                        animation: rainbow-glow 3s linear infinite;
+                      }
+                      @keyframes rainbow-glow {
+                        0% { box-shadow: 0 0 5px #ff0000; }
+                        14% { box-shadow: 0 0 5px #ff7f00; }
+                        28% { box-shadow: 0 0 5px #ffff00; }
+                        42% { box-shadow: 0 0 5px #00ff00; }
+                        57% { box-shadow: 0 0 5px #0000ff; }
+                        71% { box-shadow: 0 0 5px #8b00ff; }
+                        85% { box-shadow: 0 0 5px #ff00ff; }
+                        100% { box-shadow: 0 0 5px #ff0000; }
                       }
                     `}
                     startIcon={
@@ -418,7 +434,10 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                       fontSize: "20",
                       borderColor: "#000",
                       borderRadius: "9999px",
-                      "&:hover": { borderColor: "#000" },
+                      "&:hover": { 
+                        borderColor: "#000",
+                        borderWidth: "2px",
+                      },
                       height: 60,
                     }}
                   >
