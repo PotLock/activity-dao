@@ -1,0 +1,25 @@
+{
+    "redirects": [
+      {
+        "source": "/twitter",
+        "destination": "https://x.com/activity_dao",
+        "permanent": true
+      },
+      {
+        "source": "/handbook",
+        "destination": "https://potlock.notion.site/ActivityDAO-Handbook-2979c91a779e46659a5646438af3324c",
+        "permanent": true
+      },
+      {
+        "source": "/github",
+        "destination": "https://github.com/PotLock/activity-dao",
+        "permanent": true
+      },
+      {
+        "source": "/figma",
+        "destination": "https://www.figma.com/design/bMBfA2d7favfAUDo1FsIqS/ActivityDAO?t=CAundS3IYzh4Pf9W-0",
+        "permanent": true
+      }
+    ]
+  }
+  

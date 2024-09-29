@@ -1,0 +1,39 @@
+[
+    {
+      "name": "Blunt Olympics",
+      "description": "This is the first event",
+      "date": "2024-11-12",
+      "location": "Bangkok, Thailand",
+      "image": "image3@2x.png",
+      "link": "https://olympics.bluntdao.org",
+      "dao": "Blunt DAO"
+    },
+    {
+        "name": "SpaDAO @ Devcon",
+        "description": "This is the first event",
+        "date": "2024-11-14",
+        "location": "Bangkok, Thailand",
+        "image": "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=1,background=white,quality=75,width=400,height=400/event-covers/bc/10defec9-5e22-42a1-aa7b-89556b4159cf",
+        "link": "https://lu.ma/SpaDevcon",
+        "dao": "Spa DAO"
+      },
+      {
+        "name": "Global Bitcoin Pizza Day",
+        "description": "This is the first event",
+        "date": "2025-05-22",
+        "location": "Global",
+        "image": "image4@2x.png",
+        "link": "https://www.globalpizzaparty.xyz/",
+        "dao": "Pizza DAO"
+      },
+  {
+
+    "name": "Ramen DAO @ DevCon",
+    "description": "This is the first event",
+    "date": "2024-11-01",
+    "location": "Bangkok, Thailand",
+    "image": "https://i.seadn.io/s/raw/files/09a56ff34f3ec8942b9fada7298591a9.jpg?auto=format&dpr=1&w=1000",
+    "link": "",
+    "dao": "Ramen DAO"
+    }
+  ]
