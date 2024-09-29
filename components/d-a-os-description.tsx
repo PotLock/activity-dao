@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import daoData from "../data/daos.json";
 import { FaTwitter, FaGithub } from "react-icons/fa";
+import CardSkeleton from './card-skeleton';
 
 const pastelColors = [
   '#FFB3BA', '#BAFFC9', '#BAE1FF', '#FFFFBA', '#FFDFBA', '#E0BBE4'
@@ -259,6 +260,7 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
   const [filteredDAOs, setFilteredDAOs] = useState(daoData);
   const [selectedMaturity, setSelectedMaturity] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const allMaturityTags = Array.from(new Set(daoData.flatMap(dao => dao.maturity)));
   const allTags = Array.from(new Set(daoData.flatMap(dao => dao.tags)));
@@ -278,6 +280,7 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
       return matchesSearch && matchesMaturity && matchesTags;
     });
     setFilteredDAOs(filtered);
+    setIsLoading(false);
   }, [searchTerm, selectedMaturity, selectedTags]);
 
   return (
@@ -486,7 +489,19 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
           font-family: var(--font-dynapuff);
         `}
       >
-        {filteredDAOs.length > 0 ? (
+        {isLoading ? (
+          // Display skeleton loaders while loading
+          Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className={css`
+              width: calc(33.33% - 1.33rem);
+              ${mode === 'explore' ? `
+                width: calc(50% - 1.33rem);
+              ` : ''}
+            `}>
+              <CardSkeleton />
+            </div>
+          ))
+        ) : filteredDAOs.length > 0 ? (
           filteredDAOs.map((dao, index) => (
             <DAOCard key={index} dao={dao} mode={mode} />
           ))
