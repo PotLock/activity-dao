@@ -195,8 +195,7 @@ const Desktop: NextPage = () => {
             margin-bottom: 5rem;
           `}
         >
-          <EventsContent />
-          <EventsList />
+          <EventsList mode="home" />
           {/* <div
             className={css`
               align-self: stretch;

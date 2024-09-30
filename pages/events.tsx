@@ -2,8 +2,9 @@ import type { NextPage } from "next";
 import { css } from "@emotion/css";
 import NAVBAR from "../components/n-a-v-b-a-r";
 import Footer from "../components/Footer";
+import EventsList from "../components/events-list";
 
-const Starter: NextPage = () => {
+const Events: NextPage = () => {
   return (
     <div
       className={css`
@@ -30,16 +31,20 @@ const Starter: NextPage = () => {
       {/* Main content */}
       <main
         className={css`
-          flex: 1 0 auto; // This will make the main content grow and shrink as needed
+          flex: 1 0 auto;
           display: flex;
           flex-direction: column;
-          justify-content: center;
           align-items: center;
-          padding: 2rem;
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 2rem 0;
+          padding-top: 5rem; // Added bottom padding
         `}
-      > {/* Add this opening anygle bracket */}
-        <h1>Starter Page</h1>
-        <p>Add your content here.</p>
+      >
+   
+
+        <EventsList mode="explore" />
       </main>
 
       {/* Footer */}
@@ -48,4 +53,4 @@ const Starter: NextPage = () => {
   );
 };
 
-export default Starter;
+export default Events;

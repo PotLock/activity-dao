@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
 import { Button } from "@mui/material";
 import { css } from "@emotion/css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 export type NAVBARType = {
   className?: string;
@@ -9,12 +10,24 @@ export type NAVBARType = {
 
 const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
   const [activeLink, setActiveLink] = useState("home");
+  const router = useRouter();
+
+  useEffect(() => {
+    // Set the active link based on the current route
+    if (router.pathname === "/events") {
+      setActiveLink("events");
+    } else if (router.pathname === "/daos") {
+      setActiveLink("daos");
+    } else {
+      setActiveLink("home");
+    }
+  }, [router.pathname]);
 
   const navLinks = [
-    { id: "home", label: "Home", href: "#home" },
+    { id: "home", label: "Home", href: "/#home" },
     { id: "handbook", label: "Handbook", href: "https://potlock.notion.site/ActivityDAO-Handbook-2979c91a779e46659a5646438af3324c", target: "_blank" },
-    { id: "events", label: "Events", href: "#events" },
-    { id: "daos", label: "DAOs", href: "#daos" },
+    { id: "events", label: "Events", href: "/events" },
+    { id: "daos", label: "DAOs", href: "/daos" },
     // { id: "model", label: "Model", href: "#model" },
     // { id: "cta-bubble", label: "cta", href: "#cta-bubble" },
   ];
@@ -164,7 +177,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                   if (!link.target) {
                     e.preventDefault();
                     setActiveLink(link.id);
-                    window.location.href = link.href;
+                    router.push(link.href);
                   }
                 }}
                 className={css`
