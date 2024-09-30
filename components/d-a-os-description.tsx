@@ -276,10 +276,10 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
         dao.description.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesMaturity = selectedMaturity.length === 0 || 
-        selectedMaturity.some(tag => dao.maturity.includes(tag));
+        selectedMaturity.every(tag => dao.maturity.includes(tag));
       
       const matchesTags = selectedTags.length === 0 || 
-        selectedTags.some(tag => dao.tags.includes(tag));
+        selectedTags.every(tag => dao.tags.includes(tag));
 
       return matchesSearch && matchesMaturity && matchesTags;
     });
