@@ -23,7 +23,8 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
           color: var(--wwwgetminjiapp-black);
           font-family: var(--font-alexandria);
           @media screen and (max-width: 768px) {
-            padding: 1rem; // Add padding for mobile
+            padding: 1rem;
+            gap: var(--gap-xs); // Reduce gap on mobile
           }
 
           @keyframes bounce {
@@ -112,8 +113,9 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
             flex-wrap: wrap;
           }
           @media screen and (max-width: 768px) {
-            flex-direction: column; // Stack elements vertically on mobile
+            flex-direction: column;
             align-items: center;
+            gap: var(--gap-xs); // Reduce gap on mobile
           }
         `}
       >
@@ -124,6 +126,10 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
             flex-direction: column;
             align-items: flex-start;
             justify-content: flex-start;
+            @media screen and (max-width: 768px) {
+              height: auto;
+              margin-bottom: 1rem; // Add space below on mobile
+            }
           `}
         >
           <img
@@ -132,6 +138,9 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
               height: 1.531rem;
               position: relative;
               z-index: 2;
+              @media screen and (max-width: 768px) {
+                margin-top: 1rem; // Lower the image on mobile
+              }
             `}
             alt=""
             src="/group-7.svg"
@@ -154,6 +163,11 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
             @media screen and (max-width: 768px) {
               padding: 0; // Remove padding on mobile
               min-width: auto; // Allow content to shrink on mobile
+              flex-direction: row; // Keep buttons in one row on mobile
+              flex-wrap: wrap; // Allow wrapping if needed
+              justify-content: center; // Center buttons
+              width: 100%; // Full width on mobile
+              gap: 1rem; // Add gap between buttons
             }
           `}
         >
@@ -361,7 +375,7 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                   }
 
                   .activity-based::before,
-                  .activity-based::after {
+                  .activity-based::after { 
                     content: '✨';
                     position: absolute;
                     top: 50%;
@@ -463,8 +477,9 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                     flex-wrap: wrap;
                   }
                   @media screen and (max-width: 768px) {
-                    flex-direction: column; // Stack buttons vertically on mobile
                     width: 100%; // Full width on mobile
+                    justify-content: center; // Center buttons
+                    gap: 1rem; // Reduce gap between buttons
                   }
                 `}
               >
@@ -472,15 +487,14 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                   href="https://discord.gg/mmEv99x9QK"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ textDecoration: 'none', width: '100%' }}
+                  style={{ textDecoration: 'none' }}
                 >
                   <Button
                     className={css`
                       height: 3.75rem;
                       width: 9.875rem;
                       @media screen and (max-width: 768px) {
-                        width: 100%; // Full width button on mobile
-                        margin-bottom: 1rem; // Add space between buttons
+                        width: 158px; // Original width
                       }
                     `}
                     disableElevation
@@ -503,16 +517,15 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                   href="https://potlock.notion.site/ActivityDAO-Handbook-2979c91a779e46659a5646438af3324c"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ textDecoration: 'none', width: '100%' }}
+                  style={{ textDecoration: 'none' }}
                 >
                   <Button
                     className={css`
                       height: 3.75rem;
                       flex: 1;
                       min-width: 12.563rem;
-                      transition: all 0.3s ease;
                       @media screen and (max-width: 768px) {
-                        width: 100%;
+                        width: 200px; // Fixed width on mobile
                       }
                     `}
                     startIcon={
@@ -757,6 +770,29 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
           </div>
         </div>
       </div>
+      {/* Adjust positions of group-5.svg and group-6.svg */}
+      <img
+        className={css`
+          // ... existing styles ...
+          @media screen and (max-width: 768px) {
+            top: auto;
+            bottom: 1rem; // Lower the image on mobile
+          }
+        `}
+        alt=""
+        src="/group-5.svg"
+      />
+      <img
+        className={css`
+          // ... existing styles ...
+          @media screen and (max-width: 768px) {
+            top: auto;
+            bottom: 2rem; // Lower the image on mobile
+          }
+        `}
+        alt=""
+        src="/group-6.svg"
+      />
     </section>
   );
 };
