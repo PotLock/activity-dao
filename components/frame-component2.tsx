@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
-
+import Component1 from "./component1";
 export type FrameComponent2Type = {
   className?: string;
 };
@@ -14,7 +14,7 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
           align-self: stretch;
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
+          align-items: center;
           justify-content: flex-start;
           padding: 0rem var(--padding-12xs) var(--padding-55xl) 0rem;
           box-sizing: border-box;
@@ -30,10 +30,20 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
     >
       <div
         className={css`
+          display: flex;
+          justify-content: center;
+          margin-bottom: var(--gap-3xs); // Change this to match the gap between heading and subtitle
+        `}
+      >
+        <Component1 developmentIcon="ACTIVITY DAO MODEL" />
+      </div>
+
+      <div
+        className={css`
           align-self: stretch;
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
+          align-items: center; // Change this to center
           justify-content: flex-start;
           gap: var(--gap-3xs);
           max-width: 100%;
@@ -42,12 +52,12 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
         <h1
           className={css`
             margin: 0;
-            align-self: stretch;
             position: relative;
             font-size: inherit;
             line-height: 3.844rem;
             font-weight: 600;
             font-family: inherit;
+            max-width: 80%; // Add this to limit the width of the heading
             @media screen and (max-width: 1050px) {
               font-size: var(--font-size-13xl);
               line-height: 3.063rem;
@@ -66,7 +76,7 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
             display: flex;
             flex-direction: row;
             align-items: flex-start;
-            justify-content: flex-start;
+            justify-content: center; // Change this to center
             padding: 0rem var(--padding-100xl);
             box-sizing: border-box;
             max-width: 100%;
@@ -84,7 +94,8 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
               font-weight: 400;
               font-family: inherit;
               display: inline-block;
-              max-width: 100%;
+              max-width: 80%; // Add this to limit the width of the subtitle
+              text-align: center; // Add this to center the text
               @media screen and (max-width: 450px) {
                 font-size: var(--font-size-lgi);
                 line-height: 2rem;
@@ -140,20 +151,22 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
               align-self: stretch;
               display: flex;
               flex-direction: column;
-              align-items: flex-start;
+              align-items: center; // Change this from flex-start to center
               justify-content: flex-start;
               gap: var(--gap-mid);
+              text-align: center; // Add this line to center the text
             `}
           >
             <h1
               className={css`
                 margin: 0;
-                align-self: stretch;
+                // Remove align-self: stretch;
                 position: relative;
                 font-size: inherit;
                 line-height: 100%;
                 font-weight: 400;
                 font-family: inherit;
+                max-width: 80%; // Add this line to limit the width of the heading
                 @media screen and (max-width: 1050px) {
                   font-size: var(--font-size-7xl);
                   line-height: 1.625rem;
@@ -835,12 +848,13 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
             <h1
               className={css`
                 margin: 0;
-                align-self: stretch;
+                // Remove align-self: stretch;
                 position: relative;
                 font-size: inherit;
                 line-height: 100%;
                 font-weight: 400;
                 font-family: inherit;
+                max-width: 80%; // Add this line to limit the width of the heading
                 @media screen and (max-width: 1050px) {
                   font-size: var(--font-size-7xl);
                   line-height: 1.625rem;

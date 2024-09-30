@@ -448,19 +448,9 @@ const Desktop: NextPage = () => {
             margin-bottom: 5rem;
           `}
         >
-          <div
-            className={css`
-              width: 100%;
-              display: flex;
-              flex-direction: column;
-              align-items: flex-start;
-              justify-content: flex-start;
-              gap: var(--gap-21xl);
-            `}
-          >
-            <FrameComponent />
+
             <Aggregation />
-          </div>
+    
           <FrameComponent2 />
           <OfficialPartners />
         </section>
