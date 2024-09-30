@@ -9,8 +9,22 @@ import {
   MenuItem, 
   InputLabel, 
   OutlinedInput,
-  FormControl
+  FormControl,
+  IconButton
 } from "@mui/material";
+
+// Add these custom icon components
+const ViewListIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+  </svg>
+);
+
+const ViewModuleIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/>
+  </svg>
+);
 
 export type EventsListType = {
   className?: string;
@@ -23,10 +37,9 @@ const EventCard = ({ event }: { event: { date: string; name: string; location: s
 
   return (
     <div
+      id="event-query"
       className={css`
-        flex: 1;
-        min-width: calc(33.33% - 1rem);
-        max-width: calc(33.33% - 1rem);
+        flex: 1 0 100%;
         height: 22.875rem;
         border-radius: var(--br-3xl);
         background-color: var(--border-default-default);
@@ -38,13 +51,11 @@ const EventCard = ({ event }: { event: { date: string; name: string; location: s
         &:hover {
           box-shadow: 0 0 0 3px var(--color-gold-100);
         }
-        @media screen and (max-width: 1050px) {
-          min-width: calc(50% - 1rem);
-          max-width: calc(50% - 1rem);
+        @media screen and (min-width: 769px) {
+          flex: 0 0 calc(50% - 0.5rem);
         }
-        @media screen and (max-width: 768px) {
-          min-width: 100%;
-          max-width: 100%;
+        @media screen and (min-width: 1051px) {
+          flex: 0 0 calc(33.33% - 0.67rem);
         }
       `}
     >
@@ -143,10 +154,103 @@ const EventCard = ({ event }: { event: { date: string; name: string; location: s
   );
 };
 
+const ListEventCard = ({ event }: { event: { date: string; name: string; location: string; link: string; image: string } }) => {
+  const eventDate = parseISO(event.date);
+  const day = format(eventDate, "dd");
+  const month = format(eventDate, "MMM").toUpperCase();
+
+  return (
+    <a
+      href={event.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={css`
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-default-default);
+        text-decoration: none;
+        color: inherit;
+        transition: box-shadow 0.3s ease;
+        width: 100%;
+        &:last-child {
+          border-bottom: none;
+        }
+        &:hover {
+          box-shadow: 0 0 0 3px var(--color-gold-100);
+        }
+      `}
+    >
+      <img
+        src={event.image}
+        alt={event.name}
+        className={css`
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+          border-radius: var(--br-3xs);
+          margin-right: 1rem;
+        `}
+      />
+      <div
+        className={css`
+          flex: 1;
+        `}
+      >
+        <h3
+          className={css`
+            margin: 0;
+            font-size: var(--font-size-xl);
+          `}
+        >
+          {event.name}
+        </h3>
+        <p
+          className={css`
+            margin: 0.25rem 0 0;
+            color: var(--color-azure-47);
+            font-size: 0.8rem;
+            font-weight: 400;
+          `}
+        >
+          {event.location}
+        </p>
+      </div>
+      <div
+        className={css`
+          background-color: var(--background-default-default);
+          border-radius: var(--br-8xs);
+          padding: var(--padding-8xs) var(--padding-4xs);
+          text-align: center;
+          width: 3.5rem;
+          height: 3.5rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          border: 1px solid #000;
+        `}
+      >
+        <b className={css`font-size: var(--font-size-9xl-4);`}>{day}</b>
+        <b
+          className={css`
+            font-size: var(--font-size-xs-4);
+            color: var(--color-mediumblue);
+            font-family: var(--font-dm-sans);
+          `}
+        >
+          {month}
+        </b>
+      </div>
+    </a>
+  );
+};
+
 const EventsList: NextPage<EventsListType> = ({ className = "" }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
   const [timeFilter, setTimeFilter] = useState("all");
+  const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery');
 
   const filteredEvents = useMemo(() => {
     return events
@@ -228,7 +332,11 @@ const EventsList: NextPage<EventsListType> = ({ className = "" }) => {
   }, []);
 
   return (
-    <div className={className} id="events-list">
+    <div className={`${className} ${css`
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box;
+    `}`} id="events-list">
       <div className={css`
         display: flex;
         flex-direction: row;
@@ -316,19 +424,39 @@ const EventsList: NextPage<EventsListType> = ({ className = "" }) => {
               ))}
             </Select>
           </FormControl>
+          <IconButton onClick={() => setViewMode(viewMode === 'gallery' ? 'list' : 'gallery')}>
+            {viewMode === 'gallery' ? <ViewListIcon /> : <ViewModuleIcon />}
+          </IconButton>
         </div>
       </div>
       {filteredEvents.length > 0 ? (
         <div className={css`
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1rem;
-          justify-content: flex-start;
           width: 100%;
+          max-width: 100%;
         `}>
-          {filteredEvents.map((event, index) => (
-            <EventCard key={index} event={event} />
-          ))}
+          {viewMode === 'gallery' ? (
+            <div className={css`
+              display: flex;
+              flex-wrap: wrap;
+              gap: 1rem;
+              justify-content: flex-start;
+              width: 100%;
+            `}>
+              {filteredEvents.map((event, index) => (
+                <EventCard key={index} event={event} />
+              ))}
+            </div>
+          ) : (
+            <div className={css`
+              display: flex;
+              flex-direction: column;
+              width: 100%;
+            `}>
+              {filteredEvents.map((event, index) => (
+                <ListEventCard key={index} event={event} />
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         <h3 className={css`
