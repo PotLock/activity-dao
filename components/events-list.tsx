@@ -1,7 +1,16 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
 import events from "../data/events.json";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isAfter, isBefore, isToday, isThisWeek, isThisMonth, isThisYear, startOfQuarter, endOfQuarter, endOfYear, addYears } from "date-fns";
+import { useState, useMemo } from "react";
+import { 
+  TextField, 
+  Select, 
+  MenuItem, 
+  InputLabel, 
+  OutlinedInput,
+  FormControl
+} from "@mui/material";
 
 export type EventsListType = {
   className?: string;
@@ -135,27 +144,202 @@ const EventCard = ({ event }: { event: { date: string; name: string; location: s
 };
 
 const EventsList: NextPage<EventsListType> = ({ className = "" }) => {
-  const sortedEvents = events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [timeFilter, setTimeFilter] = useState("all");
+
+  const filteredEvents = useMemo(() => {
+    return events
+      .filter(event => {
+        const eventDate = parseISO(event.date);
+        const now = new Date();
+
+        // Apply search filter
+        const searchMatch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            event.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+        // Apply location filter
+        const locationMatch = selectedLocation === "" || event.location === selectedLocation;
+
+        // Apply time filter
+        let timeMatch = true;
+        switch (timeFilter) {
+          case "past":
+            timeMatch = isBefore(eventDate, now);
+            break;
+          case "today":
+            timeMatch = isToday(eventDate);
+            break;
+          case "thisWeek":
+            timeMatch = isThisWeek(eventDate);
+            break;
+          case "thisMonth":
+            timeMatch = isThisMonth(eventDate);
+            break;
+          case "thisQuarter":
+            const quarterStart = startOfQuarter(now);
+            const quarterEnd = endOfQuarter(now);
+            timeMatch = isAfter(eventDate, quarterStart) && isBefore(eventDate, quarterEnd);
+            break;
+          case "thisYear":
+            timeMatch = isThisYear(eventDate);
+            break;
+          case "nextYear":
+            timeMatch = isAfter(eventDate, endOfYear(now)) && isBefore(eventDate, endOfYear(addYears(now, 1)));
+            break;
+          default:
+            timeMatch = true;
+        }
+
+        return searchMatch && locationMatch && timeMatch;
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }, [searchTerm, selectedLocation, timeFilter]);
+
+  const locations = useMemo(() => {
+    return Array.from(new Set(events.map(event => event.location))).sort();
+  }, []);
+
+  const getCounts = useMemo(() => {
+    const now = new Date();
+    const counts = {
+      all: events.length,
+      past: 0,
+      today: 0,
+      thisWeek: 0,
+      thisMonth: 0,
+      thisQuarter: 0,
+      thisYear: 0,
+      nextYear: 0
+    };
+
+    events.forEach(event => {
+      const eventDate = parseISO(event.date);
+      if (isBefore(eventDate, now)) counts.past++;
+      if (isToday(eventDate)) counts.today++;
+      if (isThisWeek(eventDate)) counts.thisWeek++;
+      if (isThisMonth(eventDate)) counts.thisMonth++;
+      if (isAfter(eventDate, startOfQuarter(now)) && isBefore(eventDate, endOfQuarter(now))) counts.thisQuarter++;
+      if (isThisYear(eventDate)) counts.thisYear++;
+      if (isAfter(eventDate, endOfYear(now)) && isBefore(eventDate, endOfYear(addYears(now, 1)))) counts.nextYear++;
+    });
+
+    return counts;
+  }, []);
 
   return (
-    <div
-      className={[
-        css`
+    <div className={className} id="events-list">
+      <div className={css`
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        align-items: center;
+        width: 100%;
+        @media (max-width: 768px) {
+          flex-wrap: wrap;
+        }
+      `}>
+        <TextField
+          style={{ flex: '1 1 auto' }}
+          variant="outlined"
+          placeholder="Search events..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <img
+                width="16px"
+                height="16px"
+                src="/search.svg"
+                style={{ marginRight: "8px" }}
+              />
+            ),
+          }}
+        />
+        <div className={css`
+          display: flex;
+          gap: 1rem;
+          flex: 0 0 auto;
+          @media (max-width: 768px) {
+            width: 100%;
+          }
+        `}>
+          <FormControl style={{ width: '150px' }}> 
+            <InputLabel>Location</InputLabel>
+            <Select
+              value={selectedLocation}
+              onChange={(e) => setSelectedLocation(e.target.value as string)}
+              input={<OutlinedInput label="Location" />}
+              MenuProps={{
+                anchorOrigin: {
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                },
+                transformOrigin: {
+                  vertical: 'top',
+                  horizontal: 'left',
+                },
+              }}
+            >
+              <MenuItem value="">All Locations</MenuItem>
+              {locations.map((location) => (
+                <MenuItem key={location} value={location}>{location}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl style={{ width: '150px' }}>
+            <InputLabel>Time</InputLabel>
+            <Select
+              value={timeFilter}
+              onChange={(e) => setTimeFilter(e.target.value as string)}
+              input={<OutlinedInput label="Time" />}
+              MenuProps={{
+                anchorOrigin: {
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                },
+                transformOrigin: {
+                  vertical: 'top',
+                  horizontal: 'left',
+                },
+              }}
+            >
+              {Object.entries(getCounts).map(([key, count]) => (
+                count > 0 && (
+                  <MenuItem key={key} value={key}>
+                    {key === 'all' ? 'All Events' : 
+                     key === 'past' ? 'Past Events' :
+                     key.charAt(0).toUpperCase() + key.slice(1)} ({count})
+                  </MenuItem>
+                )
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+      </div>
+      {filteredEvents.length > 0 ? (
+        <div className={css`
           display: flex;
           flex-wrap: wrap;
           gap: 1rem;
           justify-content: flex-start;
-          &::after {
-            content: '';
-            flex: auto;
-          }
-        `,
-        className,
-      ].join(" ")}
-    >
-      {sortedEvents.map((event, index) => (
-        <EventCard key={index} event={event} />
-      ))}
+          width: 100%;
+        `}>
+          {filteredEvents.map((event, index) => (
+            <EventCard key={index} event={event} />
+          ))}
+        </div>
+      ) : (
+        <h3 className={css`
+          text-align: center;
+          width: 100%;
+          margin-top: 2rem;
+          color: var(--color-gray-500);
+        `}>
+          No events found
+        </h3>
+      )}
     </div>
   );
 };
