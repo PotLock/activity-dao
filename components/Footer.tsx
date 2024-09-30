@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from "@emotion/css";
-import { FaTwitter, FaDiscord } from 'react-icons/fa';
+import { FaTwitter, FaDiscord, FaGithub } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
   return (
@@ -54,6 +54,20 @@ const Footer: React.FC = () => {
             `}
           >
             <FaDiscord size={20} />
+          </a>
+          <a
+            href="https://github.com/potlock/acitvity-dao"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={css`
+              color: #666;
+              transition: color 0.3s ease;
+              &:hover {
+                color: #333;
+              }
+            `}
+          >
+            <FaGithub size={20} />
           </a>
         </div>
         <div
