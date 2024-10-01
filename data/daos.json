@@ -287,5 +287,25 @@
     "exists": true,
     "featured": false,
     "order": 13
+  },
+  {
+    "name": "Activity DAO",
+    "icon": "https://activity.community/-emoji-light-bulb.svg",
+    "description": "the movement to have community run & funded ecosystems around every dope activity",
+    "url": "https://activitiy.community",
+    "tags": [
+      "Wellness"
+    ],
+    "maturity": [
+      "Idea"
+    ],
+    "emoji": "👨‍💻",
+    "treasuryAddress": "https://activity.community/treasury",
+    "github": "https://github.com/potlock/activity_dao",
+    "twitter": "https://twitter.com/activity_dao",
+    "banner": "https://pbs.twimg.com/profile_banners/1635444352959885313/1727340394/1500x500",
+    "exists": true,
+    "featured": false,
+    "order": 13
   }
 ]
