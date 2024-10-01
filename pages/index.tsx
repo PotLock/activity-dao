@@ -20,6 +20,7 @@ import Footer from "../components/Footer"; // Import the new Footer component
 import daoData from "../data/daos.json";
 import eventData from "../data/events.json";
 import Link from 'next/link';
+import EmojiTicker from "../components/EmoijiTicker"; // Add this import
 
 const Desktop: NextPage = () => {
   return (
@@ -69,6 +70,9 @@ const Desktop: NextPage = () => {
           <Header />
         </div>
       </div>
+
+      {/* Add the EmojiTicker component here */}
+      <EmojiTicker />
 
       {/* How It Works button */}
 
