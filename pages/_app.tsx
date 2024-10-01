@@ -4,11 +4,11 @@ import type { AppProps } from "next/app";
 import { ThemeProvider, createTheme } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import createGlobalStyle from "./styles/global";
+import { Web3Provider } from "../components/Web3Provider"; // Import the Web3Provider
 
 createGlobalStyle();
 
-export default function MyApp(props: AppProps) {
-  const { Component, pageProps } = props;
+export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
@@ -77,11 +77,13 @@ export default function MyApp(props: AppProps) {
 
   gtag('config', 'G-7RG25GG1ZB');`}</script>
       </Head>
-      <ThemeProvider theme={muiTheme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <Web3Provider> {/* Wrap your entire app with Web3Provider */}
+        <ThemeProvider theme={muiTheme}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </Web3Provider>
     </Fragment>
   );
 }

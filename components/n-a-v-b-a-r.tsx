@@ -1,8 +1,9 @@
 import type { NextPage } from "next";
-import { Button } from "@mui/material";
 import { css } from "@emotion/css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { ConnectKitButton } from "connectkit";
+import { useAccount } from "wagmi";
 
 export type NAVBARType = {
   className?: string;
@@ -11,6 +12,7 @@ export type NAVBARType = {
 const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
   const [activeLink, setActiveLink] = useState("home");
   const router = useRouter();
+  const { address, isConnected } = useAccount();
 
   useEffect(() => {
     // Set the active link based on the current route
@@ -225,7 +227,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
           ))}
         </nav>
 
-        {/* Join Now Button */}
+        {/* Connect Wallet Button */}
         <div
           className={css`
             width: 11.194rem;
@@ -238,48 +240,47 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
             height: 100%;
           `}
         >
-          <Button
-            className={css`
-              align-self: stretch;
-              height: 2.5rem;
-              transition: all 0.3s ease;
-              &:hover {
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-                animation: rainbow-glow 3s linear infinite;
-              }
-              @keyframes rainbow-glow {
-                0% { box-shadow: 0 0 10px #ff0000; }
-                14% { box-shadow: 0 0 10px #ff7f00; }
-                28% { box-shadow: 0 0 10px #ffff00; }
-                42% { box-shadow: 0 0 10px #00ff00; }
-                57% { box-shadow: 0 0 10px #0000ff; }
-                71% { box-shadow: 0 0 10px #8b00ff; }
-                85% { box-shadow: 0 0 10px #ff00ff; }
-                100% { box-shadow: 0 0 10px #ff0000; }
-              }
-            `}
-            startIcon={
-              <img width="20.8px" height="20.8px" src="/component-1.svg" />
-            }
-            disableElevation
-            variant="contained"
-            component="a"
-            href="https://discord.gg/mmEv99x9QK"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              textTransform: "none",
-              color: "#000",
-              fontSize: "19.5",
-              background: "#facc15",
-              borderRadius: "8665.8px",
-              "&:hover": { background: "#facc15" },
-              height: 40,
-              textDecoration: "none",
+          <ConnectKitButton.Custom>
+            {({ isConnected, show, truncatedAddress, ensName }) => {
+              return (
+                <button
+                  onClick={show}
+                  className={css`
+                    align-self: stretch;
+                    height: 2.5rem;
+                    transition: all 0.3s ease;
+                    background: #facc15;
+                    border: none;
+                    border-radius: 8665.8px;
+                    color: #000;
+                    font-size: 16px;
+                    font-weight: 600;
+                    padding: 0 16px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    &:hover {
+                      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                      animation: rainbow-glow 3s linear infinite;
+                    }
+                    @keyframes rainbow-glow {
+                      0% { box-shadow: 0 0 10px #ff0000; }
+                      14% { box-shadow: 0 0 10px #ff7f00; }
+                      28% { box-shadow: 0 0 10px #ffff00; }
+                      42% { box-shadow: 0 0 10px #00ff00; }
+                      57% { box-shadow: 0 0 10px #0000ff; }
+                      71% { box-shadow: 0 0 10px #8b00ff; }
+                      85% { box-shadow: 0 0 10px #ff00ff; }
+                      100% { box-shadow: 0 0 10px #ff0000; }
+                    }
+                  `}
+                >
+                  {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
+                </button>
+              );
             }}
-          >
-            Join Now
-          </Button>
+          </ConnectKitButton.Custom>
         </div>
       </div>
     </header>
