@@ -1,6 +1,118 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
 import Component1 from "./component1";
+
+// Define the type for the model data
+type ModelData = {
+  title: string;
+  description: string;
+  imageLink: string;
+};
+
+// Define the props for the ModelComponent
+type ModelComponentProps = {
+  data: ModelData;
+};
+
+// Create the ModelComponent
+const ModelComponent: React.FC<ModelComponentProps> = ({ data }) => {
+  return (
+    <div
+      className={css`
+        flex: 1;
+        box-shadow: 0px 0px 0px 0.61px rgba(17, 24, 28, 0.08),
+          0px 0.6px 1.2px -0.61px rgba(17, 24, 28, 0.08),
+          0px 1.2px 2.4px rgba(17, 24, 28, 0.04);
+        border-radius: var(--br-4xl-1);
+        background-color: var(--background-default-default);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: var(--padding-13xl) var(--padding-34xl) var(--padding-69xl-1);
+        box-sizing: border-box;
+        gap: var(--gap-11xl);
+        min-width: 23.938rem;
+        max-width: 100%;
+        @media screen and (max-width: 450px) {
+          min-width: 100%;
+        }
+      `}
+    >
+      <div
+        className={css`
+          align-self: stretch;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          gap: var(--gap-mid);
+          text-align: center;
+        `}
+      >
+        <h1
+          className={css`
+            margin: 0;
+            position: relative;
+            font-size: inherit;
+            line-height: 100%;
+            font-weight: 400;
+            font-family: inherit;
+            max-width: 80%;
+            @media screen and (max-width: 1050px) {
+              font-size: var(--font-size-7xl);
+              line-height: 1.625rem;
+            }
+            @media screen and (max-width: 450px) {
+              font-size: var(--font-size-lgi);
+              line-height: 1.188rem;
+            }
+          `}
+        >
+          {data.title}
+        </h1>
+        <div
+          className={css`
+            height: 2.125rem;
+            position: relative;
+            font-size: var(--ui-small-strong-size);
+            font-family: var(--font-alexandria);
+            color: var(--text-default-tertiary);
+            display: inline-block;
+            flex-shrink: 0;
+          `}
+        >
+          {data.description}
+        </div>
+      </div>
+      <img
+        src={`/${data.imageLink}`}
+        alt={data.title}
+        className={css`
+          width: 100%;
+          height: auto;
+          object-fit: contain;
+        `}
+      />
+    </div>
+  );
+};
+
+// Define the data for the models
+const modelData: ModelData[] = [
+  {
+    title: "Activity DAO Model",
+    description: "Harnessing the power of community participation, validation, and funding to drive sustainable growth and innovation.",
+    imageLink: "ActivityDAOModelGraphic.png"
+  },
+  {
+    title: "Activity DAO flywheel",
+    description: "A self-reinforcing cycle where engagement fuels activity, validation attracts more participants, and funding enables continuous growth.",
+    imageLink: "ActivityDAOFlywheelGraphic.png"
+  }
+];
+
 export type FrameComponent2Type = {
   className?: string;
 };
@@ -123,154 +235,9 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
           font-size: var(--font-size-13xl);
         `}
       >
-        <div
-          className={css`
-            flex: 1;
-            box-shadow: 0px 0px 0px 0.61px rgba(17, 24, 28, 0.08),
-              0px 0.6px 1.2px -0.61px rgba(17, 24, 28, 0.08),
-              0px 1.2px 2.4px rgba(17, 24, 28, 0.04);
-            border-radius: var(--br-4xl-1);
-            background-color: var(--background-default-default);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
-            padding: var(--padding-13xl) var(--padding-34xl) var(--padding-77xl);
-            box-sizing: border-box;
-            gap: var(--gap-45xl);
-            min-width: 23.938rem;
-            max-width: 100%;
-            @media screen and (max-width: 450px) {
-              min-width: 100%;
-            }
-          `}
-        >
-          <div
-            className={css`
-              align-self: stretch;
-              display: flex;
-              flex-direction: column;
-              align-items: center; // Change this from flex-start to center
-              justify-content: flex-start;
-              gap: var(--gap-mid);
-              text-align: center; // Add this line to center the text
-            `}
-          >
-            <h1
-              className={css`
-                margin: 0;
-                // Remove align-self: stretch;
-                position: relative;
-                font-size: inherit;
-                line-height: 100%;
-                font-weight: 400;
-                font-family: inherit;
-                max-width: 80%; // Add this line to limit the width of the heading
-                @media screen and (max-width: 1050px) {
-                  font-size: var(--font-size-7xl);
-                  line-height: 1.625rem;
-                }
-                @media screen and (max-width: 450px) {
-                  font-size: var(--font-size-lgi);
-                  line-height: 1.188rem;
-                }
-              `}
-            >
-              Activity DAO Model
-            </h1>
-            <div
-              className={css`
-                height: 2.125rem;
-                position: relative;
-                font-size: var(--ui-small-strong-size);
-                font-family: var(--font-alexandria);
-                color: var(--text-default-tertiary);
-                display: inline-block;
-                flex-shrink: 0;
-              `}
-            >
-              Harnessing the power of community participation, validation, and
-              funding to drive sustainable growth and innovation.
-            </div>
-          </div>
- <img src="/ActivityDAOModelGraphic.png" alt="Activity DAO Model" />
-        </div>
-        <div
-          className={css`
-            flex: 1;
-            box-shadow: 0px 0px 0px 0.61px rgba(17, 24, 28, 0.08),
-              0px 0.6px 1.2px -0.61px rgba(17, 24, 28, 0.08),
-              0px 1.2px 2.4px rgba(17, 24, 28, 0.04);
-            border-radius: var(--br-4xl-1);
-            background-color: var(--background-default-default);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
-            padding: var(--padding-13xl) var(--padding-34xl)
-              var(--padding-69xl-1);
-            box-sizing: border-box;
-            gap: var(--gap-11xl);
-            min-width: 23.938rem;
-            max-width: 100%;
-            @media screen and (max-width: 450px) {
-              min-width: 100%;
-            }
-          `}
-        >
-          <div
-            className={css`
-              align-self: stretch;
-              display: flex;
-              flex-direction: column;
-              align-items: flex-start;
-              justify-content: flex-start;
-              gap: var(--gap-mid);
-            `}
-          >
-            <h1
-              className={css`
-                margin: 0;
-                // Remove align-self: stretch;
-                position: relative;
-                font-size: inherit;
-                line-height: 100%;
-                font-weight: 400;
-                font-family: inherit;
-                max-width: 80%; // Add this line to limit the width of the heading
-                @media screen and (max-width: 1050px) {
-                  font-size: var(--font-size-7xl);
-                  line-height: 1.625rem;
-                }
-                @media screen and (max-width: 450px) {
-                  font-size: var(--font-size-lgi);
-                  line-height: 1.188rem;
-                }
-              `}
-            >
-              Activity DAO flywheel
-            </h1>
-            <div
-              className={css`
-                height: 2.125rem;
-                position: relative;
-                font-size: var(--ui-small-strong-size);
-                font-family: var(--font-alexandria);
-                color: var(--text-default-tertiary);
-                display: inline-block;
-                flex-shrink: 0;
-              `}
-            >
-              A self-reinforcing cycle where engagement fuels activity,
-              validation attracts more participants, and funding enables
-              continuous growth.
-            </div>
-          </div>
-          <img src="/ActivityDAOFlywheelGraphic.png" alt="Activity DAO Flywheel" />
-
-        </div>
+        {modelData.map((model, index) => (
+          <ModelComponent key={index} data={model} />
+        ))}
       </div>
     </div>
   );
