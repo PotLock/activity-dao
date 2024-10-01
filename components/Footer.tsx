@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
           `}
         >
           <a
-            href="https://twitter.com/actvitiy_dao"
+            href="https://twitter.com/activity_dao"
             target="_blank"
             rel="noopener noreferrer"
             className={css`
