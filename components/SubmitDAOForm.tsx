@@ -40,7 +40,7 @@ const SubmitDAOForm: React.FC = () => {
     url: 'https://activitiy.community',
     tags: ['Wellness'],
     maturity: ['Idea'],
-    emoji: '👨‍💻',
+    emoji: '👨‍',
     treasuryAddress: 'https://activity.community/treasury',
     github: 'https://github.com/potlock/activity_dao',
     twitter: 'https://twitter.com/activity_dao',
@@ -74,6 +74,7 @@ const SubmitDAOForm: React.FC = () => {
   const [bannerPreview, setBannerPreview] = useState<string>('');
   const [bannerLoading, setBannerLoading] = useState<boolean>(false);
   const [bannerError, setBannerError] = useState<boolean>(false);
+  const [pullRequestUrl, setPullRequestUrl] = useState<string>('');
 
   const validateField = (name: string, value: unknown): string => {
     switch (name) {
@@ -144,6 +145,17 @@ const SubmitDAOForm: React.FC = () => {
       acc[key] = validateField(key, formData[key as keyof typeof formData]);
       return acc;
     }, {} as Record<string, string>);
+
+    // Check for similar DAO names
+    const similarDao = daoData.find(dao => 
+      dao.name.toLowerCase().includes(formData.name.toLowerCase()) || 
+      formData.name.toLowerCase().includes(dao.name.toLowerCase())
+    );
+
+    if (similarDao) {
+      newErrors.name = `Similar DAO name already exists: ${similarDao.name}`;
+    }
+
     setErrors(newErrors);
 
     if (Object.values(newErrors).every(error => !error)) {
@@ -159,6 +171,7 @@ const SubmitDAOForm: React.FC = () => {
           owner: 'PotLock',
           repo: 'activity-dao',
           path: 'data/daos.json',
+          ref: 'main', // Specify the main branch
         });
 
         if ('content' in fileData) {
@@ -169,18 +182,41 @@ const SubmitDAOForm: React.FC = () => {
           // Add the new DAO entry
           currentData.push(formData);
 
-          // Update the file on GitHub
+          // Create a new branch name
+          const branchName = `submitdao${formData.order}`;
+
+          // Create a new branch
+          await octokit.git.createRef({
+            owner: 'PotLock',
+            repo: 'activity-dao',
+            ref: `refs/heads/${branchName}`,
+            sha: fileData.sha,
+          });
+
+          // Update the file on the new branch
           await octokit.repos.createOrUpdateFileContents({
             owner: 'PotLock',
             repo: 'activity-dao',
             path: 'data/daos.json',
             message: `Add new DAO: ${formData.name}`,
             content: Buffer.from(JSON.stringify(currentData, null, 2)).toString('base64'),
-            sha: fileData.sha,
+            branch: branchName,
+          });
+
+          // Create a pull request
+          const { data: pullRequest } = await octokit.pulls.create({
+            owner: 'PotLock',
+            repo: 'activity-dao',
+            title: `Add new DAO: ${formData.name}`,
+            head: branchName,
+            base: 'main',
+            body: `This PR adds a new DAO: ${formData.name}\n\nPlease review the changes and merge if everything looks good.`,
           });
 
           console.log('New DAO:', formData);
+          console.log('Pull Request created:', pullRequest.html_url);
           setOpenSuccessModal(true);
+          setPullRequestUrl(pullRequest.html_url);
         } else {
           throw new Error('Unable to fetch file content');
         }
@@ -497,7 +533,12 @@ const SubmitDAOForm: React.FC = () => {
       <Dialog open={openSuccessModal} onClose={() => setOpenSuccessModal(false)}>
         <DialogTitle>Success!</DialogTitle>
         <DialogContent>
-          Your DAO has been successfully submitted to GitHub.
+          Your DAO has been successfully submitted to GitHub and a pull request has been created.
+          {pullRequestUrl && (
+            <p>
+              You can view the pull request here: <a href={pullRequestUrl} target="_blank" rel="noopener noreferrer">{pullRequestUrl}</a>
+            </p>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenSuccessModal(false)}>Close</Button>
