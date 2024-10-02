@@ -1,27 +1,19 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
-import Background from "../components/background";
 import NAVBAR from "../components/n-a-v-b-a-r";
 import Header from "../components/header";
-import UserActionsParent from "../components/user-actions-parent";
-import Card from "../components/card";
-import Button1 from "../components/button1";
-import Button2 from "../components/button2";
-import SwitchContainer1 from "../components/switch-container1";
-import EventsContent from "../components/events-content";
+import AcivityCards from "../components/activity";
 import EventsList from "../components/events-list";
-import DAOsHeader from "../components/d-a-os-header";
 import DAOsDescription from "../components/d-a-os-description";
-import FrameComponent from "../components/frame-component";
-import Aggregation from "../components/aggregation";
-import FrameComponent2 from "../components/frame-component2";
 import OfficialPartners from "../components/official-partners";
 import Footer from "../components/Footer"; // Import the new Footer component
-import daoData from "../data/daos.json";
-import eventData from "../data/events.json";
-import Link from 'next/link';
 import EmojiTicker from "../components/EmoijiTicker"; // Add this import
+import DaoMaturity from "../components/daoMaturity";
+import Evolution from "../components/evolution";
+import PoweringCommunity from "../components/dao-model";
 
+
+import JoinActivityDAO from "../components/join-activityDAO";
 const Desktop: NextPage = () => {
   return (
     <div
@@ -169,7 +161,7 @@ const Desktop: NextPage = () => {
               }
             `}
           >
-            <Card />
+            <AcivityCards />
             {/* <Button1 /> */}
           </div>
           <div
@@ -453,9 +445,10 @@ const Desktop: NextPage = () => {
           `}
         >
 
-            <Aggregation />
+            <Evolution />
     
-          <FrameComponent2 />
+          <PoweringCommunity />
+          <DaoMaturity />
           <OfficialPartners />
         </section>
 
@@ -466,7 +459,7 @@ const Desktop: NextPage = () => {
             margin-bottom: 5rem;
           `}
         >
-          <Background />
+          <JoinActivityDAO />
         </section>
       </div>
 

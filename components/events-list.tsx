@@ -3,7 +3,7 @@ import { css } from "@emotion/css";
 import events from "../data/events.json";
 import { format, parseISO, isAfter, isBefore, isToday, isThisWeek, isThisMonth, isThisYear, startOfQuarter, endOfQuarter, endOfYear, addYears } from "date-fns";
 import { useState, useMemo, useEffect } from "react";
-import Component1 from "./component1";
+import Component1 from "./featured-events";
 import { 
   TextField, 
   Select, 

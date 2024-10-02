@@ -89,7 +89,7 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-    >
+    > 
       <div
         className={css`
           align-self: stretch;

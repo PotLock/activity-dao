@@ -8,11 +8,11 @@ import {
 } from "@mui/material";
 import { css } from "@emotion/css";
 
-export type FrameComponent3Type = {
+export type ExploreType = { 
   className?: string;
 };
 
-const FrameComponent3: NextPage<FrameComponent3Type> = ({ className = "" }) => {
+const ExploreComponent: NextPage<ExploreType> = ({ className = "" }) => {
   return (
     <header
       className={[
@@ -28,7 +28,7 @@ const FrameComponent3: NextPage<FrameComponent3Type> = ({ className = "" }) => {
         `,
         className,
       ].join(" ")}
-    >
+    > 
       <div
         className={css`
           width: 75rem;
@@ -137,11 +137,11 @@ const FrameComponent3: NextPage<FrameComponent3Type> = ({ className = "" }) => {
             height: 40,
           }}
         >
-          Join Now
+          Join Now 
         </Button>
       </div>
     </header>
   );
 };
 
-export default FrameComponent3;
+export default ExploreComponent; 

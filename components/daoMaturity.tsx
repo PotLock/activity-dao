@@ -1,12 +1,12 @@
 import type { NextPage } from "next";
-import Component1 from "./component1";
+import Component1 from "./featured-events";
 import { css } from "@emotion/css";
 
-export type FrameComponentType = {
+export type DaoMaturityType = {
   className?: string;
 };
 
-const FrameComponent: NextPage<FrameComponentType> = ({ className = "" }) => {
+const DaoMaturity: NextPage<DaoMaturityType> = ({ className = "" }) => {
   return (
     <div
       className={[
@@ -26,7 +26,7 @@ const FrameComponent: NextPage<FrameComponentType> = ({ className = "" }) => {
         `,
         className,
       ].join(" ")}
-    >
+    >  
       <div
         className={css`
           width: 40.688rem;
@@ -79,4 +79,4 @@ const FrameComponent: NextPage<FrameComponentType> = ({ className = "" }) => {
   );
 };
 
-export default FrameComponent;
+export default DaoMaturity;
