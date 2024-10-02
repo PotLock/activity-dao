@@ -276,7 +276,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                     }
                   `}
                 >
-                  {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
+                  {isConnected ? ensName ?? truncatedAddress : "Login"}
                 </button>
               );
             }}
