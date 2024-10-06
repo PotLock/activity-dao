@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import Component1 from "./component1";
+import Component1 from "./featured-events";
 import { css } from "@emotion/css";
 
 export type EventsContentType = {

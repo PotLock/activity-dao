@@ -34,7 +34,7 @@ const Button2: NextPage<Button2Type> = ({ className = "" }) => {
         className,
       ].join(" ")}
     >
-      
+      button2
       <div
         className={css`
           align-self: stretch;

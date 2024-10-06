@@ -73,7 +73,7 @@ const BluntDAO: NextPage<BluntDAOType> = ({
         `,
         className,
       ].join(" ")}
-    >
+    > blunt-d-a-o
       <div
         className={css`
           flex: 1;

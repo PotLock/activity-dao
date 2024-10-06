@@ -40,6 +40,7 @@ const SubmitDAO: NextPage = () => {
           max-width: 1200px;
           margin: 0 auto;
           width: 100%;
+          margin-top: 2rem;
         `}
       >
         <h1

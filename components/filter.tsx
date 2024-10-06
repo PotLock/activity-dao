@@ -41,7 +41,7 @@ padding: ${propPadding}
 `,
         className,
       ].join(" ")}
-    >
+    > 
       <div
         className={css`
           flex: 1;

@@ -40,7 +40,7 @@ const cardData = [
   },
 ];
 
-const Card: NextPage<CardType> = ({ className = "" }) => {
+const AcivityCards: NextPage<CardType> = ({ className = "" }) => {
   return (
     <>
       {cardData.map((card, index) => {
@@ -192,4 +192,4 @@ const Card: NextPage<CardType> = ({ className = "" }) => {
   );
 };
 
-export default Card;
+export default AcivityCards;     

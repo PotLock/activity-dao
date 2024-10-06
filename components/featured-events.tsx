@@ -1,12 +1,12 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
 
-export type Component1Type = {
+export type FeaturedEventsType = {
   className?: string;
   developmentIcon?: string;
 };
 
-const Component1: NextPage<Component1Type> = ({
+const FeaturedEvents: NextPage<FeaturedEventsType> = ({
   className = "",
   developmentIcon,
 }) => {
@@ -30,7 +30,7 @@ const Component1: NextPage<Component1Type> = ({
         `,
         className,
       ].join(" ")}
-    >
+    > 
       <div
         className={css`
           overflow: hidden;
@@ -75,4 +75,4 @@ const Component1: NextPage<Component1Type> = ({
   );
 };
 
-export default Component1;
+export default FeaturedEvents;  
