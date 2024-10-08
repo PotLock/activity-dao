@@ -6,6 +6,11 @@
         "permanent": true
       },
       {
+        "source": "/backlog",
+        "destination": "https://github.com/orgs/PotLock/projects/18/views/1",
+        "permanent": true
+      },
+      {
         "source": "/handbook",
         "destination": "https://potlock.notion.site/ActivityDAO-Handbook-2979c91a779e46659a5646438af3324c",
         "permanent": true
