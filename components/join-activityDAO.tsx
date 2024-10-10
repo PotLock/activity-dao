@@ -8,11 +8,11 @@ import {
 } from "@mui/material";
 import { css } from "@emotion/css";
 
-export type BackgroundType = {
+export type JoinActivityDAOType = {
   className?: string;
 };
 
-const Background: NextPage<BackgroundType> = ({ className = "" }) => {
+const JoinActivityDAO: NextPage<JoinActivityDAOType> = ({ className = "" }) => {
   return (
     <section
       id="cta-bubble"
@@ -46,7 +46,7 @@ const Background: NextPage<BackgroundType> = ({ className = "" }) => {
         `,
         className,
       ].join(" ")}
-    >
+    > 
       <img
         className={css`
           width: 6.919rem;
@@ -372,4 +372,4 @@ const Background: NextPage<BackgroundType> = ({ className = "" }) => {
   );
 };
 
-export default Background;
+export default JoinActivityDAO;

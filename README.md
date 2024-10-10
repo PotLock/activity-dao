@@ -18,7 +18,9 @@ Twitter https://twitter.com/activity_dao
 
 
 Figma https://www.figma.com/design/bMBfA2d7favfAUDo1FsIqS/ActivityDAO?node-id=60-870&node-type=frame&t=ep0DxJNzjDvDnjmu-0
+Features https://potlock.notion.site/Activity-DAO-Testing-119c1f4ba97e80a0b3e9ea53a8bcec81?pvs=4
 
+App Backlog https://github.com/orgs/PotLock/projects/18/views/1 
 
 # To-Do
 - Finish Design

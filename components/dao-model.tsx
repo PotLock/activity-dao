@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
-import Component1 from "./component1";
+import FeaturedEvents from "./featured-events";
 
 // Define the type for the model data
 type ModelData = {
@@ -113,11 +113,11 @@ const modelData: ModelData[] = [
   }
 ];
 
-export type FrameComponent2Type = {
+export type PoweringCommunityType = {
   className?: string;
 };
 
-const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
+const PoweringCommunity: NextPage<PoweringCommunityType> = ({ className = "" }) => {
   return (
     <div
       id="model"
@@ -147,7 +147,7 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
           margin-bottom: var(--gap-3xs); // Change this to match the gap between heading and subtitle
         `}
       >
-        <Component1 developmentIcon="ACTIVITY DAO MODEL" />
+        <FeaturedEvents developmentIcon="ACTIVITY DAO MODEL" />
       </div>
 
       <div
@@ -162,26 +162,28 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
         `}
       >
         <h1
-          className={css`
-            margin: 0;
-            position: relative;
-            font-size: inherit;
-            line-height: 3.844rem;
-            font-weight: 600;
-            font-family: inherit;
-            max-width: 80%; // Add this to limit the width of the heading
-            @media screen and (max-width: 1050px) {
-              font-size: var(--font-size-13xl);
-              line-height: 3.063rem;
-            }
-            @media screen and (max-width: 450px) {
-              font-size: var(--font-size-5xl);
-              line-height: 2.313rem;
-            }
-          `}
-        >
-          Powering Community-Driven Growth
-        </h1>
+  className={css`
+    margin: 0;
+    position: relative;
+    font-weight: 600;
+    font-family: inherit;
+    max-width: 80%;
+    font-size: clamp(1.75rem, 4vw, 3.5rem);
+    line-height: clamp(2.25rem, 5vw, 3.844rem);
+    
+    @media screen and (max-width: 1050px) {
+      font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+      line-height: clamp(2rem, 4.5vw, 3.063rem);
+    }
+    
+    @media screen and (max-width: 450px) {
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      line-height: clamp(1.75rem, 4vw, 2.313rem);
+    }
+  `}
+>
+  Powering Community-Driven Growth
+</h1>
         <div
           className={css`
             align-self: stretch;
@@ -243,4 +245,4 @@ const FrameComponent2: NextPage<FrameComponent2Type> = ({ className = "" }) => {
   );
 };
 
-export default FrameComponent2;
+export default PoweringCommunity;

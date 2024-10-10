@@ -1,12 +1,12 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
-import FrameComponent3 from "../components/frame-component3";
+import ExploreComponent from "../components/explore";
 // import SearchFilter from "../components/search-filter";
 import Pagination from "../components/pagination";
 import NAVBAR from "../components/n-a-v-b-a-r";
 
 
-const Desktop1: NextPage = () => {
+const ExploreDAOs: NextPage = () => {
   return (
     <div
       className={css`
@@ -95,7 +95,7 @@ const Desktop1: NextPage = () => {
           The Model
         </b>
       </div>
-      <FrameComponent3 />
+      <ExploreComponent />
       <main
         className={css`
           align-self: stretch;
@@ -239,4 +239,4 @@ const Desktop1: NextPage = () => {
   );
 };
 
-export default Desktop1;
+export default ExploreDAOs;

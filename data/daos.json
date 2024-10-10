@@ -268,6 +268,26 @@
     "featured": false,
     "order": 13
   },
+    {
+    "name": "Jummah DAO",
+    "icon": "https://jummahdao.com/logo.png",
+    "description": "bringing the web3 industry together for Friday prayers",
+    "url": "https://jummahdao.com/",
+    "tags": [
+      "Wellness"
+    ],
+    "maturity": [
+      "Idea"
+    ],
+    "emoji": "🕌",
+    "treasuryAddress": "",
+    "github": "",
+    "twitter": "",
+    "banner": "https://www.jummahdao.com/jummahmeta.png",
+    "exists": true,
+    "featured": false,
+    "order": 15
+  },
   {
     "name": "Yoga DAO",
     "icon": "https://yogadao.io/img/banner-logo.png",

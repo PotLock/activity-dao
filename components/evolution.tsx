@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
-import Component1 from "./component1";
+import Component1 from "./featured-events";
 import MovementCard from "./MovementCard";
 
-export type AggregationType = {
+export type EvolutionType = {
   className?: string;
 };
 
@@ -28,9 +28,9 @@ const movementData = [
   },
 ];
 
-const Aggregation: NextPage<AggregationType> = ({ className = "" }) => {
+const Evolution: NextPage<EvolutionType> = ({ className = "" }) => {
   return (
-    <div>
+    <div> 
       <div
         className={[
           css`
@@ -126,4 +126,4 @@ const Aggregation: NextPage<AggregationType> = ({ className = "" }) => {
   );
 };
 
-export default Aggregation;
+export default Evolution; 

@@ -22,9 +22,15 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
           font-size: var(--font-size-3xs-2);
           color: var(--wwwgetminjiapp-black);
           font-family: var(--font-alexandria);
+          
           @media screen and (max-width: 768px) {
             padding: 1rem;
             gap: var(--gap-xs); // Reduce gap on mobile
+          }
+
+          @media screen and (max-width: 480px) {
+            margin-top: 0.5rem; // Smaller top margin for very small devices
+            gap: var(--gap-xs); 
           }
 
           @keyframes bounce {
@@ -82,6 +88,10 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                 width: 2.638rem;
                 position: relative;
                 flex-shrink: 0;
+
+                @media screen and (max-width: 768px) {
+                  margin-top: -.5rem
+                }
               `}
               alt=""
               src="/group-5.svg"
@@ -94,6 +104,8 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
               position: relative;
               flex-shrink: 0;
               z-index: 2;
+              @media screen and (max-width: 768px) {
+              margin-top: -.5rem
             `}
             alt=""
             src="/group-6.svg"
@@ -140,6 +152,7 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
               z-index: 2;
               @media screen and (max-width: 768px) {
                 margin-top: 1rem; // Lower the image on mobile
+                
               }
             `}
             alt=""
@@ -727,7 +740,9 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                             width: 4.25rem;
                             object-fit: cover;
                             z-index: 3;
-                          `}
+                          `
+                          
+                        }
                           alt=""
                           src="/rectangle-1@2x.png"
                         />
@@ -777,6 +792,8 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
           @media screen and (max-width: 768px) {
             top: auto;
             bottom: 1rem; // Lower the image on mobile
+            display: none;
+            
           }
         `}
         alt=""
@@ -788,6 +805,7 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
           @media screen and (max-width: 768px) {
             top: auto;
             bottom: 2rem; // Lower the image on mobile
+            
           }
         `}
         alt=""
