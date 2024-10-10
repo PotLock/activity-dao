@@ -1,11 +1,20 @@
 [
-    {
-      "name": "Blunt Olympics",
+        {
+      "name": "",
       "description": "The inagural Blunt Olympics",
       "date": "2024-11-12",
       "location": "Bangkok, Thailand",
       "image": "image3@2x.png",
       "link": "https://olympics.bluntdao.org",
+      "dao": "Blunt DAO"
+    },
+    {
+      "name": "420 Chiang Mai Weed Crawl",
+      "description": "​Starting at 420PM at Pineapple Express we will be going around as many weed shops as possible in Chiang Mai, smoking 1 blunt at every shop until we pass out.",
+      "date": "2024-10-11",
+      "location": "Chiang Mai, Thailand",
+      "image": "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/event-covers/ir/3e91ad6b-6b69-4349-be68-efdd847945bb",
+      "link": "https://lu.ma/ci57oe74",
       "dao": "Blunt DAO"
     },
     {
