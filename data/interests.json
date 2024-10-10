@@ -1,0 +1,308 @@
+[
+  {
+    "id_slug": "soccer",
+    "activity": "Soccer",
+    "emoji": "⚽",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "basketball",
+    "activity": "Basketball",
+    "emoji": "🏀",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "tennis",
+    "activity": "Tennis",
+    "emoji": "🎾",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "volleyball",
+    "activity": "Volleyball",
+    "emoji": "🏐",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "baseball",
+    "activity": "Baseball",
+    "emoji": "⚾",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "american-football",
+    "activity": "American Football",
+    "emoji": "🏈",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "rugby",
+    "activity": "Rugby",
+    "emoji": "🏉",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "golf",
+    "activity": "Golf",
+    "emoji": "⛳",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "swimming",
+    "activity": "Swimming",
+    "emoji": "🏊",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "surfing",
+    "activity": "Surfing",
+    "emoji": "🏄",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "skiing",
+    "activity": "Skiing",
+    "emoji": "⛷️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "snowboarding",
+    "activity": "Snowboarding",
+    "emoji": "🏂",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "ice-skating",
+    "activity": "Ice Skating",
+    "emoji": "⛸️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "cycling",
+    "activity": "Cycling",
+    "emoji": "🚴",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "running",
+    "activity": "Running",
+    "emoji": "🏃",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "weightlifting",
+    "activity": "Weightlifting",
+    "emoji": "🏋️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "yoga",
+    "activity": "Yoga",
+    "emoji": "🧘",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "martial-arts",
+    "activity": "Martial Arts",
+    "emoji": "🥋",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "boxing",
+    "activity": "Boxing",
+    "emoji": "🥊",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "rock-climbing",
+    "activity": "Rock Climbing",
+    "emoji": "🧗",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "hiking",
+    "activity": "Hiking",
+    "emoji": "🥾",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "camping",
+    "activity": "Camping",
+    "emoji": "⛺",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "fishing",
+    "activity": "Fishing",
+    "emoji": "🎣",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "archery",
+    "activity": "Archery",
+    "emoji": "🏹",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "horseback-riding",
+    "activity": "Horseback Riding",
+    "emoji": "🏇",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "bowling",
+    "activity": "Bowling",
+    "emoji": "🎳",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "table-tennis",
+    "activity": "Table Tennis",
+    "emoji": "🏓",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "badminton",
+    "activity": "Badminton",
+    "emoji": "🏸",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "chess",
+    "activity": "Chess",
+    "emoji": "♟️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "poker",
+    "activity": "Poker",
+    "emoji": "🃏",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "darts",
+    "activity": "Darts",
+    "emoji": "🎯",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "billiards",
+    "activity": "Billiards",
+    "emoji": "🎱",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "cooking",
+    "activity": "Cooking",
+    "emoji": "👨‍🍳",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "baking",
+    "activity": "Baking",
+    "emoji": "🍰",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "gardening",
+    "activity": "Gardening",
+    "emoji": "🌱",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "painting",
+    "activity": "Painting",
+    "emoji": "🎨",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "photography",
+    "activity": "Photography",
+    "emoji": "📷",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "dancing",
+    "activity": "Dancing",
+    "emoji": "💃",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "singing",
+    "activity": "Singing",
+    "emoji": "🎤",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "playing-guitar",
+    "activity": "Playing Guitar",
+    "emoji": "🎸",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "playing-piano",
+    "activity": "Playing Piano",
+    "emoji": "🎹",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "reading",
+    "activity": "Reading",
+    "emoji": "📚",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "writing",
+    "activity": "Writing",
+    "emoji": "✍️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "meditation",
+    "activity": "Meditation",
+    "emoji": "🧘‍♀️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "knitting",
+    "activity": "Knitting",
+    "emoji": "🧶",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "sewing",
+    "activity": "Sewing",
+    "emoji": "🪡",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "woodworking",
+    "activity": "Woodworking",
+    "emoji": "🪚",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "pottery",
+    "activity": "Pottery",
+    "emoji": "🏺",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "sculpting",
+    "activity": "Sculpting",
+    "emoji": "🗿",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "video-gaming",
+    "activity": "Video Gaming",
+    "emoji": "🎮",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "board-games",
+    "activity": "Board Games",
+    "emoji": "🎲",
+    "farcaster_id": ""
+  }
+]
