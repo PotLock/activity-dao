@@ -33,7 +33,10 @@ export type EventsListType = {
 
 interface EventsListProps {
   mode: 'explore' | 'home';
-  className?: string;  // Add this line
+  className?: string;
+  hideHeader?: boolean;
+  hideDescription?: boolean;
+  daoMode?: string;
 }
 
 const EventCard = ({ event }: { event: { date: string; name: string; location: string; link: string; image: string } }) => {
@@ -252,7 +255,51 @@ const ListEventCard = ({ event }: { event: { date: string; name: string; locatio
   );
 };
 
-const EventsList: React.FC<EventsListProps> = ({ mode, className = '' }) => {
+// Add this function at the top of your file or in a separate utility file
+function stringSimilarity(str1: string, str2: string): number {
+  const longer = str1.length > str2.length ? str1 : str2;
+  const shorter = str1.length > str2.length ? str2 : str1;
+  const longerLength = longer.length;
+  if (longerLength === 0) {
+    return 1.0;
+  }
+  return (longerLength - editDistance(longer, shorter)) / longerLength;
+}
+
+function editDistance(s1: string, s2: string): number {
+  s1 = s1.toLowerCase();
+  s2 = s2.toLowerCase();
+  const costs = new Array();
+  for (let i = 0; i <= s1.length; i++) {
+    let lastValue = i;
+    for (let j = 0; j <= s2.length; j++) {
+      if (i === 0) {
+        costs[j] = j;
+      } else {
+        if (j > 0) {
+          let newValue = costs[j - 1];
+          if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
+            newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+          }
+          costs[j - 1] = lastValue;
+          lastValue = newValue;
+        }
+      }
+    }
+    if (i > 0) {
+      costs[s2.length] = lastValue;
+    }
+  }
+  return costs[s2.length];
+}
+
+const EventsList: React.FC<EventsListProps> = ({ 
+  mode, 
+  className = '', 
+  hideHeader = false, 
+  hideDescription = false, 
+  daoMode 
+}) => {
   console.log("EventsList rendered with mode:", mode);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -272,6 +319,12 @@ const EventsList: React.FC<EventsListProps> = ({ mode, className = '' }) => {
   const filteredEvents = useMemo(() => {
     return events
       .filter(event => {
+        // If daoMode is set, filter events based on DAO similarity
+        if (daoMode) {
+          const similarity = stringSimilarity(event.dao.toLowerCase(), daoMode.toLowerCase());
+          if (similarity < 0.85) return false;
+        }
+
         const eventDate = parseISO(event.date);
         const now = new Date();
 
@@ -315,16 +368,17 @@ const EventsList: React.FC<EventsListProps> = ({ mode, className = '' }) => {
         return searchMatch && locationMatch && timeMatch;
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [searchTerm, selectedLocation, timeFilter]);
+  }, [searchTerm, selectedLocation, timeFilter, daoMode]);
 
   const locations = useMemo(() => {
-    return Array.from(new Set(events.map(event => event.location))).sort();
-  }, []);
+    const filteredLocations = filteredEvents.map(event => event.location);
+    return Array.from(new Set(filteredLocations)).sort();
+  }, [filteredEvents]);
 
   const getCounts = useMemo(() => {
     const now = new Date();
     const counts = {
-      all: events.length,
+      all: filteredEvents.length,
       past: 0,
       today: 0,
       thisWeek: 0,
@@ -334,7 +388,7 @@ const EventsList: React.FC<EventsListProps> = ({ mode, className = '' }) => {
       nextYear: 0
     };
 
-    events.forEach(event => {
+    filteredEvents.forEach(event => {
       const eventDate = parseISO(event.date);
       if (isBefore(eventDate, now)) counts.past++;
       if (isToday(eventDate)) counts.today++;
@@ -346,86 +400,90 @@ const EventsList: React.FC<EventsListProps> = ({ mode, className = '' }) => {
     });
 
     return counts;
-  }, []);
+  }, [filteredEvents]);
 
   return (
     <div className={css`
       width: 100%;
       max-width: 100%;
     `}>
-      <div id="events"
-        className={[
-          css`
-            align-self: stretch;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
-            gap: var(--gap-3xs);
-            text-align: center;
-            font-size: var(--font-size-21xl);
-            color: var(--wwwgetminjiapp-black);
-            font-family: var(--font-dynapuff);
-            width: 100%;
-          `,
-          className,
-        ].join(" ")}
-      >
-        {mode === 'home' && (
-          <div
-            className={css`
+      {!hideHeader && (
+        <div id="events"
+          className={[
+            css`
               align-self: stretch;
               display: flex;
-              flex-direction: row;
+              flex-direction: column;
               align-items: flex-start;
               justify-content: flex-start;
-              padding: 0rem var(--padding-512xl);
+              gap: var(--gap-3xs);
+              text-align: center;
+              font-size: var(--font-size-21xl);
+              color: var(--wwwgetminjiapp-black);
+              font-family: var(--font-dynapuff);
               width: 100%;
+            `,
+            className,
+          ].join(" ")}
+        >
+          {mode === 'home' && (
+            <div
+              className={css`
+                align-self: stretch;
+                display: flex;
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: flex-start;
+                padding: 0rem var(--padding-512xl);
+                width: 100%;
+              `}
+            >
+              <Component1 developmentIcon="FEATURED EVENTS" />
+            </div>
+          )}
+          <h1
+            className={css`
+              margin: 0;
+              align-self: stretch;
+              position: relative;
+              font-size: inherit;
+              line-height: 3.844rem;
+              font-weight: 600;
+              font-family: inherit;
+              width: 100%;
+              @media screen and (max-width: 1050px) {
+                font-size: var(--font-size-13xl);
+                line-height: 3.063rem;
+              }
+              @media screen and (max-width: 450px) {
+                font-size: var(--font-size-5xl);
+                line-height: 2.313rem;
+              }
             `}
           >
-            <Component1 developmentIcon="FEATURED EVENTS" />
-          </div>
-        )}
-        <h1
-          className={css`
-            margin: 0;
-            align-self: stretch;
-            position: relative;
-            font-size: inherit;
-            line-height: 3.844rem;
-            font-weight: 600;
-            font-family: inherit;
-            width: 100%;
-            @media screen and (max-width: 1050px) {
-              font-size: var(--font-size-13xl);
-              line-height: 3.063rem;
-            }
-            @media screen and (max-width: 450px) {
-              font-size: var(--font-size-5xl);
-              line-height: 2.313rem;
-            }
-          `}
-        >
-          Find an Event 🎉
-        </h1>
-        <h3
-          className={css`
-            margin: 0;
-            align-self: stretch;
-            position: relative;
-            font-size: var(--font-size-5xl);
-            line-height: 2.469rem;
-            font-weight: 400;
-            font-family: var(--font-hanken-grotesk);
-            @media screen and (max-width: 450px) {
-              font-size: var(--font-size-lgi);
-              line-height: 2rem;
-            }
-          `}
-        >
-          Check out upcoming activity based events!
-        </h3>
-      </div>
+            Find an Event 🎉
+          </h1>
+          {!hideDescription && (
+            <h3
+              className={css`
+                margin: 0;
+                align-self: stretch;
+                position: relative;
+                font-size: var(--font-size-5xl);
+                line-height: 2.469rem;
+                font-weight: 400;
+                font-family: var(--font-hanken-grotesk);
+                @media screen and (max-width: 450px) {
+                  font-size: var(--font-size-lgi);
+                  line-height: 2rem;
+                }
+              `}
+            >
+              Check out upcoming activity based events!
+            </h3>
+          )}
+        </div>
+      )}
 
       <div className={css`
         width: 100% !important;
