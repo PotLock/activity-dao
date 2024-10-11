@@ -7,7 +7,7 @@ import { faThumbsUp, faRetweet, faShareAlt } from '@fortawesome/free-solid-svg-i
 import { formatDistanceToNow } from 'date-fns'; // Import the function
 
 interface FeedProps {
-  channelId: string; // Added prop type definition
+  interest: any; // Updated prop type definition to accept the entire interest object
 }
 
 interface Post {
@@ -75,46 +75,72 @@ interface Post {
   mentioned_profiles: any[]; // Adjust type as necessary
 }
 
-const Feed: NextPage<FeedProps> = ({ channelId }) => { // Updated to accept channelId
+const Feed: NextPage<FeedProps> = ({ interest }) => { // Updated to accept interest
   const [posts, setPosts] = useState<Post[]>([]); // State to hold posts
   const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [toastVisible, setToastVisible] = useState(false); // State for toast notification
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get(`https://api.neynar.com/v2/farcaster/feed/channels`, {
-          params: {
-            channel_ids: channelId,
-            with_recasts: true,
-            with_replies: true,
-            members_only: true,
-            limit: 25,
-          },
-          headers: {
-            accept: 'application/json',
-            api_key: process.env.NEXT_PUBLIC_NEYNAR_API,
-          },
-        });
-        setPosts(Array.isArray(response.data.casts) ? response.data.casts : []); // Updated to set posts from response.casts
-        console.log(JSON.stringify(response.data, null, 2));
-      } catch (error: any) { // Added type assertion
-        console.error("Error fetching posts:", error.response ? error.response.data : error.message); // Improved error logging
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (interest) { // Check if interest is available
+      const fetchPosts = async () => {
+        try {
+          const response = await axios.get(`https://api.neynar.com/v2/farcaster/feed/channels`, {
+            params: {
+              channel_ids: interest.id_slug, // Use interest.id_slug for channelId
+              with_recasts: true,
+              with_replies: true,
+              members_only: true,
+              limit: 25,
+            },
+            headers: {
+              accept: 'application/json',
+              api_key: process.env.NEXT_PUBLIC_NEYNAR_API,
+            },
+          });
+          setPosts(Array.isArray(response.data.casts) ? response.data.casts : []); // Updated to set posts from response.casts
+          console.log(JSON.stringify(response.data, null, 2));
+        } catch (error: any) { // Added type assertion
+          console.error("Error fetching posts:", error.response ? error.response.data : error.message); // Improved error logging
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-    fetchPosts(); // Call the fetch function
-  }, [channelId]);
+      fetchPosts(); // Call the fetch function
+    }
+  }, [interest]); // Dependency on interest
+
+  // Conditional rendering to handle null interest
+  if (!interest) {
+    return <div>Please select an interest to view the feed.</div>; // Message when no interest is selected
+  }
 
   const handleShare = (username: string, hash: string) => {
     const shareLink = `https://warpcast.com/${username}/${hash}`;
     navigator.clipboard.writeText(shareLink);
-    alert("Link copied to clipboard!");
+    setToastVisible(true); // Show toast notification
+    setTimeout(() => setToastVisible(false), 3000); // Hide after 3 seconds
   };
 
   return (
     <>
+      {/* Toast Notification */}
+      {toastVisible && (
+        <div className={css`
+          position: fixed; 
+          bottom: 20px; 
+          right: 20px; 
+          background-color: #0070f3; 
+          color: white; 
+          padding: 10px 20px; 
+          border-radius: 5px; 
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          z-index: 1000; 
+        `}>
+          Link copied to clipboard!
+        </div>
+      )}
+      
       <div className={css` 
         display: flex; 
         align-items: center; 
@@ -132,9 +158,9 @@ const Feed: NextPage<FeedProps> = ({ channelId }) => { // Updated to accept chan
           background-color: #f0f0f0; 
           margin-right: 10px; 
         `}>
-          🛑 {/* Default icon emoji */}
+          {interest.emoji}
         </span>
-        <span>r/{channelId} {/* Displaying the channelId as a subreddit-style header */}</span>
+        <span>r/{interest.id_slug} {/* Displaying the channelId as a subreddit-style header */}</span>
       </div>
       {isLoading ? (
         <div>Loading...</div> // Loading state
@@ -153,6 +179,9 @@ const Feed: NextPage<FeedProps> = ({ channelId }) => { // Updated to accept chan
               padding: 16px; 
               box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
               background: #fff;
+              display: flex; /* Added to enable flexbox */
+              flex-direction: column; /* Stack children vertically */
+              justify-content: flex-start; /* Align children to the start */
             `}>
               <div className={css`
                 display: flex; 
@@ -161,22 +190,22 @@ const Feed: NextPage<FeedProps> = ({ channelId }) => { // Updated to accept chan
                 position: relative; /* For tooltip positioning */
                 cursor: pointer; /* Change cursor to pointer for better UX */
               `}>
-                <a href={`https://warpcast.com/${post.author.username}`} target="_blank" rel="noopener noreferrer">
-                  <img src={post.author.pfp_url} alt={post.author.username} className={css`
+                <a href={`https://warpcast.com/${post.author?.username}`} target="_blank" rel="noopener noreferrer">
+                  <img src={post.author?.pfp_url} alt={post.author?.username} className={css`
                     width: 40px; 
                     height: 40px; 
                     border-radius: 50%; 
                     margin-right: 10px;
                   `} />
                 </a>
-                <a href={`https://warpcast.com/${post.author.username}`} target="_blank" rel="noopener noreferrer" className={css`
+                <a href={`https://warpcast.com/${post.author?.username}`} target="_blank" rel="noopener noreferrer" className={css`
                   text-decoration: none; /* Remove underline */
                   color: inherit; /* Inherit color from parent */
                   position: relative; /* For tooltip positioning */
                 `}>
                   <h3>
-                    {post.author.display_name}
-                    {post.author.power_badge && <span>✨</span>} {/* Lightnight emoji if has power badge */}
+                    {post.author?.display_name}
+                    {post.author?.power_badge && <span>✨</span>} {/* Lightnight emoji if has power badge */}
                   </h3>
                 </a>
                 <span className={css`
@@ -184,7 +213,7 @@ const Feed: NextPage<FeedProps> = ({ channelId }) => { // Updated to accept chan
                   margin-left: 10px; 
                   font-size: 14px; 
                 `}>
-                  {formatDistanceToNow(new Date(post.timestamp), { addSuffix: true })} {/* Display time ago */}
+                  {post.timestamp ? formatDistanceToNow(new Date(post.timestamp), { addSuffix: true }) : 'Unknown time'} {/* Display time ago */}
                 </span>
                 <div className={css`
                   display: none; /* Hide tooltip by default */
@@ -199,14 +228,14 @@ const Feed: NextPage<FeedProps> = ({ channelId }) => { // Updated to accept chan
                   width: 200px; 
                   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 `}>
-                  <div>{post.author.display_name} @{post.author.username}</div>
-                  {post.author.profile.bio.text && <p>{post.author.profile.bio.text}</p>}
+                  <div>{post.author?.display_name} @{post.author?.username}</div>
+                  {post.author?.profile.bio.text && <p>{post.author?.profile.bio.text}</p>}
                   <div>
-                    {post.author.follower_count !== null && (
-                      <span>{post.author.follower_count} Followers</span>
+                    {post.author?.follower_count !== null && (
+                      <span>{post.author?.follower_count} Followers</span>
                     )}
-                    {post.author.following_count !== null && (
-                      <span>{post.author.following_count} Following</span>
+                    {post.author?.following_count !== null && (
+                      <span>{post.author?.following_count} Following</span>
                     )}
                   </div>
                 </div>
@@ -221,49 +250,61 @@ const Feed: NextPage<FeedProps> = ({ channelId }) => { // Updated to accept chan
                   post.text
                 )}
               </p>
-              {post.embeds.map((embed) => (
-                embed.metadata && (
-                  embed.metadata.content_type.includes("image") ? (
-                    <img src={embed.url} alt={post.author.username} className={css`
-                      max-width: 100%; 
-                      height: auto; 
-                      border-radius: 8px;
-                      display: block; /* Ensure image is block-level */
-                    `} />
-                  ) : embed.metadata.content_type.includes("video") ? (
-                    <video controls className={css`
-                      max-width: 100%; 
-                      height: auto; 
-                      border-radius: 8px;
-                    `}>
-                      <source src={embed.url} type={embed.metadata.content_type} />
-                      Your browser does not support the video tag.
-                    </video>
-                  ) : null
-                )
-              ))}
-              <div className={css`
+              {post.embeds?.length > 0 && (
+                <div className={css`
+                  display: ${post.embeds.length === 1 ? 'block' : 'grid'}; /* Use block for single embed */
+                  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive grid */
+                  gap: 10px; /* Space between items */
+                  margin-bottom: 20px; /* Space below the gallery */
+                `}>
+                  {post.embeds.map((embed) => (
+                    embed.metadata && embed.metadata.content_type ? ( // Check if metadata and content_type are defined
+                      embed.metadata.content_type.includes("image") ? (
+                        <img key={embed.url} src={embed.url} alt={post.author?.username} className={css`
+                          width: 100%; 
+                          height: auto; 
+                          border-radius: 8px;
+                          display: block; /* Ensure image is block-level */
+                        `} />
+                      ) : embed.metadata.content_type.includes("video") ? (
+                        <video key={embed.url} controls className={css`
+                          width: 100%; 
+                          height: auto; 
+                          border-radius: 8px;
+                        `}>
+                          <source src={embed.url} type={embed.metadata.content_type} />
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : null
+                    ) : null // Return null if metadata or content_type is not defined
+                  ))}
+                </div>
+              )}
+              <div id="stats" className={css`
                 display: flex; 
                 justify-content: space-between; 
-                margin-top: auto; /* Push stats to the bottom */
-                margin-top: 10px;
+                margin-top: auto; /* Pushes the stats div to the bottom */
               `}>
-                <span>
-                  <FontAwesomeIcon icon={faThumbsUp} /> {post.reactions.likes_count}
+                <div className={css` display: flex; align-items: center; `}>
+                  <FontAwesomeIcon icon={faThumbsUp} style={{ fontSize: '20px', marginRight: '5px' }} />
+                  <span>{post.reactions?.likes_count || 0}</span> {/* Default to 0 if null */}
+                </div>
+                <div className={css` display: flex; align-items: center; `}>
+                  <FontAwesomeIcon icon={faRetweet} style={{ fontSize: '20px', marginRight: '5px' }} />
+                  <span>{post.reactions?.recasts_count || 0}</span> {/* Default to 0 if null */}
+                </div>
+                <span className={css` display: flex; align-items: center; `}>
+                  <FontAwesomeIcon 
+                    icon={faShareAlt} 
+                    onClick={() => handleShare(post.author?.username, post.hash)} 
+                    style={{ cursor: 'pointer', color: 'black', fontSize: '20px', opacity: 0.7, width: '20px', height: '20px' }} // Set fixed size
+                    className={css`
+                      &:hover {
+                        opacity: 1; /* Full opacity on hover */
+                      }
+                    `}
+                  />
                 </span>
-                <span>
-                  <FontAwesomeIcon icon={faRetweet} /> {post.reactions.recasts_count}
-                </span>
-                <button onClick={() => handleShare(post.author.username, post.hash)} className={css`
-                  background-color: #0070f3; 
-                  color: white; 
-                  border: none; 
-                  border-radius: 4px; 
-                  padding: 5px 10px; 
-                  cursor: pointer;
-                `}>
-                  <FontAwesomeIcon icon={faShareAlt} /> {/* Share icon */}
-                </button>
               </div>
             </div>
           ))}

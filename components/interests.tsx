@@ -6,7 +6,7 @@ import { useState } from "react"; // Import useState for hover state
 
 const Interests: NextPage = () => { // Fixed the type definition
   const [hoveredActivity, setHoveredActivity] = useState<string | null>(null); // State for hovered activity
-  const [channelId, setChannelId] = useState<string>("bluntdao"); // Default channelId state
+  const [selectedInterest, setSelectedInterest] = useState<any>(null); // State for selected interest
 
   return (
     <>
@@ -15,7 +15,10 @@ const Interests: NextPage = () => { // Fixed the type definition
         {interestsData.map((interest) => (
           <span 
             key={interest.id_slug} 
-            onClick={() => setChannelId(interest.id_slug)} // Update channelId based on interest click
+            onClick={() => {
+              setSelectedInterest(interest); // Set selected interest
+              setHoveredActivity(null); // Clear hovered activity on click
+            }} // Update selected interest based on interest click
             onMouseEnter={() => setHoveredActivity(interest.activity)} // Set hovered activity
             onMouseLeave={() => setHoveredActivity(null)} // Clear hovered activity
             style={{ margin: '0 5px', fontSize: '24px', position: 'relative', cursor: 'pointer' }} // Style for spacing and size
@@ -29,7 +32,7 @@ const Interests: NextPage = () => { // Fixed the type definition
           </span>
         ))}
       </div>
-      <Feed channelId={channelId} /> {/* Use the dynamic channelId */}
+      <Feed interest={selectedInterest} /> {/* Pass the entire interest object to Feed */}
 
       {/* Content for feed */}
     </>

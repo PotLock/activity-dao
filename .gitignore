@@ -1,8 +1,17 @@
+# Environment variables file
 .env
+
+# Next.js build output
 /.next
+
+# Node.js modules
 /node_modules
+
+# macOS system files
 .DS_Store
-.DS_Store
+
+# Lock file for package dependencies
 package-lock.json
-.DS_Store
-package-lock.json
+
+# Cursor history
+.cursorrules

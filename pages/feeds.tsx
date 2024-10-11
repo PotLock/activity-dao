@@ -32,14 +32,18 @@ const Feeds: NextPage = () => {
       {/* Main content */}
       <main
         className={css`
-          flex: 1 0 auto; // This will make the main content grow and shrink as needed
+          flex: 1 0 auto;
           display: flex;
           flex-direction: column;
-          justify-content: center;
           align-items: center;
-          padding: 2rem;
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 2rem 0;
+          padding-top: 5rem; // Added bottom padding
         `}
-      >            
+      >
+            
         <Interests />
       </main>
 
