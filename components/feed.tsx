@@ -5,10 +5,13 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faRetweet, faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { formatDistanceToNow } from 'date-fns'; // Import the function
+import Skeleton from 'react-loading-skeleton'; // Import skeleton loader
 
 interface FeedProps {
   interest: any; // Updated prop type definition to accept the entire interest object
 }
+
+//in future add lazy loading
 
 interface Post {
   hash: string;
@@ -74,6 +77,15 @@ interface Post {
   };
   mentioned_profiles: any[]; // Adjust type as necessary
 }
+
+// SkeletonLoader component
+const SkeletonLoader = () => (
+  <div className={css` margin-bottom: 20px; `}>
+    <Skeleton height={40} width={40} circle={true} /> {/* Skeleton for emoji */}
+    <Skeleton height={24} width={`60%`} /> {/* Skeleton for subreddit header */}
+    <Skeleton count={3} height={100} style={{ marginBottom: '10px' }} /> {/* Skeleton for posts */}
+  </div>
+);
 
 const Feed: NextPage<FeedProps> = ({ interest }) => { // Updated to accept interest
   const [posts, setPosts] = useState<Post[]>([]); // State to hold posts
@@ -148,22 +160,29 @@ const Feed: NextPage<FeedProps> = ({ interest }) => { // Updated to accept inter
         font-weight: bold; 
         margin-bottom: 20px; 
       `}>
-        <span className={css` 
-          display: inline-flex; 
-          align-items: center; 
-          justify-content: center; 
-          width: 40px; 
-          height: 40px; 
-          border-radius: 50%; 
-          background-color: #f0f0f0; 
-          margin-right: 10px; 
-        `}>
-          {interest.emoji}
-        </span>
-        <span>r/{interest.id_slug} {/* Displaying the channelId as a subreddit-style header */}</span>
+        {interest ? (
+          <>
+            <span className={css` 
+              display: inline-flex; 
+              align-items: center; 
+              justify-content: center; 
+              width: 40px; 
+              height: 40px; 
+              border-radius: 50%; 
+              background-color: #f0f0f0; 
+              margin-right: 10px; 
+            `}>
+              {interest.emoji}
+            </span>
+            <span>r/{interest.id_slug}</span>
+          </>
+        ) : (
+          <SkeletonLoader /> // Show skeleton loader if interest is not available
+        )}
       </div>
+      
       {isLoading ? (
-        <div>Loading...</div> // Loading state
+        <Skeleton count={5} height={150} style={{ marginBottom: '10px' }} /> // Skeleton for loading posts
       ) : (
         <div className={css` 
           display: flex; 
@@ -244,6 +263,7 @@ const Feed: NextPage<FeedProps> = ({ interest }) => { // Updated to accept inter
                 font-family: 'Hanken Grotesk', sans-serif; /* Set font to Hanken Grotesk */
                 margin-bottom: 20px; /* Add margin to separate from stats */
               `}>
+                {/* make it so that only hyperlink the part of text that has the link not the whole content */}
                 {post.text.includes('http') ? (
                   <a href={post.text} target="_blank" rel="noopener noreferrer">{post.text}</a>
                 ) : (

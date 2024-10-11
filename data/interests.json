@@ -30,7 +30,7 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "american-football",
+    "id_slug": "football",
     "activity": "American Football",
     "emoji": "🏈",
     "farcaster_id": ""
@@ -90,7 +90,7 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "weightlifting",
+    "id_slug": "lifting",
     "activity": "Weightlifting",
     "emoji": "🏋️",
     "farcaster_id": ""
@@ -114,7 +114,7 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "rock-climbing",
+    "id_slug": "climbing",
     "activity": "Rock Climbing",
     "emoji": "🧗",
     "farcaster_id": ""
@@ -144,7 +144,7 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "horseback-riding",
+    "id_slug": "equestrian",
     "activity": "Horseback Riding",
     "emoji": "🏇",
     "farcaster_id": ""
@@ -156,7 +156,7 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "table-tennis",
+    "id_slug": "pingpong",
     "activity": "Table Tennis",
     "emoji": "🏓",
     "farcaster_id": ""
@@ -303,6 +303,312 @@
     "id_slug": "board-games",
     "activity": "Board Games",
     "emoji": "🎲",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "skateboarding",
+    "activity": "Skateboarding",
+    "emoji": "🛹",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "rollerblading",
+    "activity": "Rollerblading",
+    "emoji": "🛼",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "parkour",
+    "activity": "Parkour",
+    "emoji": "🏃‍♂️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "fencing",
+    "activity": "Fencing",
+    "emoji": "🤺",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "ultimate-frisbee",
+    "activity": "Ultimate Frisbee",
+    "emoji": "🥏",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "hockey",
+    "activity": "Hockey",
+    "emoji": "🏒",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "sailing",
+    "activity": "Sailing",
+    "emoji": "⛵",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "surfing",
+    "activity": "Surfing",
+    "emoji": "🏄",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "kite-surfing",
+    "activity": "Kite Surfing",
+    "emoji": "🪂",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "snowmobiling",
+    "activity": "Snowmobiling",
+    "emoji": "❄️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "paragliding",
+    "activity": "Paragliding",
+    "emoji": "🪂",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "bungee-jumping",
+    "activity": "Bungee Jumping",
+    "emoji": "🪂",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "rock-climbing",
+    "activity": "Rock Climbing",
+    "emoji": "🧗",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "zip-lining",
+    "activity": "Zip Lining",
+    "emoji": "🪂",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "caving",
+    "activity": "Caving",
+    "emoji": "🧗",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "scuba-diving",
+    "activity": "Scuba Diving",
+    "emoji": "🤿",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "snorkeling",
+    "activity": "Snorkeling",
+    "emoji": "🐠",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "kite-flying",
+    "activity": "Kite Flying",
+    "emoji": "🪁",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "bird-watching",
+    "activity": "Bird Watching",
+    "emoji": "🐦",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "geocaching",
+    "activity": "Geocaching",
+    "emoji": "🗺️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "metal-detecting",
+    "activity": "Metal Detecting",
+    "emoji": "🔍",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "whale-watching",
+    "activity": "Whale Watching",
+    "emoji": "🐋",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "camping",
+    "activity": "Camping",
+    "emoji": "⛺",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "backpacking",
+    "activity": "Backpacking",
+    "emoji": "🎒",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "motorcycling",
+    "activity": "Motorcycling",
+    "emoji": "🏍️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "off-roading",
+    "activity": "Off-Roading",
+    "emoji": "🚙",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "racing",
+    "activity": "Car Racing",
+    "emoji": "🏎️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "drone-flying",
+    "activity": "Drone Flying",
+    "emoji": "🚁",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "paddleboarding",
+    "activity": "Paddleboarding",
+    "emoji": "🏄‍♀️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "windsurfing",
+    "activity": "Windsurfing",
+    "emoji": "🏄‍♂️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "rollercoasters",
+    "activity": "Roller Coaster Riding",
+    "emoji": "🎢",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "trampoline",
+    "activity": "Trampolining",
+    "emoji": "🤸",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "escape-room",
+    "activity": "Escape Room",
+    "emoji": "🔑",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "cooking",
+    "activity": "Cooking",
+    "emoji": "👩‍🍳",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "wine-tasting",
+    "activity": "Wine Tasting",
+    "emoji": "🍷",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "cheese-tasting",
+    "activity": "Cheese Tasting",
+    "emoji": "🧀",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "potluck",
+    "activity": "Potluck",
+    "emoji": "🍽️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "picnic",
+    "activity": "Picnic",
+    "emoji": "🧺",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "barbecue",
+    "activity": "Barbecue",
+    "emoji": "🍖",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "crafting",
+    "activity": "Crafting",
+    "emoji": "✂️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "calligraphy",
+    "activity": "Calligraphy",
+    "emoji": "🖋️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "origami",
+    "activity": "Origami",
+    "emoji": "🦢",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "puzzles",
+    "activity": "Jigsaw Puzzles",
+    "emoji": "🧩",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "model-building",
+    "activity": "Model Building",
+    "emoji": "🏗️",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "stargazing",
+    "activity": "Stargazing",
+    "emoji": "🌌",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "hiking",
+    "activity": "Hiking",
+    "emoji": "🥾",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "fishing",
+    "activity": "Fishing",
+    "emoji": "🎣",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "gardening",
+    "activity": "Gardening",
+    "emoji": "🌱",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "vlogging",
+    "activity": "Vlogging",
+    "emoji": "📹",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "photography",
+    "activity": "Photography",
+    "emoji": "📷",
+    "farcaster_id": ""
+  },
+  {
+    "id_slug": "writing",
+    "activity": "Writing",
+    "emoji": "✍️",
     "farcaster_id": ""
   }
 ]

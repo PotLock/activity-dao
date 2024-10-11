@@ -39,7 +39,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <meta property="og:url" content="https://activity.community" /> {/* Replace with your actual URL */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="ActivityDAO - Community-Driven Activities" />
-        <meta name="twitter:description" content="ActivityDAOs - the movement to bootstrap the proliferation of activity-based communitie" />
+        <meta name="twitter:description" content="ActivityDAOs - the movement to building funded communities around every activity" />
         <meta name="twitter:image" content="/thumbnail.png" />
 
         <style

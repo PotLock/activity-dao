@@ -25,7 +25,7 @@ const Interests: NextPage = () => { // Fixed the type definition
           >
             {interest.emoji}
             {hoveredActivity === interest.activity && ( // Conditionally render activity text
-              <span style={{ position: 'absolute', top: '25px', background: 'white', border: '1px solid black', padding: '5px', borderRadius: '5px' }}>
+              <span style={{ position: 'absolute', top: '25px', background: 'white', border: '1px solid black', padding: '5px', borderRadius: '5px', zIndex: 1000 }}>
                 {interest.activity}
               </span>
             )}
