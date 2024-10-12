@@ -27,7 +27,8 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
 
   const navLinks = [
     { id: "home", label: "Home", href: "/#home" },
-    { id: "handbook", label: "Handbook", href: "https://potlock.notion.site/ActivityDAO-Handbook-2979c91a779e46659a5646438af3324c", target: "_blank" },
+    // { id: "handbook", label: "Handbook", href: "https://potlock.notion.site/ActivityDAO-Handbook-2979c91a779e46659a5646438af3324c", target: "_blank" },
+    { id: "feed", label: "Feed", href: "/feeds" },
     { id: "events", label: "Events", href: "/events" },
     { id: "daos", label: "DAOs", href: "/daos" },
     // { id: "model", label: "Model", href: "#model" },

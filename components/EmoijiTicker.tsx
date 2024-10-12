@@ -1,13 +1,14 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react';
+import React, { useState } from 'react';
 import { css, keyframes } from '@emotion/react';
+import interestsData from "../data/interests.json";
+import { useRouter } from 'next/router';
 
 const scrollAnimation = keyframes`
   0% {
     transform: translateX(0);
   }
   100% {
-    // Adjusted to -50% for smoother looping with two sets of emojis
     transform: translateX(-50%);
   }
 `;
@@ -17,19 +18,17 @@ const surfAnimation = keyframes`
     transform: translateY(0);
   }
   50% {
-    // Reduced vertical movement
     transform: translateY(-5px);
   }
 `;
 
 const EmojiTicker: React.FC = () => {
-  const emojis = [
-    '🏃‍♂️', '🏋️‍♀️', '🚴‍♂️', '🏊‍♀️', '🧘‍♂️', '🤸‍♀️', '🏄‍♂️', '🎳', '🏓', '🥾', '🧗‍♀️', '🤾‍♂️', '🏌️‍♀️', '🏂', '🤼‍♂️', '🤹‍♀️', '🎭',
-    // Added more food emojis
-    '🍳', '🥗', '🍽️', '🍕', '🍔', '🍣', '🍜', '🍖', '🥩', '🥑', '🍇', '🍓',
-    // Added more activity and sports emojis
-    '⚽️', '🏀', '🏈', '⚾️', '🎾', '🏐', '🏉', '🥏', '🎱', '🪀', '🏸', '🏒', '🥍', '🏹', '🛹', '🛼', '⛸️', '🎿'
-  ];
+  const [hoveredActivity, setHoveredActivity] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleEmojiClick = (idSlug: string) => {
+    router.push(`/interest/${idSlug}`);
+  };
 
   return (
     <div
@@ -39,7 +38,6 @@ const EmojiTicker: React.FC = () => {
         background-color: transparent;
         padding: 10px 0;
         position: relative;
-        // Removed border styles
       `}
     >
       <div
@@ -49,20 +47,42 @@ const EmojiTicker: React.FC = () => {
           animation: ${scrollAnimation} 30s linear infinite;
         `}
       >
-        {/* Repeated emojis array twice for smoother wrapping */}
-        {[...emojis, ...emojis].map((emoji, index) => (
+        {/* Repeated interests array twice for smoother wrapping */}
+        {[...interestsData, ...interestsData].map((interest, index) => (
           <span
             key={index}
             css={css`
               font-size: 2rem;
               margin: 0 15px;
               display: inline-block;
-              // Adjusted animation duration and reduced vertical movement
               animation: ${surfAnimation} 1.5s ease-in-out infinite;
               animation-delay: ${index * 0.1}s;
+              cursor: pointer;
+              position: relative;
             `}
+            onClick={() => handleEmojiClick(interest.id_slug)}
+            onMouseEnter={() => setHoveredActivity(interest.activity)}
+            onMouseLeave={() => setHoveredActivity(null)}
           >
-            {emoji}
+            {interest.emoji}
+            {hoveredActivity === interest.activity && (
+              <span
+                css={css`
+                  position: absolute;
+                  left: 0%;
+                  transform: translateX(50%);
+                  background: white;
+                  border: 1px solid black;
+                  padding: 5px;
+                  border-radius: 5px;
+                  font-size: 0.8rem;
+                  white-space: nowrap;
+                  z-index: 10000000;
+                `}
+              >
+                {interest.activity}
+              </span>
+            )}
           </span>
         ))}
       </div>

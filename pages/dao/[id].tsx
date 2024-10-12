@@ -227,18 +227,28 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
             padding-top: 120px;
           `}
         >
-          <img
-            src={dao.icon}
-            alt={dao.name}
+          <div
             className={css`
               width: 120px;
               height: 120px;
-              object-fit: cover;
               border-radius: 50%;
               border: 4px solid white;
               box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+              overflow: hidden;
+              flex-shrink: 0;
             `}
-          />
+          >
+            <img
+              src={dao.icon}
+              alt={dao.name}
+              className={css`
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+              `}
+            />
+          </div>
           <div
             className={css`
               background-color: rgba(255, 255, 255, 0.9);
