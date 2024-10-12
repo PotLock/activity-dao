@@ -65,6 +65,10 @@ const Tag = ({ text, color }: { text: string; color: string }) => (
       font-size: 0.75rem;
       background-color: ${color};
       color: #333;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     `}
   >
     {text}
@@ -182,7 +186,7 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
         className={css`
           max-width: 1200px;
           margin: 0 auto;
-          padding: 4rem;
+          padding: 2rem;
           width: 100%;
         `}
       >
@@ -220,11 +224,18 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            align-items: flex-end;
+            flex-direction: column;
+            align-items: center;
             gap: 2rem;
             position: relative;
             z-index: 1;
-            padding-top: 120px;
+            padding: 120px 1rem 0;
+
+            @media (min-width: 768px) {
+              flex-direction: row;
+              align-items: flex-end;
+              padding-top: 120px;
+            }
           `}
         >
           <div
@@ -259,13 +270,23 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
           >
             <div className={css`
               display: flex;
-              justify-content: space-between;
-              align-items: flex-end;
+              flex-direction: column;
+              gap: 1rem;
+
+              @media (min-width: 768px) {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-end;
+              }
             `}>
               <h1
                 className={css`
-                  font-size: 2.5rem;
+                  font-size: 2rem;
                   margin: 0;
+
+                  @media (min-width: 768px) {
+                    font-size: 2.5rem;
+                  }
                 `}
               >
                 {dao.emoji} {dao.name}         
@@ -296,8 +317,10 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
             <div
               className={css`
                 display: flex;
+                flex-wrap: wrap;
                 gap: 0.5rem;
                 margin-top: 0.5rem;
+                max-width: 100%;
               `}
             >
               {dao.maturity.concat(dao.tags).map((tag, index) => (
@@ -420,6 +443,3 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default DAOPage;
-
-
-
