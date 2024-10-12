@@ -194,36 +194,94 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
           width: 100%;
           background-color: #f0f0f0;
           padding: 2rem 0;
+          position: relative;
+          overflow: hidden;
         `}
       >
+        {/* Banner image or gradient */}
+        <div
+          className={css`
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: ${dao.banner
+              ? `url(${dao.banner}) no-repeat center center`
+              : `linear-gradient(45deg, #FFB3BA, #BAFFC9, #BAE1FF)`};
+            background-size: cover;
+            filter: brightness(0.7);
+          `}
+        />
+
         <div
           className={css`
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             gap: 2rem;
+            position: relative;
+            z-index: 1;
+            padding-top: 120px;
           `}
         >
           <img
             src={dao.icon}
             alt={dao.name}
             className={css`
-              width: 100px;
-              height: 100px;
+              width: 120px;
+              height: 120px;
               object-fit: cover;
               border-radius: 50%;
+              border: 4px solid white;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             `}
           />
-          <div>
-            <h1
-              className={css`
-                font-size: 2.5rem;
-                margin: 0;
-              `}
-            >
-              {dao.name} {dao.emoji}
-            </h1>
+          <div
+            className={css`
+              background-color: rgba(255, 255, 255, 0.9);
+              padding: 1rem;
+              border-radius: 8px;
+              width: 100%;
+            `}
+          >
+            <div className={css`
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-end;
+            `}>
+              <h1
+                className={css`
+                  font-size: 2.5rem;
+                  margin: 0;
+                `}
+              >
+                {dao.emoji} {dao.name}         
+              </h1>
+              <div
+                id="socials" className={css`
+                  display: flex;
+                  gap: 1rem;
+                `}
+              >
+                {dao.url && (
+                  <a href={dao.url} target="_blank" rel="noopener noreferrer">
+                    <FaGlobe size={24} />
+                  </a>
+                )}
+                {dao.twitter && (
+                  <a href={dao.twitter} target="_blank" rel="noopener noreferrer">
+                    <FaTwitter size={24} />
+                  </a>
+                )}
+                {dao.github && (
+                  <a href={dao.github} target="_blank" rel="noopener noreferrer">
+                    <FaGithub size={24} />
+                  </a>
+                )}
+              </div>
+            </div>
             <div
               className={css`
                 display: flex;
@@ -235,29 +293,16 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
                 <Tag key={index} text={tag} color={pastelColors[index % pastelColors.length]} />
               ))}
             </div>
-            <div
-              className={css`
-                display: flex;
-                gap: 1rem;
-                margin-top: 1rem;
-              `}
-            >
-              {dao.url && (
-                <a href={dao.url} target="_blank" rel="noopener noreferrer">
-                  <FaGlobe size={24} />
-                </a>
-              )}
-              {dao.twitter && (
-                <a href={dao.twitter} target="_blank" rel="noopener noreferrer">
-                  <FaTwitter size={24} />
-                </a>
-              )}
-              {dao.github && (
-                <a href={dao.github} target="_blank" rel="noopener noreferrer">
-                  <FaGithub size={24} />
-                </a>
-              )}
-            </div>
+            <p
+          className={css`
+            font-size: 1rem;
+            max-width: 800px;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+          `}
+        >
+          {dao.description}
+        </p>
           </div>
         </div>
       </div>
@@ -275,26 +320,16 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
           padding: 2rem 0;
         `}
       >
-        <p
-          className={css`
-            font-size: 1.2rem;
-            max-width: 800px;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-          `}
-        >
-          {dao.description}
-        </p>
 
         {/* Divider */}
-        <hr
+        {/* <hr
           className={css`
             width: 100%;
             border: none;
             border-top: 1px solid #ccc;
             margin: 2rem 0;
           `}
-        />
+        /> */}
 
         {/* Tabs */}
         <div
