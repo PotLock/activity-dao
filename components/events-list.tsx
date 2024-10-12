@@ -323,16 +323,28 @@ const EventsList: React.FC<EventsListProps> = ({
       .filter(event => {
         // If daoMode or interestMode is set, filter events based on similarity
         if (daoMode || interestMode) {
-          const checkSimilarity = (mode: string) => {
+          const checkDaoSimilarity = (mode: string) => {
             const fields = [event.dao, event.name, event.description];
+            return fields.some(field => 
+              stringSimilarity(field.toLowerCase(), mode.toLowerCase()) >= 0.9
+            );
+          };
+
+          const checkInterestSimilarity = (mode: string) => {
+            const fields = [event.dao, event.name, event.description];
+            const modeWords = mode.toLowerCase().split(/\s+/);
             return fields.some(field => {
-              const similarity = stringSimilarity(field.toLowerCase(), mode.toLowerCase());
-              return similarity >= 0.9;
+              const fieldWords = field.toLowerCase().split(/\s+/);
+              return modeWords.some(modeWord => 
+                fieldWords.some(fieldWord => 
+                  stringSimilarity(modeWord, fieldWord) >= 0.8
+                )
+              );
             });
           };
 
-          if (daoMode && !checkSimilarity(daoMode)) return false;
-          if (interestMode && !checkSimilarity(interestMode)) return false;
+          if (daoMode && !checkDaoSimilarity(daoMode)) return false;
+          if (interestMode && !checkInterestSimilarity(interestMode)) return false;
         }
 
         const eventDate = parseISO(event.date);
