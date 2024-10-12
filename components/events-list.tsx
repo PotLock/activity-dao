@@ -37,6 +37,7 @@ interface EventsListProps {
   hideHeader?: boolean;
   hideDescription?: boolean;
   daoMode?: string;
+  interestMode?: string;
 }
 
 const EventCard = ({ event }: { event: { date: string; name: string; location: string; link: string; image: string } }) => {
@@ -298,7 +299,8 @@ const EventsList: React.FC<EventsListProps> = ({
   className = '', 
   hideHeader = false, 
   hideDescription = false, 
-  daoMode 
+  daoMode,
+  interestMode
 }) => {
   console.log("EventsList rendered with mode:", mode);
 
@@ -319,10 +321,18 @@ const EventsList: React.FC<EventsListProps> = ({
   const filteredEvents = useMemo(() => {
     return events
       .filter(event => {
-        // If daoMode is set, filter events based on DAO similarity
-        if (daoMode) {
-          const similarity = stringSimilarity(event.dao.toLowerCase(), daoMode.toLowerCase());
-          if (similarity < 0.85) return false;
+        // If daoMode or interestMode is set, filter events based on similarity
+        if (daoMode || interestMode) {
+          const checkSimilarity = (mode: string) => {
+            const fields = [event.dao, event.name, event.description];
+            return fields.some(field => {
+              const similarity = stringSimilarity(field.toLowerCase(), mode.toLowerCase());
+              return similarity >= 0.9;
+            });
+          };
+
+          if (daoMode && !checkSimilarity(daoMode)) return false;
+          if (interestMode && !checkSimilarity(interestMode)) return false;
         }
 
         const eventDate = parseISO(event.date);
@@ -368,7 +378,7 @@ const EventsList: React.FC<EventsListProps> = ({
         return searchMatch && locationMatch && timeMatch;
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [searchTerm, selectedLocation, timeFilter, daoMode]);
+  }, [searchTerm, selectedLocation, timeFilter, daoMode, interestMode]);
 
   const locations = useMemo(() => {
     const filteredLocations = filteredEvents.map(event => event.location);

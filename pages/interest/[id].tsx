@@ -4,6 +4,9 @@ import NAVBAR from "../../components/n-a-v-b-a-r";
 import Footer from "../../components/Footer";
 import Feed from "../../components/feed";
 import interestsData from "../../data/interests.json";
+import EventsList from "../../components/events-list";
+import { useState } from 'react';
+import { FaRss, FaCalendarAlt } from "react-icons/fa";
 
 type InterestPageProps = {
   interest: {
@@ -15,6 +18,26 @@ type InterestPageProps = {
 };
 
 const InterestPage: NextPage<InterestPageProps> = ({ interest }) => {
+  const [activeTab, setActiveTab] = useState('Feed');
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'Feed':
+        return (
+          <Feed farcaster_channel={interest.id_slug} emoji={interest.emoji} />
+        );
+      case 'Events':
+        return <EventsList 
+          mode="explore" 
+          hideHeader={true} 
+          hideDescription={true} 
+          interestMode={interest.activity} 
+        />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div
       className={css`
@@ -53,7 +76,57 @@ const InterestPage: NextPage<InterestPageProps> = ({ interest }) => {
       </div>
 
       <main>
-        <Feed farcaster_channel={interest.id_slug} emoji={interest.emoji} />
+        {/* Tabs */}
+        <div
+          className={css`
+            display: flex;
+            gap: 1rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+          `}
+        >
+          {[
+            { name: 'Feed', icon: FaRss },
+            { name: 'Events', icon: FaCalendarAlt }
+          ].map(({ name, icon: Icon }) => (
+            <button
+              key={name}
+              onClick={() => setActiveTab(name)}
+              className={css`
+                padding: 0.5rem 1rem;
+                background-color: ${activeTab === name ? '#e0e0e0' : '#f0f0f0'};
+                border: none;
+                border-radius: 4px;
+                font-size: 1rem;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                &:hover {
+                  background-color: #e0e0e0;
+                }
+              `}
+            >
+              <Icon size={16} />
+              {name}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab content */}
+        <div
+          className={css`
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 300px;
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border-radius: 4px;
+          `}
+        >
+          {renderTabContent()}
+        </div>
       </main>
       <Footer />
     </div>

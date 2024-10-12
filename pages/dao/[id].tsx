@@ -7,6 +7,8 @@ import { FaTwitter, FaGithub, FaGlobe, FaRss, FaMoneyBillWave, FaCalendarAlt } f
 import daoData from "../../data/daos.json";
 import { useState } from 'react';
 import Feed from "../../components/feed";
+import { isValidEthereumAddressOrDomain } from "../../utils/isEth";
+import axios from 'axios';
 
 // ToDo- edi events. 2) add fee by going to daos.json and adding farcaster_id and then create feed section to just map that as a component 
 // Add this type definition
@@ -41,6 +43,10 @@ const blockExplorerLinks: { [key: string]: string } = {
   SOL: 'https://solscan.io/account/',
   BASE: 'https://basescan.org/address/',
   ARB: 'https://arbiscan.io/address/',
+  SPUTNIK: "https://near.social/astraplusplus.ndctools.near/widget/home?page=dao&daoId=",
+  SNAPSHOT: "https://snapshot.org/#/",
+  SAFE: "",
+  
   // Add more networks as needed
   // turn this more into chainlist.org with chain id, currency, block explorer, name, sybol to switch and route
 };
@@ -109,27 +115,50 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {dao.treasuryAddresses.map((treasury, index) => (
-                    <tr key={index}>
-                      <td className={css`padding: 0.5rem;`}>{treasury.network}</td>
-                      <td className={css`padding: 0.5rem;`}>
-                        <a
-                          href={`${blockExplorerLinks[treasury.network]}${treasury.address}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={css`
-                            color: #0066cc;
-                            text-decoration: none;
-                            &:hover {
-                              text-decoration: underline;
-                            }
-                          `}
-                        >
-                          {treasury.address}
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
+                  {dao.treasuryAddresses.map((treasury, index) => {
+                    let explorerNetwork = treasury.network;
+                    if (treasury.network === "NEAR" && treasury.address.includes("sputnik-dao.near")) {
+                      explorerNetwork = "SPUTNIK";
+                    }
+                    const {isValid: isEthAddress, type } = isValidEthereumAddressOrDomain(treasury.address);
+                    console.log("Type of eth address: " + type);
+                    
+                    if (isEthAddress) {
+                      // Check if the address is a Safe address
+                      axios.get(`https://safe-transaction.gnosis.io/api/v1/safes/${treasury.address}/`)
+                        .then(response => {
+                          console.log("Safe API response:", response.data);
+                          explorerNetwork = "SAFE";
+                        })
+                        .catch(error => {
+                          if (error.response && error.response.status !== 404) {
+                            console.error("Error checking Safe address:", error);
+                          }
+                        });
+                    }
+                    
+                    return (
+                      <tr key={index}>
+                        <td className={css`padding: 0.5rem;`}>{treasury.network}</td>
+                        <td className={css`padding: 0.5rem;`}>
+                          <a
+                            href={`${blockExplorerLinks[explorerNetwork]}${treasury.address}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={css`
+                              color: #0066cc;
+                              text-decoration: none;
+                              &:hover {
+                                text-decoration: underline;
+                              }
+                            `}
+                          >
+                            {treasury.address}
+                          </a>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             ) : (

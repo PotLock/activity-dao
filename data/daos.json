@@ -38,10 +38,24 @@
     "name": "Blunt DAO",
     "id": "blunt-dao",
     "icon": "jointslogo-11@2x.png",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [
+      {
+        "network": "ETH",
+        "address": "bluntdao.eth"
+      },
+      {
+        "network": "NEAR",
+        "address": "bluntdao.near"
+      },
+      {
+        "network": "NEAR",
+        "address": "blunt.sputnik-dao.near"
+      },
+      {
+        "network": "BASE",
+        "address": "0xD8940918a2880f7EA7152B3e9594d94935fb478b"
+      }
+    ],
     "description": "We make sure blunts get smoked. Proliferate the funding of seshing blunts and participating via proof of sesh..",
     "url": "https://bluntdao.org",
     "tags": [
@@ -58,7 +72,7 @@
     "twitter": "https://twitter.com/bluntdao",
     "exists": true,
     "emoji": "🍃",
-    "banner": "",
+    "banner": "https://pbs.twimg.com/profile_banners/1486451185804623875/1713488614/1500x500",
     "featured": true,
     "order": 2,
     "farcaster_channel": "bluntdao"

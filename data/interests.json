@@ -132,6 +132,12 @@
     "farcaster_id": ""
   },
   {
+    "id_slug": "pizza",
+    "activity": "Pizza",
+    "emoji": "🍕",
+    "farcaster_id": ""
+  },
+  {
     "id_slug": "fishing",
     "activity": "Fishing",
     "emoji": "🎣",
