@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { ConnectKitButton } from "connectkit";
 import { useAccount } from "wagmi";
+import Image from 'next/image';
+import { RiHome5Line, RiNewspaperLine, RiCalendarEventLine, RiGroupLine } from "react-icons/ri";
 
 export type NAVBARType = {
   className?: string;
@@ -20,264 +22,336 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
       setActiveLink("events");
     } else if (router.pathname === "/daos") {
       setActiveLink("daos");
+    } else if (router.pathname === "/feeds") {
+      setActiveLink("feed");
     } else {
       setActiveLink("home");
     }
   }, [router.pathname]);
 
   const navLinks = [
-    { id: "home", label: "Home", href: "/#home" },
-    { id: "feed", label: "Feed", href: "/feeds" },
-    { id: "events", label: "Events", href: "/events" },
-    { id: "daos", label: "DAOs", href: "/daos" },
+    { id: "home", label: "Home", href: "/#home", icon: RiHome5Line },
+    { id: "feed", label: "Feed", href: "/feeds", icon: RiNewspaperLine },
+    { id: "events", label: "Events", href: "/events", icon: RiCalendarEventLine },
+    { id: "daos", label: "DAOs", href: "/daos", icon: RiGroupLine },
   ];
 
   return (
-    <header
-      className={[
-        css`
-          position: fixed;
-          top: 0;
-          left: 0;
-          background-color: var(--background-default-default);
-          width: 100%;
-          display: flex;
-          flex-direction: row;
-          align-items: flex-start;
-          justify-content: center;
-          padding: var(--padding-xl);
-          box-sizing: border-box;
-          max-width: 100%;
-          z-index: 1000;
-          text-align: center;
-          font-size: var(--font-size-base);
-          color: var(--wwwgetminjiapp-black);
-          font-family: var(--font-hanken-grotesk);
-        `,
-        className,
-      ].join(" ")}
-    >
-      <div
-        className={css`
-          width: 75rem;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0rem var(--padding-12xs);
-          box-sizing: border-box;
-          gap: var(--gap-5xl); // Increased gap between main elements
-          max-width: 100%;
-          height: 5rem; // Add a fixed height to the container
-          @media screen and (max-width: 1050px) {
-            width: 43.563rem;
-          }
-        `}
+    <>
+      {/* Top Navbar */}
+      <header
+        className={[
+          css`
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--background-default-default);
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            padding: var(--padding-xl);
+            box-sizing: border-box;
+            max-width: 100%;
+            z-index: 1001; // Increased z-index
+            text-align: center;
+            font-size: var(--font-size-base);
+            color: var(--wwwgetminjiapp-black);
+            font-family: var(--font-hanken-grotesk);
+            @media screen and (max-width: 1050px) {
+              padding: var(--padding-xs);
+            }
+          `,
+          className,
+        ].join(" ")}
       >
-        {/* Logo */}
         <div
           className={css`
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
-            padding: var(--padding-xl-3) var(--padding-6xs) 0rem 0rem;
-            cursor: pointer;
-          `}
-          onClick={() => window.location.href = '/#home'}
-        >
-          <div
-            className={css`
-              align-self: stretch;
-              display: flex;
-              flex-direction: row;
-              align-items: flex-start;
-              justify-content: flex-start;
-            `}
-          >
-            <div
-              className={css`
-                width: 1.994rem;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: flex-start;
-                padding: var(--padding-10xs-2) var(--padding-6xs);
-                box-sizing: border-box;
-                flex-shrink: 0;
-              `}
-            >
-              <img
-                className={css`
-                  height: 1.681rem;
-                  width: 1.013rem;
-                  position: relative;
-                `}
-                alt=""
-                src="/-emoji-light-bulb.svg"
-              />
-            </div>
-            <div
-              className={css`
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                justify-content: flex-start;
-                padding: var(--padding-9xs-1) 0rem 0rem;
-              `}
-            >
-              <img
-                className={css`
-                  align-self: stretch;
-                  height: 1.569rem;
-                  position: relative;
-                  max-width: 100%;
-                  overflow: hidden;
-                  flex-shrink: 0;
-                `}
-                loading="lazy"
-                alt=""
-                src="/activitydaos.svg"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Nav Links */}
-        <nav
-          className={css`
+            width: 75rem;
             display: flex;
             flex-direction: row;
             align-items: center;
-            justify-content: center;
-            gap: var(--gap-5xl); // Increased gap between nav links
-            flex: 1;
-            height: 100%;
+            justify-content: space-between;
+            padding: 0rem var(--padding-12xs);
+            box-sizing: border-box;
+            gap: var(--gap-5xl);
+            max-width: 100%;
+            height: 5rem;
             @media screen and (max-width: 1050px) {
-              display: none;
+              width: 100%;
             }
           `}
         >
-          {navLinks.map((link) => (
+          {/* Logo */}
+          <div
+            className={css`
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              justify-content: flex-start;
+              padding: var(--padding-xl-3) var(--padding-6xs) 0rem 0rem;
+              cursor: pointer;
+              @media screen and (max-width: 1050px) {
+                padding: 0;
+              }
+            `}
+            onClick={() => window.location.href = '/#home'}
+          >
             <div
-              key={link.id}
               className={css`
-                position: relative;
-                height: 100%;
+                align-self: stretch;
                 display: flex;
-                align-items: center;
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: flex-start;
               `}
             >
-              <a
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveLink(link.id);
-                  router.push(link.href);
-                }}
+              <div
                 className={css`
-                  text-decoration: none;
+                  width: 1.994rem;
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  justify-content: flex-start;
+                  padding: var(--padding-10xs-2) var(--padding-6xs);
+                  box-sizing: border-box;
+                  flex-shrink: 0;
+                `}
+              >
+                <img
+                  className={css`
+                    height: 1.681rem;
+                    width: 1.013rem;
+                    position: relative;
+                  `}
+                  alt=""
+                  src="/-emoji-light-bulb.svg"
+                />
+              </div>
+              <div
+                className={css`
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-start;
+                  justify-content: flex-start;
+                  padding: var(--padding-9xs-1) 0rem 0rem;
+                `}
+              >
+                <img
+                  className={css`
+                    align-self: stretch;
+                    height: 1.569rem;
+                    position: relative;
+                    max-width: 100%;
+                    overflow: hidden;
+                    flex-shrink: 0;
+                  `}
+                  loading="lazy"
+                  alt=""
+                  src="/activitydaos.svg"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Nav Links */}
+          <nav
+            className={css`
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              justify-content: center;
+              gap: var(--gap-5xl);
+              flex: 1;
+              height: 100%;
+              @media screen and (max-width: 1050px) {
+                display: none;
+              }
+            `}
+          >
+            {navLinks.map((link) => (
+              <div
+                key={link.id}
+                className={css`
                   position: relative;
-                  font-weight: 600;
-                  color: inherit;
-                  padding: 0.5rem;
                   height: 100%;
                   display: flex;
                   align-items: center;
-                  &::after {
-                    content: '';
-                    position: absolute;
-                    bottom: 0.5rem; // Reduced space between text and underline
-                    left: 0;
-                    width: 100%;
-                    height: 0.125rem;
-                    background-color: var(--color-gold-100);
-                    transform: scaleX(0);
-                    transition: transform 0.3s ease-in-out;
-                    transform-origin: left;
-                  }
-                  &:hover::after {
-                    transform: scaleX(1);
+                  @media screen and (max-width: 1050px) {
+                    flex-direction: column;
+                    justify-content: center;
+                    height: auto;
                   }
                 `}
               >
-                {link.label}
-              </a>
-              {activeLink === link.id && (
-                <div
+                <a
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActiveLink(link.id);
+                    router.push(link.href);
+                  }}
                   className={css`
-                    width: 100%;
-                    height: 0.125rem;
-                    position: absolute;
-                    bottom: 0.5rem; // Reduced space between text and underline
-                    left: 0;
-                    border-radius: var(--br-9xs);
-                    background-color: var(--color-gold-100);
-                  `}
-                />
-              )}
-            </div>
-          ))}
-        </nav>
-
-        {/* Connect Wallet Button */}
-        <div
-          className={css`
-            width: 11.194rem;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
-            padding: var(--padding-base) 0rem 0rem;
-            box-sizing: border-box;
-            height: 100%;
-          `}
-        >
-          <ConnectKitButton.Custom>
-            {({ isConnected, show, truncatedAddress, ensName }) => {
-              return (
-                <button
-                  onClick={show}
-                  className={css`
-                    align-self: stretch;
-                    height: 2.5rem;
-                    transition: all 0.3s ease;
-                    background: #facc15;
-                    border: none;
-                    border-radius: 8665.8px;
-                    color: #000;
-                    font-size: 16px;
+                    text-decoration: none;
+                    position: relative;
                     font-weight: 600;
-                    padding: 0 16px;
-                    cursor: pointer;
+                    color: inherit;
+                    padding: 0.5rem;
+                    height: 100%;
                     display: flex;
                     align-items: center;
-                    justify-content: center;
-                    &:hover {
-                      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-                      animation: rainbow-glow 3s linear infinite;
+                    @media screen and (max-width: 1050px) {
+                      font-size: 0.75rem;
                     }
-                    @keyframes rainbow-glow {
-                      0% { box-shadow: 0 0 10px #ff0000; }
-                      14% { box-shadow: 0 0 10px #ff7f00; }
-                      28% { box-shadow: 0 0 10px #ffff00; }
-                      42% { box-shadow: 0 0 10px #00ff00; }
-                      57% { box-shadow: 0 0 10px #0000ff; }
-                      71% { box-shadow: 0 0 10px #8b00ff; }
-                      85% { box-shadow: 0 0 10px #ff00ff; }
-                      100% { box-shadow: 0 0 10px #ff0000; }
+                    &::after {
+                      content: '';
+                      position: absolute;
+                      bottom: 0.5rem;
+                      left: 0;
+                      width: 100%;
+                      height: 0.125rem;
+                      background-color: var(--color-gold-100);
+                      transform: scaleX(0);
+                      transition: transform 0.3s ease-in-out;
+                      transform-origin: left;
+                      @media screen and (max-width: 1050px) {
+                        display: none;
+                      }
+                    }
+                    &:hover::after {
+                      transform: scaleX(1);
                     }
                   `}
                 >
-                  {isConnected ? ensName ?? truncatedAddress : "Login"}
-                </button>
-              );
-            }}
-          </ConnectKitButton.Custom>
+                  {link.label}
+                </a>
+                {activeLink === link.id && (
+                  <div
+                    className={css`
+                      width: 100%;
+                      height: 0.125rem;
+                      position: absolute;
+                      bottom: 0.5rem;
+                      left: 0;
+                      border-radius: var(--br-9xs);
+                      background-color: var(--color-gold-100);
+                      @media screen and (max-width: 1050px) {
+                        display: none;
+                      }
+                    `}
+                  />
+                )}
+              </div>
+            ))}
+          </nav>
+
+          {/* Connect Wallet Button */}
+          <div
+            className={css`
+              width: 11.194rem;
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              justify-content: flex-start;
+              padding: var(--padding-base) 0rem 0rem;
+              box-sizing: border-box;
+              height: 100%;
+              @media screen and (max-width: 1050px) {
+                width: auto;
+                padding: 0;
+              }
+            `}
+          >
+            <ConnectKitButton.Custom>
+              {({ isConnected, show, truncatedAddress, ensName }) => {
+                return (
+                  <button
+                    onClick={show}
+                    className={css`
+                      align-self: stretch;
+                      height: 2.5rem;
+                      transition: all 0.3s ease;
+                      background: #facc15;
+                      border: none;
+                      border-radius: 8665.8px;
+                      color: #000;
+                      font-size: 16px;
+                      font-weight: 600;
+                      padding: 0 16px;
+                      cursor: pointer;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      &:hover {
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                        animation: rainbow-glow 3s linear infinite;
+                      }
+                      @keyframes rainbow-glow {
+                        0% { box-shadow: 0 0 10px #ff0000; }
+                        14% { box-shadow: 0 0 10px #ff7f00; }
+                        28% { box-shadow: 0 0 10px #ffff00; }
+                        42% { box-shadow: 0 0 10px #00ff00; }
+                        57% { box-shadow: 0 0 10px #0000ff; }
+                        71% { box-shadow: 0 0 10px #8b00ff; }
+                        85% { box-shadow: 0 0 10px #ff00ff; }
+                        100% { box-shadow: 0 0 10px #ff0000; }
+                      }
+                    `}
+                  >
+                    {isConnected ? ensName ?? truncatedAddress : "Login"}
+                  </button>
+                );
+              }}
+            </ConnectKitButton.Custom>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile Bottom Navbar */}
+      <nav
+        className={css`
+          display: none;
+          @media screen and (max-width: 1050px) {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--background-default-default);
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001; // Increased z-index
+          }
+        `}
+      >
+        {navLinks.map((link) => (
+          <a
+            key={link.id}
+            href={link.href}
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveLink(link.id);
+              router.push(link.href);
+            }}
+            className={css`
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              text-decoration: none;
+              color: inherit;
+              font-size: 0.75rem;
+              opacity: ${activeLink === link.id ? 1 : 0.7};
+            `}
+          >
+            <link.icon size={24} />
+            <span>{link.label}</span>
+          </a>
+        ))}
+      </nav>
+    </>
   );
 };
 
