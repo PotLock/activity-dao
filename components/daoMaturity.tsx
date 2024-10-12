@@ -48,9 +48,9 @@ const DaoMaturity: NextPage<DaoMaturityType> = ({ className = "" }) => {
             padding: 0rem var(--padding-218xl);
           `}
         >
-          <Component1 developmentIcon="ACTIVITY DAO MATURITY" />
+          {/* <Component1 developmentIcon="ACTIVITY DAO MATURITY" /> */}
         </div>
-        <div
+        {/* <div
           className={css`
             align-self: stretch;
             height: 5.375rem;
@@ -73,7 +73,7 @@ const DaoMaturity: NextPage<DaoMaturityType> = ({ className = "" }) => {
           `}
         >
           The Start of A Movement
-        </div>
+        </div> */}
       </div>
     </div>
   );
