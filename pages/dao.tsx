@@ -6,6 +6,7 @@ import EventsList from "../components/events-list";
 import { FaTwitter, FaGithub, FaGlobe, FaRss, FaMoneyBillWave, FaCalendarAlt } from "react-icons/fa";
 import daoData from "../data/daos.json";
 import { useState } from 'react';
+import Feed from "../components/feed";
 
 // ToDo- edi events. 2) add fee by going to daos.json and adding farcaster_id and then create feed section to just map that as a component 
 // Add this type definition
@@ -20,6 +21,27 @@ type DAO = {
   github?: string;
   emoji: string;
   banner?: string;
+  farcaster_channel?: string;
+  treasuryAddresses?: {
+    network: string;
+    address: string;
+  }[];
+  exists?: boolean;          // New optional field
+  featured?: boolean;        // New optional field
+  order?: number;            // New optional field
+};
+
+// Add this object for block explorer links
+const blockExplorerLinks: { [key: string]: string } = {
+  ETH: 'https://etherscan.io/address/',
+  BSC: 'https://bscscan.com/address/',
+  POLYGON: 'https://polygonscan.com/address/',
+  NEAR: 'https://nearblocks.io/address/',
+  SOL: 'https://solscan.io/account/',
+  BASE: 'https://basescan.org/address/',
+  ARB: 'https://arbiscan.io/address/',
+  // Add more networks as needed
+  // turn this more into chainlist.org with chain id, currency, block explorer, name, sybol to switch and route
 };
 
 type DAOPageProps = {
@@ -55,16 +77,59 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
     switch (activeTab) {
       case 'Feed':
         return (
-          <div>
-            <h2>Latest Updates</h2>
-            <p>This is where the DAO's feed content would go.</p>
-          </div>
+          <Feed farcaster_channel={dao.farcaster_channel ?? ''} emoji={dao.emoji} />
         );
       case 'Treasury':
         return (
           <div>
             <h2>Treasury Overview</h2>
-            <p>This is where the DAO's treasury information would be displayed.</p>
+            {dao.treasuryAddresses && dao.treasuryAddresses.length > 0 ? (
+              <table className={css`
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1rem;
+              `}>
+                <thead>
+                  <tr>
+                    <th className={css`
+                      text-align: left;
+                      padding: 0.5rem;
+                      border-bottom: 1px solid #ccc;
+                    `}>Network</th>
+                    <th className={css`
+                      text-align: left;
+                      padding: 0.5rem;
+                      border-bottom: 1px solid #ccc;
+                    `}>Address</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dao.treasuryAddresses.map((treasury, index) => (
+                    <tr key={index}>
+                      <td className={css`padding: 0.5rem;`}>{treasury.network}</td>
+                      <td className={css`padding: 0.5rem;`}>
+                        <a
+                          href={`${blockExplorerLinks[treasury.network]}${treasury.address}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={css`
+                            color: #0066cc;
+                            text-decoration: none;
+                            &:hover {
+                              text-decoration: underline;
+                            }
+                          `}
+                        >
+                          {treasury.address}
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No treasury information available.</p>
+            )}
           </div>
         );
       case 'Events':
@@ -241,7 +306,7 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
         >
           {[
             { name: 'Feed', icon: FaRss },
-            { name: 'Treasury', icon: FaMoneyBillWave },
+            ...(dao.treasuryAddresses && dao.treasuryAddresses.length > 0 ? [{ name: 'Treasury', icon: FaMoneyBillWave }] : []),
             { name: 'Events', icon: FaCalendarAlt }
           ].map(({ name, icon: Icon }) => (
             <button

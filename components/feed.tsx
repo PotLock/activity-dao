@@ -8,7 +8,8 @@ import { formatDistanceToNow } from 'date-fns'; // Import the function
 import Skeleton from 'react-loading-skeleton'; // Import skeleton loader
 
 interface FeedProps {
-  interest: any; // Updated prop type definition to accept the entire interest object
+  emoji: string; // Updated prop type definition to accept the entire interest object
+  farcaster_channel: string; // Updated prop type definition to accept the entire interest object
 }
 
 //in future add lazy loading
@@ -87,18 +88,18 @@ const SkeletonLoader = () => (
   </div>
 );
 
-const Feed: NextPage<FeedProps> = ({ interest }) => { // Updated to accept interest
+const Feed: NextPage<FeedProps> = ({ emoji, farcaster_channel }) => { // Updated to accept interest
   const [posts, setPosts] = useState<Post[]>([]); // State to hold posts
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [toastVisible, setToastVisible] = useState(false); // State for toast notification
 
   useEffect(() => {
-    if (interest) { // Check if interest is available
+    if (farcaster_channel) { // Check if interest is available
       const fetchPosts = async () => {
         try {
           const response = await axios.get(`https://api.neynar.com/v2/farcaster/feed/channels`, {
             params: {
-              channel_ids: interest.id_slug, // Use interest.id_slug for channelId
+              channel_ids: farcaster_channel, // interest.id_slug, // Use interest.id_slug for channelId
               with_recasts: true,
               with_replies: true,
               members_only: true,
@@ -120,10 +121,10 @@ const Feed: NextPage<FeedProps> = ({ interest }) => { // Updated to accept inter
 
       fetchPosts(); // Call the fetch function
     }
-  }, [interest]); // Dependency on interest
+  }, [farcaster_channel]); // Dependency on interest
 
   // Conditional rendering to handle null interest
-  if (!interest) {
+  if (!farcaster_channel) {
     return <div>Please select an interest to view the feed.</div>; // Message when no interest is selected
   }
 
@@ -160,9 +161,9 @@ const Feed: NextPage<FeedProps> = ({ interest }) => { // Updated to accept inter
         font-weight: bold; 
         margin-bottom: 20px; 
       `}>
-        {interest ? (
+        {farcaster_channel ? (
           <>
-            <span className={css` 
+          {emoji ? (       <span className={css` 
               display: inline-flex; 
               align-items: center; 
               justify-content: center; 
@@ -172,9 +173,10 @@ const Feed: NextPage<FeedProps> = ({ interest }) => { // Updated to accept inter
               background-color: #f0f0f0; 
               margin-right: 10px; 
             `}>
-              {interest.emoji}
-            </span>
-            <span>r/{interest.id_slug}</span>
+              {emoji}
+            </span>) :    <SkeletonLoader />  }
+     
+            <span>r/{farcaster_channel}</span>
           </>
         ) : (
           <SkeletonLoader /> // Show skeleton loader if interest is not available

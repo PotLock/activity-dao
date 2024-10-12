@@ -2,7 +2,16 @@
   {
     "name": "Pizza DAO",
     "icon": "image-108@2x.png",
-    "treasuryAddress": "",
+    "treasuryAddresses": [
+      {
+        "network": "ETH",
+        "address": "0xba5e28a2d1c8cf67ac9e0dfc850dc8b7b21a4de2"
+      },
+      {
+        "network": "ETH",
+        "address": "0xf41a98d4f2e52aa1ccb48f0b6539e955707b8f7a"
+      }
+    ],
     "description": "We make sure pizza gets eaten - mechanisms to proliferate the funding of pizza parties powered by Web3",
     "url": "https://www.globalpizzaparty.xyz/",
     "tags": [
@@ -21,12 +30,16 @@
     "emoji": "🍕",
     "banner": "",
     "featured": true,
-    "order": 1
+    "order": 1,
+    "farcaster_channel": "pizza"
   },
   {
     "name": "Blunt DAO",
     "icon": "jointslogo-11@2x.png",
-    "treasuryAddress": "",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "We make sure blunts get smoked. Proliferate the funding of seshing blunts and participating via proof of sesh..",
     "url": "https://bluntdao.org",
     "tags": [
@@ -45,12 +58,16 @@
     "emoji": "🍃",
     "banner": "",
     "featured": true,
-    "order": 2
+    "order": 2,
+    "farcaster_channel": "blunt"
   },
   {
     "name": "TreeGens",
     "icon": "freepikexport20240924165639oj8b-3@2x.png",
-    "treasuryAddress": "",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "Gamify reforestation with tokenized mangroves, AI-verified planting, and dynamic Semi-Soulbound NFTs, aiming for transparency, ecological benefits, and a new tree-planting world record.",
     "url": "",
     "tags": [
@@ -70,12 +87,16 @@
     "emoji": "🌳",
     "banner": "",
     "featured": true,
-    "order": 3
+    "order": 3,
+    "farcaster_channel": "tree"
   },
   {
     "name": "HotPotDAO",
     "icon": "image-41@2x.png",
-    "treasuryAddress": "",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "Hotpotdao is a social network that offers frens in crypto to eat Hotpot, making frens from different cultures and backgrounds.",
     "url": "https://x.com/hotpotdao888",
     "tags": [
@@ -91,12 +112,16 @@
     "emoji": "🍲",
     "banner": "",
     "featured": false,
-    "order": 4
+    "order": 4,
+    "farcaster_channel": "hotpot"
   },
   {
     "name": "Sauna DAO",
     "icon": "https://pbs.twimg.com/profile_images/1705229665479385088/Xutm8XEy_400x400.jpg",
-    "treasuryAddress": "",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "cold plunge | onsen | banya enthusiasts building the network state of bathhouses",
     "url": "https://x.com/TheSaunaDao",
     "tags": [
@@ -112,12 +137,16 @@
     "emoji": "🧖🏼‍♀️",
     "banner": "",
     "featured": false,
-    "order": 4
+    "order": 4,
+    "farcaster_channel": "sauna"
   },
   {
     "name": "Waffle DAO",
     "icon": "https://pbs.twimg.com/profile_images/1531732006698090496/hw_53Ioi_400x400.jpg",
-    "treasuryAddress": "",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "Originated in Belgium, WaffleDAO is a community of waffle enthusiasts who are passionate about promoting the culture of waffles and supporting local businesses.",
     "url": "https://x.com/WaffleDAO",
     "tags": [
@@ -133,12 +162,16 @@
     "emoji": "🧖🏼‍♀️",
     "banner": "https://pbs.twimg.com/profile_banners/1466019556019875842/1654101819/1500x500",
     "featured": false,
-    "order": 7
+    "order": 7,
+    "farcaster_channel": "waffle"
   },
   {
     "name": "Blocker Ravers (Rave)",
     "icon": "https://pbs.twimg.com/profile_images/1620837196205887514/2R9hAWtY_400x400.jpg",
-    "treasuryAddress": "",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "A collective of builders and ravers for gud.",
     "url": "https://x.com/blockravers",
     "tags": [
@@ -154,12 +187,16 @@
     "emoji": "✨",
     "banner": "https://pbs.twimg.com/profile_banners/1620836551126126599/1675272913/1500x500",
     "featured": false,
-    "order": 8
+    "order": 8,
+    "farcaster_channel": "rave"
   },
   {
     "name": "Ramen DAO",
     "icon": "https://images.rawpixel.com/image_400/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L2pvYjY4NS0xODAuanBn.jpg",
-    "treasuryAddress": "",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "A global dinner series named after the bear market’s favorite food by CryptoNomads Club",
     "url": "https://club.cryptonomads.org/ramendao",
     "tags": [
@@ -176,12 +213,16 @@
     "emoji": "🍜",
     "banner": "https://pbs.twimg.com/profile_banners/1620836551126126599/1675272913/1500x500",
     "featured": false,
-    "order": 9
+    "order": 9,
+    "farcaster_channel": "ramen"
   },
   {
     "name": "Gnars DAO (Action Sports)",
     "icon": "https://gnars.com/images/logo.png",
-    "treasuryAddress": "https://nouns.build/dao/base/0x880Fb3Cf5c6Cc2d7DFC13a993E839a9411200C17/6316",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "Action sports accelerator. Community owned brand. $117,009 in grants ready to deploy. Nounish community",
     "url": "https://gnars.com",
     "tags": [
@@ -200,12 +241,16 @@
     "emoji": "🛹",
     "banner": "https://pbs.twimg.com/profile_banners/1415446698386624512/1700551444/1500x500",
     "featured": false,
-    "order": 10
+    "order": 10,
+    "farcaster_channel": "gnars"
   },
   {
     "name": "Grounds DAO (Coffee)",
     "icon": "https://grounds.wtf/_next/image?url=%2Fimages%2Fgrounds%2Flogo.svg&w=48&q=75",
-    "treasuryAddress": "https://nouns.build/dao/base/0x880Fb3Cf5c6Cc2d7DFC13a993E839a9411200C17/6316",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "Grounds is a global, community-run organization that uses money raised by the community to fund open-source technology, art and public-works projects. Grounds positively impacts the world by funding ideas and fostering permissionless collaboration. Inspired by nouns",
     "url": "https://grounds.wtf",
     "tags": [
@@ -223,12 +268,16 @@
     "emoji": "☕️",
     "banner": "https://pbs.twimg.com/profile_banners/1731495129800753153/1709786192/1500x500",
     "featured": false,
-    "order": 11
+    "order": 11,
+    "farcaster_channel": "coffee"
   },
   {
     "name": "Spa DAO",
     "icon": "https://attic.sh/lbvhio1i304m6siwgwwvxycfxm7b",
-    "treasuryAddress": "",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "​Sauna + Cold Plunge and good discussions at a crypto event near you. By Ben Lakoff from Bankless Ventures",
     "url": "https://lu.ma/benlakoff",
     "tags": [
@@ -244,12 +293,16 @@
     "emoji": "🧖",
     "banner": "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=1,background=white,quality=75,width=400,height=400/event-covers/ln/a38adf6d-aead-4297-9d20-872b60fa6450",
     "featured": false,
-    "order": 12
+    "order": 12,
+    "farcaster_channel": "spa"
   },
   {
     "name": "Jolle' DAO / Jolof Rice",
     "icon": "https://pbs.twimg.com/profile_images/1762138425082232832/tDJAIBwZ_400x400.jpg",
-    "treasuryAddress": "https://www.foodnouns.wtf/vote",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "description": "​Jollé is a Foodnouns DAO funded hunger relief program, dedicated to feeding those in need delicious Jollof Rice",
     "url": "https://foodnouns.wtff",
     "tags": [
@@ -266,9 +319,10 @@
     "emoji": "🍚",
     "banner": "",
     "featured": false,
-    "order": 13
+    "order": 13,
+    "farcaster_channel": "jolof"
   },
-    {
+  {
     "name": "Jummah DAO",
     "icon": "https://jummahdao.com/logo.png",
     "description": "bringing the web3 industry together for Friday prayers",
@@ -280,13 +334,17 @@
       "Idea"
     ],
     "emoji": "🕌",
-    "treasuryAddress": "",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "github": "",
     "twitter": "",
     "banner": "https://www.jummahdao.com/jummahmeta.png",
     "exists": true,
     "featured": false,
-    "order": 15
+    "order": 15,
+    "farcaster_channel": "jummah"
   },
   {
     "name": "Yoga DAO",
@@ -300,12 +358,16 @@
       "Idea", "Regular Thing", "Treasury"
     ],
     "emoji": "🧘🏼",
-    "treasuryAddress": "",
+    "treasuryAddress": {
+      "network": "",
+      "address": ""
+    },
     "github": "",
     "twitter": "https://twitter.com/YOG8DAO",
     "banner": "https://pbs.twimg.com/profile_banners/1488161264308211714/1666191548/1500x500",
     "exists": true,
     "featured": false,
-    "order": 14
+    "order": 14,
+    "farcaster_channel": "yoga"
   }
 ]

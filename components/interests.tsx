@@ -32,7 +32,11 @@ const Interests: NextPage = () => { // Fixed the type definition
           </span>
         ))}
       </div>
-      <Feed interest={selectedInterest} /> {/* Pass the entire interest object to Feed */}
+      {selectedInterest ? (
+        <Feed farcaster_channel={selectedInterest.id_slug} emoji={selectedInterest.emoji} />
+      ) : (
+        <p>Please select an interest to view the feed.</p>
+      )}
 
       {/* Content for feed */}
     </>
