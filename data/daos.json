@@ -1,6 +1,7 @@
 [
   {
     "name": "Pizza DAO",
+    "id": "pizza-dao",
     "icon": "image-108@2x.png",
     "treasuryAddresses": [
       {
@@ -35,6 +36,7 @@
   },
   {
     "name": "Blunt DAO",
+    "id": "blunt-dao",
     "icon": "jointslogo-11@2x.png",
     "treasuryAddress": {
       "network": "",
@@ -59,10 +61,11 @@
     "banner": "",
     "featured": true,
     "order": 2,
-    "farcaster_channel": "blunt"
+    "farcaster_channel": "bluntdao"
   },
   {
     "name": "TreeGens",
+    "id": "treegens",
     "icon": "freepikexport20240924165639oj8b-3@2x.png",
     "treasuryAddress": {
       "network": "",
@@ -92,6 +95,7 @@
   },
   {
     "name": "HotPotDAO",
+    "id": "hotpotdao",
     "icon": "image-41@2x.png",
     "treasuryAddress": {
       "network": "",
@@ -117,6 +121,7 @@
   },
   {
     "name": "Sauna DAO",
+    "id": "sauna-dao",
     "icon": "https://pbs.twimg.com/profile_images/1705229665479385088/Xutm8XEy_400x400.jpg",
     "treasuryAddress": {
       "network": "",
@@ -142,6 +147,7 @@
   },
   {
     "name": "Waffle DAO",
+    "id": "waffle-dao",
     "icon": "https://pbs.twimg.com/profile_images/1531732006698090496/hw_53Ioi_400x400.jpg",
     "treasuryAddress": {
       "network": "",
@@ -167,6 +173,7 @@
   },
   {
     "name": "Blocker Ravers (Rave)",
+    "id": "blocker-ravers",
     "icon": "https://pbs.twimg.com/profile_images/1620837196205887514/2R9hAWtY_400x400.jpg",
     "treasuryAddress": {
       "network": "",
@@ -192,6 +199,7 @@
   },
   {
     "name": "Ramen DAO",
+    "id": "ramen-dao",
     "icon": "https://images.rawpixel.com/image_400/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L2pvYjY4NS0xODAuanBn.jpg",
     "treasuryAddress": {
       "network": "",
@@ -218,6 +226,7 @@
   },
   {
     "name": "Gnars DAO (Action Sports)",
+    "id": "gnars-dao",
     "icon": "https://gnars.com/images/logo.png",
     "treasuryAddress": {
       "network": "",
@@ -246,6 +255,7 @@
   },
   {
     "name": "Grounds DAO (Coffee)",
+    "id": "grounds-dao",
     "icon": "https://grounds.wtf/_next/image?url=%2Fimages%2Fgrounds%2Flogo.svg&w=48&q=75",
     "treasuryAddress": {
       "network": "",
@@ -273,6 +283,7 @@
   },
   {
     "name": "Spa DAO",
+    "id": "spa-dao",
     "icon": "https://attic.sh/lbvhio1i304m6siwgwwvxycfxm7b",
     "treasuryAddress": {
       "network": "",
@@ -298,6 +309,7 @@
   },
   {
     "name": "Jolle' DAO / Jolof Rice",
+    "id": "jolle-dao",
     "icon": "https://pbs.twimg.com/profile_images/1762138425082232832/tDJAIBwZ_400x400.jpg",
     "treasuryAddress": {
       "network": "",
@@ -324,6 +336,7 @@
   },
   {
     "name": "Jummah DAO",
+    "id": "jummah-dao",
     "icon": "https://jummahdao.com/logo.png",
     "description": "bringing the web3 industry together for Friday prayers",
     "url": "https://jummahdao.com/",
@@ -348,6 +361,7 @@
   },
   {
     "name": "Yoga DAO",
+    "id": "yoga-dao",
     "icon": "https://yogadao.io/img/banner-logo.png",
     "description": "YOUR GATEWAY TO OPTIMAL MENTAL WELLNESS AND HOLISTIC PHYSICAL HEALTH",
     "url": "https://yogadao.io/",

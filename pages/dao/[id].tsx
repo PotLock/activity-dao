@@ -1,17 +1,18 @@
 import type { NextPage, GetServerSideProps } from "next";
 import { css } from "@emotion/css";
-import NAVBAR from "../components/n-a-v-b-a-r";
-import Footer from "../components/Footer";
-import EventsList from "../components/events-list";
+import NAVBAR from "../../components/n-a-v-b-a-r";
+import Footer from "../../components/Footer";
+import EventsList from "../../components/events-list";
 import { FaTwitter, FaGithub, FaGlobe, FaRss, FaMoneyBillWave, FaCalendarAlt } from "react-icons/fa";
-import daoData from "../data/daos.json";
+import daoData from "../../data/daos.json";
 import { useState } from 'react';
-import Feed from "../components/feed";
+import Feed from "../../components/feed";
 
 // ToDo- edi events. 2) add fee by going to daos.json and adding farcaster_id and then create feed section to just map that as a component 
 // Add this type definition
 type DAO = {
   name: string;
+  id?: string; // Make id optional
   icon: string;
   url: string;
   description: string;
@@ -395,7 +396,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let dao: DAO | undefined;
 
   if (id) {
-    dao = daoData.find(dao => dao.name.toLowerCase().replace(/\s+/g, '-') === id);
+    dao = daoData.find(dao => dao.id === id);
   }
 
   if (!dao) {

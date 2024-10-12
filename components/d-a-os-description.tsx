@@ -15,7 +15,7 @@ import {
   FormControl // Add this import
 } from "@mui/material";
 import daoData from "../data/daos.json";
-import { FaTwitter, FaGithub } from "react-icons/fa";
+import { FaTwitter, FaGithub, FaGlobe } from "react-icons/fa";
 import CardSkeleton from './card-skeleton';
 import { Button as MuiButton } from "@mui/material"; // Rename to avoid conflict
 
@@ -40,16 +40,20 @@ const Tag = ({ text, color }: { text: string; color: string }) => (
   </span>
 );
 
-// Add this type definition
+// Update the DAO type definition
 type DAO = {
+  id?: string; // Make id optional
   name: string;
   icon: string;
   url: string;
   description: string;
   maturity: string[];
   tags: string[];
-  twitter?: string; // Add this optional field
-  github?: string; // Add this optional field
+  twitter?: string;
+  github?: string;
+  treasuryAddresses?: { network: string; address: string; }[];
+  treasuryAddress?: { network: string; address: string; };
+  // Add any other properties that might be present in your data
 };
 
 const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
@@ -169,7 +173,10 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
             ))}
           </div>
         </div>
-        <a href={dao.url} target="_blank" rel="noopener noreferrer">
+        <a href={`/dao/${dao.id}`} className={css`
+          text-decoration: none;
+          color: inherit;
+        `}>
           <img
             className={css`
               height: 2.5rem;
@@ -178,7 +185,7 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
               overflow: hidden;
               flex-shrink: 0;
             `}
-            alt="Open in new tab"
+            alt="View DAO"
             src="/vertical-container.svg"
           />
         </a>
@@ -209,6 +216,25 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
           margin-top: 1rem;
           gap: 1rem;
         `}> 
+          {dao.url && (
+            <a 
+              href={dao.url}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={css`
+                color: #333;
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                font-size: 0.9rem;
+                &:hover {
+                  text-decoration: underline;
+                }
+              `}
+            >
+              <FaGlobe />
+            </a>
+          )}
           {dao.twitter && (
             <a 
               href={dao.twitter}
@@ -282,7 +308,10 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
         selectedTags.every(tag => dao.tags.includes(tag));
 
       return matchesSearch && matchesMaturity && matchesTags;
-    });
+    }).map(dao => ({
+      ...dao,
+      id: dao.id || `dao-${dao.name.toLowerCase().replace(/\s+/g, '-')}` // Generate an id if it doesn't exist
+    }));
     setFilteredDAOs(filtered);
     setIsLoading(false);
   }, [searchTerm, selectedMaturity, selectedTags]);
@@ -538,7 +567,7 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
           ))
         ) : filteredDAOs.length > 0 ? (
           filteredDAOs.map((dao, index) => (
-            <DAOCard key={index} dao={dao} mode={mode} />
+            <DAOCard key={dao.id || `dao-${index}`} dao={dao} mode={mode} />
           ))
         ) : (
           <div className={css`
