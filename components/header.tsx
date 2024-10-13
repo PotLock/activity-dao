@@ -387,7 +387,7 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                   .activity-based {
                     position: relative;
                     display: inline-block;
-                    animation: tickle 2s ease-in-out infinite, rainbow-glow 5s linear infinite;
+                    animation: tickle 2s ease-in-out infinite;
                   }
 
                   .activity-based::before,
@@ -432,7 +432,7 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                   }
                 `}
               >
-                bootstrap <span className="emoji">💸</span> the proliferation <span className="emoji">🚀</span> of <span className="activity-based">activity-based</span> <span className="emoji">🏄</span> communities
+                bootstrap <span className="emoji">💸</span> the proliferation <span className="emoji">🚀</span> of <span className="activity-based" style={{animation: "tickle 2s ease-in-out infinite, rainbow-glow 5s linear infinite"}}>activity-based</span> <span className="emoji">🏄</span> communities
               </h1>
               <h3
                 className={css`
