@@ -1,3 +1,4 @@
+import React, { forwardRef, useImperativeHandle, Ref } from 'react';
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
 import events from "../data/events.json";
@@ -294,20 +295,27 @@ function editDistance(s1: string, s2: string): number {
   return costs[s2.length];
 }
 
-const EventsList: React.FC<EventsListProps> = ({ 
-  mode, 
-  className = '', 
-  hideHeader = false, 
-  hideDescription = false, 
-  daoMode,
-  interestMode
-}) => {
+const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref) => {
+  const { 
+    mode, 
+    className = '', 
+    hideHeader = false, 
+    hideDescription = false, 
+    daoMode,
+    interestMode
+  } = props;
+
   console.log("EventsList rendered with mode:", mode);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
   const [timeFilter, setTimeFilter] = useState("all");
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery');
+  const [hasMatchingEvents, setHasMatchingEvents] = useState(true);
+
+  useImperativeHandle(ref, () => ({
+    hasMatchingEvents
+  }));
 
   useEffect(() => {
     console.log("useEffect triggered. Setting viewMode based on mode:", mode);
@@ -335,8 +343,8 @@ const EventsList: React.FC<EventsListProps> = ({
             const modeWords = mode.toLowerCase().split(/\s+/);
             return fields.some(field => {
               const fieldWords = field.toLowerCase().split(/\s+/);
-              return modeWords.some(modeWord => 
-                fieldWords.some(fieldWord => 
+              return modeWords.some((modeWord: string) => 
+                fieldWords.some((fieldWord: string) => 
                   stringSimilarity(modeWord, fieldWord) >= 0.8
                 )
               );
@@ -391,6 +399,10 @@ const EventsList: React.FC<EventsListProps> = ({
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [searchTerm, selectedLocation, timeFilter, daoMode, interestMode]);
+
+  useEffect(() => {
+    setHasMatchingEvents(filteredEvents.length > 0);
+  }, [filteredEvents]);
 
   const locations = useMemo(() => {
     const filteredLocations = filteredEvents.map(event => event.location);
@@ -612,7 +624,7 @@ const EventsList: React.FC<EventsListProps> = ({
             </IconButton>
           </div>
         </div>
-        {filteredEvents.length > 0 ? (
+        {hasMatchingEvents ? (
           <div className={css`
             width: 100%;
             max-width: 100%;
@@ -649,12 +661,49 @@ const EventsList: React.FC<EventsListProps> = ({
             margin-top: 2rem;
             color: var(--color-gray-500);
           `}>
-            No events found
+            {daoMode || interestMode 
+              ? `No events found for ${daoMode || interestMode}`
+              : "No events found"}
           </h3>
         )}
       </div>
     </div>
   );
+});
+
+const EventsListComponent = EventsList as typeof EventsList & {
+  checkForEvents: (daoName: string) => Promise<boolean>;
 };
 
-export default EventsList;
+EventsListComponent.checkForEvents = async (daoName: string): Promise<boolean> => {
+  const checkSimilarity = (event: any, mode: string, threshold: number) => {
+    const fields = [event.dao, event.name, event.description];
+    return fields.some(field => 
+      stringSimilarity(field.toLowerCase(), mode.toLowerCase()) >= threshold
+    );
+  };
+
+  const checkInterestSimilarity = (event: any, mode: string) => {
+    const fields = [event.dao, event.name, event.description];
+    const modeWords = mode.toLowerCase().split(/\s+/);
+    return fields.some(field => {
+      const fieldWords = field.toLowerCase().split(/\s+/);
+      return modeWords.some((modeWord: string) => 
+        fieldWords.some((fieldWord: string) => 
+          stringSimilarity(modeWord, fieldWord) >= 0.8
+        )
+      );
+    });
+  };
+
+  return events.some(event => 
+    checkSimilarity(event, daoName, 0.9) || checkInterestSimilarity(event, daoName)
+  );
+};
+
+// Add this to the return type of the component
+export type EventsListReturnType = {
+  hasMatchingEvents: boolean;
+};
+
+export default EventsListComponent;
