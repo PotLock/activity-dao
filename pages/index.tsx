@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
 import NAVBAR from "../components/n-a-v-b-a-r";
@@ -6,15 +7,30 @@ import AcivityCards from "../components/activity";
 import EventsList from "../components/events-list";
 import DAOsDescription from "../components/d-a-os-description";
 import OfficialPartners from "../components/official-partners";
-import Footer from "../components/Footer"; // Import the new Footer component
-import EmojiTicker from "../components/EmoijiTicker"; // Add this import
+import Footer from "../components/Footer";
+import EmojiTicker from "../components/EmoijiTicker";
 import DaoMaturity from "../components/daoMaturity";
 import Evolution from "../components/evolution";
 import PoweringCommunity from "../components/dao-model";
-
-
 import JoinActivityDAO from "../components/join-activityDAO";
+import LoadingAnimation from "../components/LoadingAnimation";
+
 const Desktop: NextPage = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <LoadingAnimation />;
+  }
+
   return (
     <div
       className={css`
