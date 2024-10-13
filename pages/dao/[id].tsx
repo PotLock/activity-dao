@@ -11,6 +11,14 @@ import { isValidEthereumAddressOrDomain } from "../../utils/isEth";
 import axios from 'axios';
 import Image from 'next/image';
 import React from 'react';
+import { Network, Alchemy } from "alchemy-sdk";
+
+// Optional config object, but defaults to demo api-key and eth-mainnet.
+const settings = {
+  apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID, // Replace with your Alchemy API Key.
+  network: Network.ETH_MAINNET, // Replace with your network.
+};
+const alchemy = new Alchemy(settings);
 // ToDo- edi events. 2) conditional rednering on events if events lists returns no matching events
 // add dao join interest phase
 // add related daos 
@@ -123,8 +131,8 @@ const formatNumber = (num: number | string): string => {
 };
 
 // Add these constants near the top of the file
-const DEFAULT_TAB = 'Treasury';
-const SECONDARY_DEFAULT_TAB = 'Feed';
+const DEFAULT_TAB = 'Feed';
+const SECONDARY_DEFAULT_TAB = 'Events';
 
 // Helper function to determine image source
 const getImageSrc = (path: string) => {
@@ -242,7 +250,7 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
         );
 
         if (response.data.error) {
-          console.error(`API Error: ${response.data.error.message}`);
+          console.error(`Alchemy API Error: after reponse ${response.data.error.message}`);
           throw new Error(response.data.error.message);
         }
 
@@ -255,7 +263,7 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
         };
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          console.error(`API Error (${error.response.status}): ${error.response.data.error?.message || 'Unknown error'}`);
+          console.error(`Alchemy API Error (${error.response.status}): ${error.response.data.error?.message || 'Unknown error'}`);
         } else {
           console.error('Error fetching token info:', error);
         }
@@ -269,10 +277,13 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
   };
 
   const fetchTokenPrice = async (tokenAddress: string, network: string) => {
-    // Implement token price fetching logic here
-    // This should return the current USD price of the token
-    // You might want to use a price feed API for this
-    return 1; // Default to 1 USD for now
+    if (tokenAddress === 'NATIVE') {
+      // Fetch native token price (e.g., ETH, BNB, MATIC) based on the network
+      // You might want to use a price feed API for this
+      return 0; // Default to 0 USD for now
+    }
+    // Implement token price fetching logic for other tokens
+    return 0; // Default to 0 USD for now
   };
 
   const fetchBalance = useCallback(async (index: number) => {
@@ -315,7 +326,7 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
               jsonrpc: '2.0',
               id: 1,
               method: 'alchemy_getTokenBalances',
-              params: [treasury.address]
+              params: [treasury.address, 'erc20']
             }
           );
 
@@ -327,17 +338,42 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
           const tokenBalances = response.data.result.tokenBalances;
           const balancesPromises = tokenBalances.map(async (token: any) => {
             const tokenInfo = await fetchTokenInfo(token.contractAddress, treasury.network);
+            const balance = BigInt(token.tokenBalance);
+            const amount = Number(balance) / Math.pow(10, tokenInfo.decimals);
             return {
               token: tokenInfo.symbol,
               tokenAddress: token.contractAddress,
-              amount: (parseInt(token.tokenBalance, 16) / Math.pow(10, tokenInfo.decimals)).toString(),
+              amount: amount.toString(),
               usdPrice: await fetchTokenPrice(token.contractAddress, treasury.network),
               icon: tokenInfo.icon
             };
           });
 
           const resolvedBalances = await Promise.all(balancesPromises);
-          setBalances(prev => ({ ...prev, [index]: resolvedBalances }));
+          
+          // Fetch native token balance
+          const nativeBalanceResponse = await axios.post(
+            `https://${treasury.network.toLowerCase()}-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+            {
+              jsonrpc: '2.0',
+              id: 1,
+              method: 'eth_getBalance',
+              params: [treasury.address, 'latest']
+            }
+          );
+
+          const nativeBalance = BigInt(nativeBalanceResponse.data.result);
+          const nativeAmount = Number(nativeBalance) / 1e18; // Assuming 18 decimals for native token
+
+          const nativeToken = {
+            token: treasury.network,
+            tokenAddress: 'NATIVE',
+            amount: nativeAmount.toString(),
+            usdPrice: await fetchTokenPrice('NATIVE', treasury.network),
+            icon: `/icons/${treasury.network.toLowerCase()}.png` // Assuming you have these icons
+          };
+
+          setBalances(prev => ({ ...prev, [index]: [nativeToken, ...resolvedBalances] }));
           console.log(`Balances fetched successfully for ${treasury.address}`);
         } catch (error) {
           if (axios.isAxiosError(error) && error.response) {
@@ -345,7 +381,6 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
           } else {
             console.error('Error fetching token balances:', error);
           }
-          // Set an error state or display an error message to the user
           setBalances(prev => ({ ...prev, [index]: [] }));
         }
       } else {
@@ -473,8 +508,8 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
                 <thead>
                   <tr>
                     <th></th>
-                    <th>Network</th>
-                    <th>Address</th>
+                    <th className={css`text-align: left;`}>Network</th>
+                    <th className={css`text-align: left;`}>Address</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -499,10 +534,10 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
                           <>
                             <tr className={css`background-color: #f0f0f0;`}>
                               <th></th>
-                              <th>Token</th>
-                              <th>Amount</th>
-                              <th className={css`white-space: nowrap;`}>USD Price</th>
-                              <th className={css`white-space: nowrap;`}>Total USD</th>
+                              <th className={css`text-align: left;`}>Token</th>
+                              <th className={css`text-align: right;`}>Amount</th>
+                              <th className={css`text-align: right; white-space: nowrap;`}>USD Price</th>
+                              <th className={css`text-align: right; white-space: nowrap;`}>Total USD</th>
                             </tr>
                             {balances[index] === undefined ? (
                               <tr>
@@ -526,9 +561,9 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
                                       ? `${token.tokenAddress.slice(0, 6)}...${token.tokenAddress.slice(-4)}`
                                       : token.tokenAddress})
                                   </td>
-                                  <td>{formatNumber(token.amount)}</td>
-                                  <td>${formatNumber(token.usdPrice)}</td>
-                                  <td>${formatNumber(parseFloat(token.amount) * token.usdPrice)}</td>
+                                  <td className={css`text-align: right;`}>{formatNumber(token.amount)}</td>
+                                  <td className={css`text-align: right;`}>${formatNumber(token.usdPrice)}</td>
+                                  <td className={css`text-align: right;`}>${formatNumber(parseFloat(token.amount) * token.usdPrice)}</td>
                                 </tr>
                               ))
                             )}

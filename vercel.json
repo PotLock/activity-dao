@@ -16,6 +16,11 @@
         "permanent": true
       },
       {
+        "source": "/accelerator",
+        "destination": "https://potlock.notion.site/ActivityDAOs-Accelerator-113c1f4ba97e8023a2cfe34dd7e7e26c?pvs=74",
+        "permanent": true
+      },
+      {
         "source": "/github",
         "destination": "https://github.com/PotLock/activity-dao",
         "permanent": true
@@ -25,6 +30,7 @@
         "destination": "https://discord.com/invite/mmEv99x9QK",
         "permanent": true
       },
+      
       {
         "source": "/figma",
         "destination": "https://www.figma.com/design/bMBfA2d7favfAUDo1FsIqS/ActivityDAO?t=CAundS3IYzh4Pf9W-0",

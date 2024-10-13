@@ -157,7 +157,7 @@ const EventCard = ({ event }: { event: { date: string; name: string; location: s
               `}
             >
               <div className={css`font-weight: 600;`}>{event.location}</div>
-              <div
+              {/* <div
                 className={css`
                   background-color: var(--color-lemonchiffon);
                   color: var(--color-gold-100);
@@ -167,7 +167,7 @@ const EventCard = ({ event }: { event: { date: string; name: string; location: s
                 `}
               >
                 All Day
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
