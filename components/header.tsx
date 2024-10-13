@@ -26,6 +26,9 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
           @media screen and (max-width: 768px) {
             padding: 1rem;
             gap: var(--gap-xs); // Reduce gap on mobile
+            img {
+              display: none; // Hide all images on mobile
+            }
           }
 
           @media screen and (max-width: 480px) {
