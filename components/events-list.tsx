@@ -15,6 +15,17 @@ import {
   IconButton
 } from "@mui/material";
 
+// Add this type definition
+type Event = {
+  date: string;
+  name: string;
+  location: string;
+  link: string;
+  image: string;
+  dao: string;
+  description: string;
+};
+
 // Add these custom icon components
 const ViewListIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -257,7 +268,30 @@ const ListEventCard = ({ event }: { event: { date: string; name: string; locatio
   );
 };
 
-// Add this function at the top of your file or in a separate utility file
+// Add these functions at the top of your file
+function checkDaoSimilarity(event: Event, mode: string): boolean {
+  if (!mode) return true;
+  const fields = [event.dao, event.name, event.description];
+  return fields.some(field => 
+    stringSimilarity(field.toLowerCase(), mode.toLowerCase()) >= 0.9
+  );
+}
+
+function checkInterestSimilarity(event: Event, mode: string): boolean {
+  if (!mode) return true;
+  const fields = [event.dao, event.name, event.description];
+  const modeWords = mode.toLowerCase().split(/\s+/);
+  return fields.some(field => {
+    const fieldWords = field.toLowerCase().split(/\s+/);
+    return modeWords.some(modeWord => 
+      fieldWords.some(fieldWord => 
+        stringSimilarity(modeWord, fieldWord) >= 0.8
+      )
+    );
+  });
+}
+
+// Add this function near the top of your file, alongside other utility functions
 function stringSimilarity(str1: string, str2: string): number {
   const longer = str1.length > str2.length ? str1 : str2;
   const shorter = str1.length > str2.length ? str2 : str1;
@@ -309,7 +343,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
-  const [timeFilter, setTimeFilter] = useState("all");
+  const [timeFilter, setTimeFilter] = useState("upcoming");
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery');
   const [hasMatchingEvents, setHasMatchingEvents] = useState(true);
 
@@ -327,36 +361,14 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
   }, [viewMode]);
 
   const filteredEvents = useMemo(() => {
+    console.log("Filtering events with:", { searchTerm, selectedLocation, daoMode, interestMode });
+    
     return events
-      .filter(event => {
-        // If daoMode or interestMode is set, filter events based on similarity
-        if (daoMode || interestMode) {
-          const checkDaoSimilarity = (mode: string) => {
-            const fields = [event.dao, event.name, event.description];
-            return fields.some(field => 
-              stringSimilarity(field.toLowerCase(), mode.toLowerCase()) >= 0.9
-            );
-          };
-
-          const checkInterestSimilarity = (mode: string) => {
-            const fields = [event.dao, event.name, event.description];
-            const modeWords = mode.toLowerCase().split(/\s+/);
-            return fields.some(field => {
-              const fieldWords = field.toLowerCase().split(/\s+/);
-              return modeWords.some((modeWord: string) => 
-                fieldWords.some((fieldWord: string) => 
-                  stringSimilarity(modeWord, fieldWord) >= 0.8
-                )
-              );
-            });
-          };
-
-          if (daoMode && !checkDaoSimilarity(daoMode)) return false;
-          if (interestMode && !checkInterestSimilarity(interestMode)) return false;
-        }
-
-        const eventDate = parseISO(event.date);
-        const now = new Date();
+      .filter((event: Event) => {
+        const daoMatch = !daoMode || checkDaoSimilarity(event, daoMode);
+        const interestMatch = !interestMode || checkInterestSimilarity(event, interestMode);
+        
+        if (!daoMatch || !interestMatch) return false;
 
         // Apply search filter
         const searchMatch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -365,54 +377,16 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
         // Apply location filter
         const locationMatch = selectedLocation === "" || event.location === selectedLocation;
 
-        // Apply time filter
-        let timeMatch = true;
-        switch (timeFilter) {
-          case "past":
-            timeMatch = isBefore(eventDate, now);
-            break;
-          case "today":
-            timeMatch = isToday(eventDate);
-            break;
-          case "thisWeek":
-            timeMatch = isThisWeek(eventDate);
-            break;
-          case "thisMonth":
-            timeMatch = isThisMonth(eventDate);
-            break;
-          case "thisQuarter":
-            const quarterStart = startOfQuarter(now);
-            const quarterEnd = endOfQuarter(now);
-            timeMatch = isAfter(eventDate, quarterStart) && isBefore(eventDate, quarterEnd);
-            break;
-          case "thisYear":
-            timeMatch = isThisYear(eventDate);
-            break;
-          case "nextYear":
-            timeMatch = isAfter(eventDate, endOfYear(now)) && isBefore(eventDate, endOfYear(addYears(now, 1)));
-            break;
-          default:
-            timeMatch = true;
-        }
-
-        return searchMatch && locationMatch && timeMatch;
+        return searchMatch && locationMatch;
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [searchTerm, selectedLocation, timeFilter, daoMode, interestMode]);
-
-  useEffect(() => {
-    setHasMatchingEvents(filteredEvents.length > 0);
-  }, [filteredEvents]);
-
-  const locations = useMemo(() => {
-    const filteredLocations = filteredEvents.map(event => event.location);
-    return Array.from(new Set(filteredLocations)).sort();
-  }, [filteredEvents]);
+  }, [searchTerm, selectedLocation, daoMode, interestMode]);
 
   const getCounts = useMemo(() => {
     const now = new Date();
     const counts = {
       all: filteredEvents.length,
+      upcoming: 0,
       past: 0,
       today: 0,
       thisWeek: 0,
@@ -424,6 +398,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
 
     filteredEvents.forEach(event => {
       const eventDate = parseISO(event.date);
+      if (isAfter(eventDate, now) || isToday(eventDate)) counts.upcoming++;
       if (isBefore(eventDate, now)) counts.past++;
       if (isToday(eventDate)) counts.today++;
       if (isThisWeek(eventDate)) counts.thisWeek++;
@@ -434,6 +409,44 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     });
 
     return counts;
+  }, [filteredEvents]);
+
+  const timeFilteredEvents = useMemo(() => {
+    return filteredEvents.filter((event: Event) => {
+      const eventDate = parseISO(event.date);
+      const now = new Date();
+
+      switch (timeFilter) {
+        case 'upcoming':
+          return isAfter(eventDate, now) || isToday(eventDate);
+        case 'past':
+          return isBefore(eventDate, now);
+        case 'today':
+          return isToday(eventDate);
+        case 'thisWeek':
+          return isThisWeek(eventDate);
+        case 'thisMonth':
+          return isThisMonth(eventDate);
+        case 'thisQuarter':
+          return isAfter(eventDate, startOfQuarter(now)) && isBefore(eventDate, endOfQuarter(now));
+        case 'thisYear':
+          return isThisYear(eventDate);
+        case 'nextYear':
+          return isAfter(eventDate, endOfYear(now)) && isBefore(eventDate, endOfYear(addYears(now, 1)));
+        case 'all':
+        default:
+          return true;
+      }
+    });
+  }, [filteredEvents, timeFilter]);
+
+  useEffect(() => {
+    setHasMatchingEvents(timeFilteredEvents.length > 0);
+  }, [timeFilteredEvents]);
+
+  const locations = useMemo(() => {
+    const filteredLocations = filteredEvents.map(event => event.location);
+    return Array.from(new Set(filteredLocations)).sort();
   }, [filteredEvents]);
 
   return (
@@ -601,12 +614,13 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                   },
                 }}
               >
+                <MenuItem value="upcoming">Upcoming Events ({getCounts.upcoming})</MenuItem>
+                <MenuItem value="all">All Events ({getCounts.all})</MenuItem>
+                <MenuItem value="past">Past Events ({getCounts.past})</MenuItem>
                 {Object.entries(getCounts).map(([key, count]) => (
-                  count > 0 && (
+                  count > 0 && key !== 'upcoming' && key !== 'all' && key !== 'past' && (
                     <MenuItem key={key} value={key}>
-                      {key === 'all' ? 'All Events' : 
-                       key === 'past' ? 'Past Events' :
-                       key.charAt(0).toUpperCase() + key.slice(1)} ({count})
+                      {key.charAt(0).toUpperCase() + key.slice(1)} ({count})
                     </MenuItem>
                   )
                 ))}
@@ -628,7 +642,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
           <div className={css`
             width: 100%;
             max-width: 100%;
-            padding-top: 2rem; // Add consistent top padding here
+            padding-top: 2rem;
           `}>
             {viewMode === 'gallery' ? (
               <div className={css`
@@ -638,7 +652,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 justify-content: flex-start;
                 width: 100%;
               `}>
-                {filteredEvents.map((event, index) => (
+                {timeFilteredEvents.map((event, index) => (
                   <EventCard key={index} event={event} />
                 ))}
               </div>
@@ -648,7 +662,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 flex-direction: column;
                 width: 100%;
               `}>
-                {filteredEvents.map((event, index) => (
+                {timeFilteredEvents.map((event, index) => (
                   <ListEventCard key={index} event={event} />
                 ))}
               </div>
@@ -681,19 +695,6 @@ EventsListComponent.checkForEvents = async (daoName: string): Promise<boolean> =
     return fields.some(field => 
       stringSimilarity(field.toLowerCase(), mode.toLowerCase()) >= threshold
     );
-  };
-
-  const checkInterestSimilarity = (event: any, mode: string) => {
-    const fields = [event.dao, event.name, event.description];
-    const modeWords = mode.toLowerCase().split(/\s+/);
-    return fields.some(field => {
-      const fieldWords = field.toLowerCase().split(/\s+/);
-      return modeWords.some((modeWord: string) => 
-        fieldWords.some((fieldWord: string) => 
-          stringSimilarity(modeWord, fieldWord) >= 0.8
-        )
-      );
-    });
   };
 
   return events.some(event => 
