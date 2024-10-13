@@ -21,15 +21,15 @@ const Button1: NextPage<Button1Type> = ({ className = "" }) => {
           flex-direction: column;
           align-items: flex-end;
           justify-content: flex-start;
-          padding: var(--padding-15xl) var(--padding-33xl) var(--padding-37xl-2)
-            var(--padding-mid);
+          padding: var(--padding-lg) var(--padding-xl) var(--padding-xl)
+            var(--padding-base);
           box-sizing: border-box;
-          gap: var(--gap-lgi-4);
-          min-width: 20.25rem;
-          min-height: 30.063rem;
+          gap: var(--gap-base);
+          min-width: 18rem; // Reduced from 20.25rem
+          min-height: 26rem; // Reduced from 30.063rem
           max-width: 100%;
           text-align: center;
-          font-size: var(--font-size-59xl-3);
+          font-size: var(--font-size-45xl); // Reduced from 59xl-3
           color: var(--color-darkslateblue-200);
           font-family: var(--font-aclonica);
           @media screen and (max-width: 1050px) {

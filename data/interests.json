@@ -354,12 +354,6 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "surfing",
-    "activity": "Surfing",
-    "emoji": "🏄",
-    "farcaster_id": ""
-  },
-  {
     "id_slug": "kite-surfing",
     "activity": "Kite Surfing",
     "emoji": "🪂",
@@ -381,12 +375,6 @@
     "id_slug": "bungee-jumping",
     "activity": "Bungee Jumping",
     "emoji": "🪂",
-    "farcaster_id": ""
-  },
-  {
-    "id_slug": "rock-climbing",
-    "activity": "Rock Climbing",
-    "emoji": "🧗",
     "farcaster_id": ""
   },
   {
@@ -441,12 +429,6 @@
     "id_slug": "whale-watching",
     "activity": "Whale Watching",
     "emoji": "🐋",
-    "farcaster_id": ""
-  },
-  {
-    "id_slug": "camping",
-    "activity": "Camping",
-    "emoji": "⛺",
     "farcaster_id": ""
   },
   {
@@ -507,12 +489,6 @@
     "id_slug": "escape-room",
     "activity": "Escape Room",
     "emoji": "🔑",
-    "farcaster_id": ""
-  },
-  {
-    "id_slug": "cooking",
-    "activity": "Cooking",
-    "emoji": "👩‍🍳",
     "farcaster_id": ""
   },
   {
@@ -582,39 +558,9 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "hiking",
-    "activity": "Hiking",
-    "emoji": "🥾",
-    "farcaster_id": ""
-  },
-  {
-    "id_slug": "fishing",
-    "activity": "Fishing",
-    "emoji": "🎣",
-    "farcaster_id": ""
-  },
-  {
-    "id_slug": "gardening",
-    "activity": "Gardening",
-    "emoji": "🌱",
-    "farcaster_id": ""
-  },
-  {
     "id_slug": "vlogging",
     "activity": "Vlogging",
     "emoji": "📹",
-    "farcaster_id": ""
-  },
-  {
-    "id_slug": "photography",
-    "activity": "Photography",
-    "emoji": "📷",
-    "farcaster_id": ""
-  },
-  {
-    "id_slug": "writing",
-    "activity": "Writing",
-    "emoji": "✍️",
     "farcaster_id": ""
   }
 ]
