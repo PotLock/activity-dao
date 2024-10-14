@@ -40,7 +40,7 @@ const Feeds: NextPage = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 2rem 0;
-          padding-top: 5rem; // Added bottom padding
+          padding-top: 6rem; // Added bottom padding
         `}
       >
             
