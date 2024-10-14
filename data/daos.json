@@ -395,6 +395,31 @@
     "farcaster_user": ""
   },
   {
+    "name": "Afrobeats DAO",
+    "id": "afrobeats-dao",
+    "icon": "https://pbs.twimg.com/profile_images/1845725805051297792/XZf1i-En_400x400.jpg",
+    "description": "A global community spreading culture through Afrobeats Parties, music and vibes.",
+    "url": "https://bento.me/afrobeats/",
+    "tags": [
+      "Dance"
+    ],
+    "maturity": [
+      "Idea"
+    ],
+    "emoji": "🥁",
+    "treasuryAddresses": [],
+    "github": "",
+    "twitter": "https://x.com/afrobeatsdao",
+    "banner": "https://pbs.twimg.com/profile_banners/1845725691406626816/1728890398/1500x500",
+    "exists": true,
+    "featured": true,
+    "order": 16,
+    "farcaster_channel": "afrobeats",
+    "telegram": "",
+    "discord": "https://discord.com/invite/55EGdbyh",
+    "farcaster_user": ""
+  },
+  {
     "name": "Yoga DAO",
     "id": "yoga-dao",
     "icon": "https://yogadao.io/img/banner-logo.png",
