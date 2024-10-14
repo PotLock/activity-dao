@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { isValidEthereumAddressOrDomain } from '../utils/isEth';
 import { css } from "@emotion/css";
 import {
   TextField,
@@ -30,6 +31,25 @@ import SafeImage from './SafeImage';
 const allMaturityTags = Array.from(new Set(daoData.flatMap(dao => dao.maturity)));
 const allTags = Array.from(new Set(daoData.flatMap(dao => dao.tags)));
 
+const networks = ['ETH', 'BSC', 'POLYGON', 'NEAR', 'SOL', 'BASE', 'ARB'];
+
+const NetworkSelect: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => (
+  <Select
+    value={value}
+    onChange={(e) => onChange(e.target.value as string)}
+    displayEmpty
+    fullWidth
+  >
+    <MenuItem value="" disabled>Select Network</MenuItem>
+    {networks.map((network) => (
+      <MenuItem key={network} value={network}>{network}</MenuItem>
+    ))}
+  </Select>
+);
+
 const SubmitDAOForm: React.FC = () => {
   const [devMode, setDevMode] = useState(false);
 
@@ -48,6 +68,11 @@ const SubmitDAOForm: React.FC = () => {
     exists: true,
     featured: false,
     order: daoData.length + 1,
+    treasuryAddresses: [{ network: 'ETH', address: '0x1234567890123456789012345678901234567890' }],
+    farcaster_channel: 'activity',
+    telegram: 'https://t.me/activitydao',
+    discord: 'https://discord.gg/activitydao',
+    farcaster_user: 'activity_dao',
   };
 
   const [formData, setFormData] = useState(devMode ? defaultDevValues : {
@@ -65,6 +90,11 @@ const SubmitDAOForm: React.FC = () => {
     exists: true,
     featured: true,
     order: daoData.length + 1,
+    treasuryAddresses: [{ network: '', address: '' }],
+    farcaster_channel: '',
+    telegram: '',
+    discord: '',
+    farcaster_user: '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -100,6 +130,24 @@ const SubmitDAOForm: React.FC = () => {
         return typeof value === 'string' ? (value ? (isValidUrl(value) ? '' : 'Invalid Twitter URL') : '') : '';
       case 'banner':
         return typeof value === 'string' ? (value ? (isValidUrl(value) ? '' : 'Invalid Banner URL') : '') : '';
+      case 'treasuryAddresses':
+        if (!Array.isArray(value) || value.length === 0) {
+          return 'At least one treasury address is required';
+        }
+        for (const address of value) {
+          if (!address.network || !address.address) {
+            return 'Network and address are required for all treasury addresses';
+          }
+          if (!isValidUrl(address.address) && !isValidEthereumAddressOrDomain(address.address)) {
+            return 'Invalid treasury address';
+          }
+        }
+        return '';
+      case 'farcaster_channel':
+      case 'telegram':
+      case 'discord':
+      case 'farcaster_user':
+        return typeof value === 'string' ? '' : 'Invalid value';
       default:
         return '';
     }
@@ -137,6 +185,26 @@ const SubmitDAOForm: React.FC = () => {
   const isEmoji = (str: string) => {
     // Remove this function as we're simplifying the emoji validation
     return true;
+  };
+
+  const handleTreasuryAddressChange = (index: number, field: 'network' | 'address', value: string) => {
+    const newTreasuryAddresses = [...formData.treasuryAddresses];
+    newTreasuryAddresses[index][field] = value;
+    setFormData(prev => ({ ...prev, treasuryAddresses: newTreasuryAddresses }));
+  };
+
+  const handleTreasuryAddressAction = (action: 'add' | 'remove', index?: number) => {
+    if (action === 'add') {
+      setFormData(prev => ({
+        ...prev,
+        treasuryAddresses: [...prev.treasuryAddresses, { network: '', address: '' }]
+      }));
+    } else if (action === 'remove' && index !== undefined) {
+      setFormData(prev => ({
+        ...prev,
+        treasuryAddresses: prev.treasuryAddresses.filter((_, i) => i !== index)
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -249,6 +317,11 @@ const SubmitDAOForm: React.FC = () => {
         exists: true,
         featured: true,
         order: daoData.length + 1,
+        treasuryAddresses: [{ network: '', address: '' }],
+        farcaster_channel: '',
+        telegram: '',
+        discord: '',
+        farcaster_user: '',
       });
     }
   }, [devMode]);
@@ -489,6 +562,62 @@ const SubmitDAOForm: React.FC = () => {
           </Grid>
         </Grid>
         
+        <h3>Treasury Addresses</h3>
+        {formData.treasuryAddresses.map((address, index) => (
+          <Box key={index} sx={{ display: 'flex', gap: 2, mb: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel>Network</InputLabel>
+              <NetworkSelect
+                value={address.network}
+                onChange={(value) => handleTreasuryAddressChange(index, 'network', value)}
+              />
+            </FormControl>
+            <TextField
+              fullWidth
+              label="Address"
+              value={address.address}
+              onChange={(e) => handleTreasuryAddressChange(index, 'address', e.target.value)}
+              error={!!errors[`treasuryAddress${index}`]}
+              helperText={errors[`treasuryAddress${index}`]}
+            />
+            <Button onClick={() => handleTreasuryAddressAction('remove', index)}>Remove</Button>
+          </Box>
+        ))}
+        <Button onClick={() => handleTreasuryAddressAction('add')}>Add Treasury Address</Button>
+
+        <TextField
+          label="Farcaster Channel"
+          name="farcaster_channel"
+          value={formData.farcaster_channel}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Telegram"
+          name="telegram"
+          value={formData.telegram}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Discord"
+          name="discord"
+          value={formData.discord}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Farcaster User"
+          name="farcaster_user"
+          value={formData.farcaster_user}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+        />
+
         <Button
           type="submit"
           variant="contained"

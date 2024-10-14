@@ -17,3 +17,4 @@ package-lock.json
 .cursorrules
 .env
 package-lock.json
+.DS_Store

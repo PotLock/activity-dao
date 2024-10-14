@@ -12,7 +12,7 @@ export type NAVBARType = {
 };
 
 const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
-  const [activeLink, setActiveLink] = useState("home");
+  const [activeLink, setActiveLink] = useState("");
   const router = useRouter();
   const { address, isConnected } = useAccount();
 
@@ -20,12 +20,14 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
     // Set the active link based on the current route
     if (router.pathname === "/events") {
       setActiveLink("events");
-    } else if (router.pathname === "/daos") {
+    } else if (router.pathname.startsWith("/dao")) {
       setActiveLink("daos");
-    } else if (router.pathname === "/feeds") {
+    } else if (router.pathname.startsWith("/interest") || router.pathname.startsWith("/feeds")) {
       setActiveLink("feed");
-    } else {
+    } else if (router.pathname === "/") {
       setActiveLink("home");
+    } else {
+      setActiveLink(""); // Set to an empty string for no active link
     }
   }, [router.pathname]);
 
@@ -323,7 +325,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
             justify-content: space-around;
             padding: 0.5rem 0;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1001; // Increased z-index
+            z-index: 1001;
           }
         `}
       >
@@ -341,9 +343,25 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
               flex-direction: column;
               align-items: center;
               text-decoration: none;
-              color: inherit;
+              color: ${activeLink === link.id ? 'var(--color-gold-100)' : 'inherit'};
               font-size: 0.75rem;
-              opacity: ${activeLink === link.id ? 1 : 0.7};
+              font-weight: ${activeLink === link.id ? '600' : 'normal'};
+              position: relative;
+              padding: 0.25rem 0;
+
+              &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                background-color: var(--color-gold-100);
+                opacity: ${activeLink === link.id ? '1' : '0'};
+                transition: opacity 0.3s ease;
+              }
             `}
           >
             <link.icon size={24} />

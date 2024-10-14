@@ -32,12 +32,15 @@
     "banner": "https://pbs.twimg.com/profile_banners/1354998647373631491/1715954474/1500x500",
     "featured": true,
     "order": 1,
-    "farcaster_channel": "pizza"
+    "farcaster_channel": "pizza",
+    "telegram": "",
+    "discord": "https://discord.com/invite/9VGh6Crmf2",
+    "farcaster_user": ""
   },
   {
     "name": "Blunt DAO",
     "id": "blunt-dao",
-    "icon": "jointslogo-11@2x.png",
+    "icon": "bluntdaologobackground.png",
     "treasuryAddresses": [
       {
         "network": "ETH",
@@ -75,18 +78,18 @@
     "banner": "https://pbs.twimg.com/profile_banners/1486451185804623875/1713488614/1500x500",
     "featured": true,
     "order": 2,
-    "farcaster_channel": "bluntdao"
+    "farcaster_channel": "bluntdao",
+    "telegram": "https://t.me/+r61CkOBHLq03YTYx",
+    "discord": "https://discord.com/invite/e3cGSTzyWp",
+    "farcaster_user": "blunts"
   },
   {
     "name": "TreeGens",
     "id": "treegens",
     "icon": "freepikexport20240924165639oj8b-3@2x.png",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [],
     "description": "Gamify reforestation with tokenized mangroves, AI-verified planting, and dynamic Semi-Soulbound NFTs, aiming for transparency, ecological benefits, and a new tree-planting world record.",
-    "url": "",
+    "url": "https://thetreegens.com/",
     "tags": [
       "Sports",
       "Outside",
@@ -99,22 +102,22 @@
       "Proving/Membership"
     ],
     "github": "",
-    "twitter": "",
+    "twitter": "https://x.com/thetreegens",
     "exists": true,
     "emoji": "🌳",
-    "banner": "",
+    "banner": "https://pbs.twimg.com/profile_banners/1587788916920393729/1719351095/1500x500",
     "featured": true,
     "order": 3,
-    "farcaster_channel": "tree"
+    "farcaster_channel": "treegens",
+    "telegram": "https://t.me/@reegenfam",
+    "discord": "https://discord.com/invite/RNVpKRqSsW",
+    "farcaster_user": ""
   },
   {
     "name": "HotPotDAO",
     "id": "hotpotdao",
     "icon": "image-41@2x.png",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [],
     "description": "Hotpotdao is a social network that offers frens in crypto to eat Hotpot, making frens from different cultures and backgrounds.",
     "url": "https://x.com/hotpotdao888",
     "tags": [
@@ -131,16 +134,16 @@
     "banner": "",
     "featured": false,
     "order": 4,
-    "farcaster_channel": "hotpot"
+    "farcaster_channel": "hotpot",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": ""
   },
   {
     "name": "Sauna DAO",
     "id": "sauna-dao",
     "icon": "https://pbs.twimg.com/profile_images/1705229665479385088/Xutm8XEy_400x400.jpg",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [],
     "description": "cold plunge | onsen | banya enthusiasts building the network state of bathhouses",
     "url": "https://x.com/TheSaunaDao",
     "tags": [
@@ -157,16 +160,16 @@
     "banner": "",
     "featured": false,
     "order": 4,
-    "farcaster_channel": "sauna"
+    "farcaster_channel": "sauna",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": ""
   },
   {
     "name": "Waffle DAO",
     "id": "waffle-dao",
     "icon": "https://pbs.twimg.com/profile_images/1531732006698090496/hw_53Ioi_400x400.jpg",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [],
     "description": "Originated in Belgium, WaffleDAO is a community of waffle enthusiasts who are passionate about promoting the culture of waffles and supporting local businesses.",
     "url": "https://x.com/WaffleDAO",
     "tags": [
@@ -183,16 +186,16 @@
     "banner": "https://pbs.twimg.com/profile_banners/1466019556019875842/1654101819/1500x500",
     "featured": false,
     "order": 7,
-    "farcaster_channel": "waffle"
+    "farcaster_channel": "waffle",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": ""
   },
   {
     "name": "Blocker Ravers (Rave)",
     "id": "blocker-ravers",
     "icon": "https://pbs.twimg.com/profile_images/1620837196205887514/2R9hAWtY_400x400.jpg",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [],
     "description": "A collective of builders and ravers for gud.",
     "url": "https://x.com/blockravers",
     "tags": [
@@ -209,16 +212,16 @@
     "banner": "https://pbs.twimg.com/profile_banners/1620836551126126599/1675272913/1500x500",
     "featured": false,
     "order": 8,
-    "farcaster_channel": "rave"
+    "farcaster_channel": "rave",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": "blockravers"
   },
   {
     "name": "Ramen DAO",
     "id": "ramen-dao",
     "icon": "https://images.rawpixel.com/image_400/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L2pvYjY4NS0xODAuanBn.jpg",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [],
     "description": "A global dinner series named after the bear market’s favorite food by CryptoNomads Club",
     "url": "https://club.cryptonomads.org/ramendao",
     "tags": [
@@ -230,22 +233,27 @@
       "Treasury"
     ],
     "github": "",
-    "twitter": "https://x.com/blockravers",
+    "twitter": "https://x.com/CryptoNomads_gm",
     "exists": true,
     "emoji": "🍜",
     "banner": "https://pbs.twimg.com/profile_banners/1620836551126126599/1675272913/1500x500",
     "featured": false,
     "order": 9,
-    "farcaster_channel": "ramen"
+    "farcaster_channel": "ramen",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": ""
   },
   {
     "name": "Gnars DAO (Action Sports)",
     "id": "gnars-dao",
     "icon": "https://gnars.com/images/logo.png",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [
+      {
+        "network": "BASE",
+        "address": "0x72ad986ebac0246d2b3c565ab2a1ce3a14ce6f88"
+      }
+    ],
     "description": "Action sports accelerator. Community owned brand. $117,009 in grants ready to deploy. Nounish community",
     "url": "https://gnars.com",
     "tags": [
@@ -265,16 +273,21 @@
     "banner": "https://pbs.twimg.com/profile_banners/1415446698386624512/1700551444/1500x500",
     "featured": false,
     "order": 10,
-    "farcaster_channel": "gnars"
+    "farcaster_channel": "gnars",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": ""
   },
   {
     "name": "Grounds DAO (Coffee)",
     "id": "grounds-dao",
     "icon": "https://grounds.wtf/_next/image?url=%2Fimages%2Fgrounds%2Flogo.svg&w=48&q=75",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [
+      {
+        "network": "BASE",
+        "address": "0x46cce6307fb77021aDd11380fb7E249D0fF76A78"
+      }
+    ],
     "description": "Grounds is a global, community-run organization that uses money raised by the community to fund open-source technology, art and public-works projects. Grounds positively impacts the world by funding ideas and fostering permissionless collaboration. Inspired by nouns",
     "url": "https://grounds.wtf",
     "tags": [
@@ -293,16 +306,16 @@
     "banner": "https://pbs.twimg.com/profile_banners/1731495129800753153/1709786192/1500x500",
     "featured": false,
     "order": 11,
-    "farcaster_channel": "coffee"
+    "farcaster_channel": "groundsdao",
+    "telegram": "https://t.me/groundsdao",
+    "discord": "",
+    "farcaster_user": ""
   },
   {
     "name": "Spa DAO",
     "id": "spa-dao",
     "icon": "https://attic.sh/lbvhio1i304m6siwgwwvxycfxm7b",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [],
     "description": "​Sauna + Cold Plunge and good discussions at a crypto event near you. By Ben Lakoff from Bankless Ventures",
     "url": "https://lu.ma/benlakoff",
     "tags": [
@@ -319,16 +332,21 @@
     "banner": "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=1,background=white,quality=75,width=400,height=400/event-covers/ln/a38adf6d-aead-4297-9d20-872b60fa6450",
     "featured": false,
     "order": 12,
-    "farcaster_channel": "spa"
+    "farcaster_channel": "spa",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": ""
   },
   {
     "name": "Jolle' DAO / Jolof Rice",
     "id": "jolle-dao",
     "icon": "https://pbs.twimg.com/profile_images/1762138425082232832/tDJAIBwZ_400x400.jpg",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [
+      {
+        "network": "ETH",
+        "address": "0xaF1BFd8bF02C5EC169d20faba53BF0fa761bf65f"
+      }
+    ],
     "description": "​Jollé is a Foodnouns DAO funded hunger relief program, dedicated to feeding those in need delicious Jollof Rice",
     "url": "https://foodnouns.wtff",
     "tags": [
@@ -343,10 +361,13 @@
     "twitter": "https://x.com/foodnounsjollof?",
     "exists": true,
     "emoji": "🍚",
-    "banner": "",
+    "banner": "https://i.ytimg.com/vi/z4tNAyRdo70/maxresdefault.jpg",
     "featured": false,
     "order": 13,
-    "farcaster_channel": "jolof"
+    "farcaster_channel": "jolof",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": ""
   },
   {
     "name": "Jummah DAO",
@@ -361,17 +382,17 @@
       "Idea"
     ],
     "emoji": "🕌",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [],
     "github": "",
     "twitter": "",
     "banner": "https://www.jummahdao.com/jummahmeta.png",
     "exists": true,
     "featured": false,
     "order": 15,
-    "farcaster_channel": "jummah"
+    "farcaster_channel": "jummah",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": ""
   },
   {
     "name": "Yoga DAO",
@@ -386,16 +407,16 @@
       "Idea", "Regular Thing", "Treasury"
     ],
     "emoji": "🧘🏼",
-    "treasuryAddress": {
-      "network": "",
-      "address": ""
-    },
+    "treasuryAddresses": [],
     "github": "",
     "twitter": "https://twitter.com/YOG8DAO",
     "banner": "https://pbs.twimg.com/profile_banners/1488161264308211714/1666191548/1500x500",
     "exists": true,
     "featured": false,
     "order": 14,
-    "farcaster_channel": "yoga"
+    "farcaster_channel": "yoga",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": ""
   }
 ]
