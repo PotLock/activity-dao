@@ -129,7 +129,7 @@ const LoadingAnimation: React.FC = () => {
               key={index}
               className={css`
                 opacity: ${index < loadedLetters ? 1 : 0};
-                transition: opacity 0.3s ease-in-out;
+                transition: opacity 0.4s ease-in-out;
               `}
             >
               {letter}
