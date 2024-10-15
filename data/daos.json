@@ -84,6 +84,34 @@
     "farcaster_user": "blunts"
   },
   {
+    "name": "Run DAO",
+    "id": "run-dao",
+    "icon": "https://pbs.twimg.com/profile_images/1785266469573414914/_tNI8YkQ_400x400.jpg",
+    "treasuryAddresses": [
+    ],
+    "description": "Running Community For Freaks & Geeks",
+    "url": "https://x.com/runxdao",
+    "tags": [
+      "Wellness",
+      "Sports"
+    ],
+    "maturity": [
+      "Idea",
+      "Regular Thing"
+    ],
+    "github": "",
+    "twitter": "https://twitter.com/runxdao",
+    "exists": true,
+    "emoji": "🏃‍♂️",
+    "banner": "https://pbs.twimg.com/profile_banners/1785259950710685698/1714475671/1500x500",
+    "featured": true,
+    "order": 2,
+    "farcaster_channel": "running",
+    "telegram": "https://t.me/+zeaZ26PoCfs4NjA1",
+    "discord": "",
+    "farcaster_user": ""
+  },
+  {
     "name": "TreeGens",
     "id": "treegens",
     "icon": "freepikexport20240924165639oj8b-3@2x.png",
@@ -109,7 +137,7 @@
     "featured": true,
     "order": 3,
     "farcaster_channel": "treegens",
-    "telegram": "https://t.me/@reegenfam",
+    "telegram": "https://t.me/@treegenfam",
     "discord": "https://discord.com/invite/RNVpKRqSsW",
     "farcaster_user": ""
   },
