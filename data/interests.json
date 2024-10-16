@@ -240,14 +240,14 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "playing-guitar",
-    "activity": "Playing Guitar",
+    "id_slug": "guitar",
+    "activity": "Guitar",
     "emoji": "🎸",
     "farcaster_id": ""
   },
   {
-    "id_slug": "playing-piano",
-    "activity": "Playing Piano",
+    "id_slug": "piano",
+    "activity": "Piano",
     "emoji": "🎹",
     "farcaster_id": ""
   },
@@ -300,8 +300,8 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "video-gaming",
-    "activity": "Video Gaming",
+    "id_slug": "gaming",
+    "activity": "Gaming",
     "emoji": "🎮",
     "farcaster_id": ""
   },
