@@ -13,7 +13,7 @@ const LoadingAnimation: React.FC = () => {
   const emojisRef = useRef<Array<{ x: number; y: number; vx: number; vy: number; emoji: string }>>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const word = 'ACTIVITIES';
+  const word = 'ActivityDAOs';
   const letters = word.split('');
   const activityEmojis = ['🏃‍♂️', '🚴‍♀️', '🏋️‍♂️', '🧘‍♀️', '🏊‍♂️'];
 
