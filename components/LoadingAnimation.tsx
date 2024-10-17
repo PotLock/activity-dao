@@ -15,7 +15,7 @@ const LoadingAnimation: React.FC = () => {
 
   const word = 'ActivityDAOs';
   const letters = word.split('');
-  const activityEmojis = ['🏃‍♂️', '🚴‍♀️', '🏋️‍♂️', '🧘‍♀️', '🏊‍♂️'];
+  const activityEmojis = ['🏃‍♂️', '🚴‍♀️', '🏋️‍♂️', '🧘‍♀️', '🏊‍♂️','🎣','🏕️',];
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -32,7 +32,7 @@ const LoadingAnimation: React.FC = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Initialize emojis
+
     emojisRef.current = [...Array(10)].map(() => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
