@@ -15,7 +15,7 @@ const LoadingAnimation: React.FC = () => {
 
   const word = 'ActivityDAOs';
   const letters = word.split('');
-  const activityEmojis = ['🏃‍♂️', '🚴‍♀️', '🏋️‍♂️', '🧘‍♀️', '🏊‍♂️', '🎣', '🏕️', '⚽', '🏀'];
+  const activityEmojis = ['🏃‍♂️', '🚴‍♀️', '🏋️‍♂️', '🧘‍♀️', '🏊‍♂️', '🎣', '🏕️', '⚽', '🏀','🛹'];
 
   useEffect(() => {
     const canvas = canvasRef.current;
