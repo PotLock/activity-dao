@@ -32,7 +32,7 @@ const LoadingAnimation: React.FC = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Create two instances of each emoji
+
     emojisRef.current = [...Array(2)].flatMap(() => 
       activityEmojis.map(emoji => ({
         x: Math.random() * canvas.width,

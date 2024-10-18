@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { css } from "@emotion/css";
 import NAVBAR from "../components/n-a-v-b-a-r";
 import Header from "../components/header";
-import AcivityCards from "../components/activity";
+import AcivityCards from "../components/how-it-works";
 import EventsList from "../components/events-list";
 import DAOsDescription from "../components/d-a-os-description";
 import OfficialPartners from "../components/official-partners";
