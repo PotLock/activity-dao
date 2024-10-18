@@ -1,35 +1,70 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { css, keyframes } from '@emotion/css';
 
-const sparkle = keyframes`
-  0% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
-`;
-
-const float = keyframes`
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(10px, -10px); }
-  50% { transform: translate(20px, 0); }
-  75% { transform: translate(10px, 10px); }
-  100% { transform: translate(0, 0); }
-`;
-
 const rainbow = keyframes`
-  0% { background-position: 0% 50%; }
+  0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 `;
 
 const LoadingAnimation: React.FC = () => {
   const [loadedLetters, setLoadedLetters] = useState(0);
   const [isFullHourglass, setIsFullHourglass] = useState(true);
-  const word = 'ACTIVITIES';
+  const animationRef = useRef<number>();
+  const emojisRef = useRef<Array<{ x: number; y: number; vx: number; vy: number; emoji: string }>>([]);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const word = 'ActivityDAOs';
+  const letters = word.split('');
+  const activityEmojis = ['🏃‍♂️', '🚴‍♀️', '🏋️‍♂️', '🧘‍♀️', '🏊‍♂️', '🎣', '🏕️', '⚽', '🏀','🛹'];
 
   useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+
+    emojisRef.current = [...Array(2)].flatMap(() => 
+      activityEmojis.map(emoji => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 2,
+        vy: (Math.random() - 0.5) * 2,
+        emoji: emoji
+      }))
+    );
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      emojisRef.current.forEach(emoji => {
+        emoji.x += emoji.vx;
+        emoji.y += emoji.vy;
+
+        if (emoji.x < 0 || emoji.x > canvas.width) emoji.vx *= -1;
+        if (emoji.y < 0 || emoji.y > canvas.height) emoji.vy *= -1;
+
+        ctx.font = '2rem Arial';
+        ctx.fillText(emoji.emoji, emoji.x, emoji.y);
+      });
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
     const letterInterval = setInterval(() => {
       setLoadedLetters((prev) => (prev < word.length ? prev + 1 : prev));
-    }, 300);
+    }, 150);
 
     const hourglassInterval = setInterval(() => {
       setIsFullHourglass((prev) => !prev);
@@ -38,17 +73,10 @@ const LoadingAnimation: React.FC = () => {
     return () => {
       clearInterval(letterInterval);
       clearInterval(hourglassInterval);
+      cancelAnimationFrame(animationRef.current!);
+      window.removeEventListener('resize', resizeCanvas);
     };
   }, []);
-
-  const letters = word.split('');
-  const activityEmojis = ['🏃‍♂️', '🚴‍♀️', '🏋️‍♂️', '🧘‍♀️', '🏊‍♂️'];
-  const hourglassEmoji = isFullHourglass ? '⏳' : '⌛';
-  
-  const emojis = [
-    ...activityEmojis,
-    ...Array(activityEmojis.length).fill(hourglassEmoji)
-  ];
 
   return (
     <div
@@ -63,32 +91,14 @@ const LoadingAnimation: React.FC = () => {
         overflow: hidden;
       `}
     >
-      <div
+      <canvas
+        ref={canvasRef}
         className={css`
           position: absolute;
           top: 0;
           left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
         `}
-      >
-        {emojis.map((emoji, index) => (
-          <span
-            key={index}
-            className={css`
-              position: absolute;
-              font-size: 2rem;
-              animation: ${float} ${10 + index * 2}s ease-in-out infinite;
-              left: ${Math.random() * 100}vw;
-              top: ${Math.random() * 100}vh;
-            `}
-          >
-            {emoji}
-          </span>
-        ))}
-      </div>
-
+      />
       <div
         className={css`
           position: absolute;
@@ -121,14 +131,23 @@ const LoadingAnimation: React.FC = () => {
               key={index}
               className={css`
                 opacity: ${index < loadedLetters ? 1 : 0};
-                animation: ${sparkle} 1.5s infinite;
-                animation-delay: ${index * 0.1}s;
+                transition: opacity 0.4s ease-in-out;
               `}
             >
               {letter}
             </span>
           ))}
         </h1>
+      </div>
+      <div
+        className={css`
+          position: absolute;
+          bottom: 20px;
+          right: 20px;
+          font-size: 2rem;
+        `}
+      >
+        {isFullHourglass ? '⏳' : '⌛'}
       </div>
     </div>
   );

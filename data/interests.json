@@ -1,6 +1,6 @@
 [
   {
-    "id_slug": "soccer",
+    "id_slug": "football",
     "activity": "Soccer",
     "emoji": "⚽",
     "farcaster_id": ""
@@ -30,7 +30,7 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "football",
+    "id_slug": "NFL",
     "activity": "American Football",
     "emoji": "🏈",
     "farcaster_id": ""
@@ -48,7 +48,7 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "swimming",
+    "id_slug": "swim",
     "activity": "Swimming",
     "emoji": "🏊",
     "farcaster_id": ""
@@ -102,7 +102,7 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "martial-arts",
+    "id_slug": "MMA",
     "activity": "Martial Arts",
     "emoji": "🥋",
     "farcaster_id": ""
@@ -234,25 +234,25 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "singing",
+    "id_slug": "sing",
     "activity": "Singing",
     "emoji": "🎤",
     "farcaster_id": ""
   },
   {
-    "id_slug": "playing-guitar",
-    "activity": "Playing Guitar",
+    "id_slug": "guitar",
+    "activity": "Guitar",
     "emoji": "🎸",
     "farcaster_id": ""
   },
   {
-    "id_slug": "playing-piano",
-    "activity": "Playing Piano",
+    "id_slug": "piano",
+    "activity": "Piano",
     "emoji": "🎹",
     "farcaster_id": ""
   },
   {
-    "id_slug": "reading",
+    "id_slug": "books",
     "activity": "Reading",
     "emoji": "📚",
     "farcaster_id": ""
@@ -300,8 +300,8 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "video-gaming",
-    "activity": "Video Gaming",
+    "id_slug": "gaming",
+    "activity": "Gaming",
     "emoji": "🎮",
     "farcaster_id": ""
   },
@@ -498,7 +498,7 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "cheese-tasting",
+    "id_slug": "cheese",
     "activity": "Cheese Tasting",
     "emoji": "🧀",
     "farcaster_id": ""
@@ -516,7 +516,7 @@
     "farcaster_id": ""
   },
   {
-    "id_slug": "barbecue",
+    "id_slug": "bbq",
     "activity": "Barbecue",
     "emoji": "🍖",
     "farcaster_id": ""
