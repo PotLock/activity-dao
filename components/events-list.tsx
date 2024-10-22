@@ -14,7 +14,6 @@ import {
   FormControl,
   IconButton
 } from "@mui/material";
-import { gql, GraphQLClient } from 'graphql-request';
 
 // Add this type definition
 type Event = {
@@ -368,57 +367,63 @@ function editDistance(s1: string, s2: string): number {
 
 // Define the GraphQL client
 const endpoint = 'https://graph.sola.day/v1/graphql';
-const client = new GraphQLClient(endpoint);
 
-// Define the GraphQL query
-const query = gql`
-  query FetchUpcomingEvents($currentTime: timestamp!, $twentyFourHoursLater: timestamp!) {
-    events(
-      where: {
-        display: {_neq: "private"},
-        start_time: {_gte: $currentTime, _lte: $twentyFourHoursLater},
-        status: {_in: ["open", "new", "normal"]}
-      },
-      order_by: {start_time: asc},
-      limit: 10
-    ) {
-      id
-      title
-      start_time
-      end_time
-      location
-      participants_count
-      cover_url
-      owner {
-        username
-        image_url
-      }
-    }
-  }
-`;
-
-// Function to fetch upcoming events
 async function fetchUpcomingEvents(): Promise<Event[]> {
   const currentTime = new Date().toISOString();
   const twentyFourHoursLater = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+  const query = `
+    query FetchUpcomingEvents($currentTime: timestamp!, $twentyFourHoursLater: timestamp!) {
+      events(
+        where: {
+          display: {_neq: "private"},
+          start_time: {_gte: $currentTime, _lte: $twentyFourHoursLater},
+          status: {_in: ["open", "new", "normal"]}
+        },
+        order_by: {start_time: asc},
+        limit: 10
+      ) {
+        id
+        title
+        start_time
+        end_time
+        location
+        participants_count
+        cover_url
+        owner {
+          username
+          image_url
+        }
+      }
+    }
+  `;
 
   const variables = {
     currentTime: currentTime.split('.')[0] + 'Z',
     twentyFourHoursLater: twentyFourHoursLater.split('.')[0] + 'Z'
   };
 
-  console.log("Fetching events with variables:", variables);
-
   try {
-    const data = await client.request(query, variables);
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+    });
+
+    const data = await response.json();
     console.log("Original API response:", JSON.stringify(data, null, 2));
     
-    if (!data.events || data.events.length === 0) {
+    if (!data.data.events || data.data.events.length === 0) {
       console.log("No events received from API");
       return [];
     }
 
-    const mappedEvents = data.events.map((event: any) => ({
+    const mappedEvents = data.data.events.map((event: any) => ({
       date: event.start_time,
       name: event.title,
       location: event.location || 'Location not specified',
