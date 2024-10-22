@@ -144,8 +144,6 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
   const [hasMatchingEvents, setHasMatchingEvents] = useState<boolean | null>(null);
   const [activeTab, setActiveTab] = useState<'Feed' | 'Treasury' | 'Events' | null>(null);
   const eventsChecked = useRef(false);
-  const treasuryChecked = useRef(false);
-  const feedChecked = useRef(false);
   const router = useRouter()
   const {tab} = router.query;
 
@@ -196,6 +194,9 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
   // }, [dao.defaultTab, hasTreasury, hasFeed, hasMatchingEvents]);
 
   useEffect(() => {
+    if (!tab) {
+      setActiveTab('Feed')
+    }
     if (tab) {
       setActiveTab(tab as 'Feed' | 'Treasury' | 'Events');
     }

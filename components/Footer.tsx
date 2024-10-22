@@ -1,6 +1,8 @@
 import React from 'react';
 import { css } from "@emotion/css";
 import { FaTwitter, FaDiscord, FaGithub } from 'react-icons/fa';
+import Image from 'next/image'; // Import Image from Next.js
+import guildPic from '../public/guild.jpg'; // Import your image
 
 const Footer: React.FC = () => {
   return (
@@ -68,6 +70,27 @@ const Footer: React.FC = () => {
             `}
           >
             <FaGithub size={20} />
+          </a>
+          
+          <a
+            href="https://guild.xyz/activities" 
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src={guildPic} 
+              alt="Guild Icon" 
+              width={20} 
+              height={20} 
+              className={css`
+                border-radius: 50%; 
+                opacity: 0.7;
+                transition: opacity 0.3s ease;
+                &:hover {
+                  opacity: 1;
+                }
+              `}
+            />
           </a>
         </div>
         <div
