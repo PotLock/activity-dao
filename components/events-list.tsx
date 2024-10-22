@@ -14,18 +14,12 @@ import {
   FormControl,
   IconButton
 } from "@mui/material";
+import dynamic from 'next/dynamic';
+import { Event, EventLocation } from '../types/event'; // Add this import
+
+const MapComponent = dynamic(() => import('./MapComponent'), { ssr: false });
 
 // Add this type definition
-type Event = {
-  date: string;
-  name: string;
-  location: string;
-  link: string;
-  image: string;
-  dao: string;
-  description: string;
-  isFeatured?: boolean;
-};
 
 // Add these custom icon components
 const ViewListIcon = () => (
@@ -456,12 +450,17 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
   console.log("EventsList rendered with mode:", mode);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState<EventLocation | null>(null);
   const [timeFilter, setTimeFilter] = useState("upcoming");
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery');
   const [hasMatchingEvents, setHasMatchingEvents] = useState(true);
   const [events, setEvents] = useState<Event[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filters, setFilters] = useState({
+    search: "",
+    location: null as EventLocation | null,
+    time: "upcoming"
+  });
 
   useImperativeHandle(ref, () => ({
     hasMatchingEvents
@@ -508,7 +507,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
           (event.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
 
         // Apply location filter
-        const locationMatch = selectedLocation === "" || event.location === selectedLocation;
+        const locationMatch = selectedLocation === null || event.location === selectedLocation.city;
 
         return searchMatch && locationMatch;
       });
@@ -598,6 +597,33 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
   }, [timeFilteredEvents, currentPage, eventsPerPage]);
 
   const totalPages = Math.ceil(timeFilteredEvents.length / eventsPerPage);
+
+  const groupedEvents = useMemo(() => {
+    const groups: { [key: string]: EventLocation } = {};
+    timeFilteredEvents.forEach(event => {
+      if (!groups[event.location]) {
+        groups[event.location] = {
+          city: event.location,
+          lat: 0, // You'll need to add latitude data to your events
+          lng: 0, // You'll need to add longitude data to your events
+          events: []
+        };
+      }
+      groups[event.location].events.push(event);
+    });
+    return Object.values(groups);
+  }, [timeFilteredEvents]);
+
+  const clearFilters = () => {
+    setFilters({
+      search: "",
+      location: null,
+      time: "upcoming"
+    });
+    setSearchTerm("");
+    setSelectedLocation(null);
+    setTimeFilter("upcoming");
+  };
 
   return (
     <div className={css`
@@ -704,7 +730,10 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
             variant="outlined"
             placeholder="Search events..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setFilters(prev => ({ ...prev, search: e.target.value }));
+            }}
             InputProps={{
               startAdornment: (
                 <img
@@ -727,8 +756,14 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
             <FormControl style={{ width: '150px' }}> 
               <InputLabel>Location</InputLabel>
               <Select
-                value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value as string)}
+                value={selectedLocation?.city || ''}
+                onChange={(e) => {
+                  const newLocation = locations.find(location => location === e.target.value)
+                    ? { city: e.target.value, lat: 0, lng: 0, events: [] }
+                    : null;
+                  setSelectedLocation(newLocation);
+                  setFilters(prev => ({ ...prev, location: newLocation }));
+                }}
                 input={<OutlinedInput label="Location" />}
                 MenuProps={{
                   anchorOrigin: {
@@ -751,7 +786,10 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
               <InputLabel>Time</InputLabel>
               <Select
                 value={timeFilter}
-                onChange={(e) => setTimeFilter(e.target.value as string)}
+                onChange={(e) => {
+                  setTimeFilter(e.target.value as string);
+                  setFilters(prev => ({ ...prev, time: e.target.value as string }));
+                }}
                 input={<OutlinedInput label="Time" />}
                 MenuProps={{
                   anchorOrigin: {
@@ -776,15 +814,11 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 ))}
               </Select>
             </FormControl>
-            <IconButton onClick={() => {
-              console.log("IconButton clicked. Current viewMode:", viewMode);
-              setViewMode(prevMode => {
-                const newMode = prevMode === 'gallery' ? 'list' : 'gallery';
-                console.log("Switching viewMode to:", newMode);
-                return newMode;
-              });
-            }}>
-              {viewMode === 'gallery' ? <ViewListIcon /> : <ViewModuleIcon />}
+            <IconButton onClick={() => setViewMode('gallery')}>
+              <ViewModuleIcon />
+            </IconButton>
+            <IconButton onClick={() => setViewMode('list')}>
+              <ViewListIcon />
             </IconButton>
           </div>
         </div>
