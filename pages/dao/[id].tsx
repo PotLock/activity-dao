@@ -11,6 +11,7 @@ import { isValidEthereumAddressOrDomain } from "../../utils/isEth";
 import axios from 'axios';
 import Image from 'next/image';
 import React from 'react';
+import { useRouter } from "next/router";
 import { Network, Alchemy } from "alchemy-sdk";
 
 // Optional config object, but defaults to demo api-key and eth-mainnet.
@@ -143,6 +144,10 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
   const [hasMatchingEvents, setHasMatchingEvents] = useState<boolean | null>(null);
   const [activeTab, setActiveTab] = useState<'Feed' | 'Treasury' | 'Events' | null>(null);
   const eventsChecked = useRef(false);
+  const treasuryChecked = useRef(false);
+  const feedChecked = useRef(false);
+  const router = useRouter()
+  const {tab} = router.query;
 
   const hasTreasury = dao.treasuryAddresses.length > 0;
   const hasFeed = !!dao.farcaster_channel;
@@ -160,35 +165,49 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
     checkForEvents();
   }, [dao.name]);
 
+  // useEffect(() => {
+  //   const determineActiveTab = () => {
+  //     const availableTabs = [
+  //       ...(hasTreasury ? ['Treasury'] : []),
+  //       ...(hasFeed ? ['Feed'] : []),
+  //       ...(hasMatchingEvents ? ['Events'] : []),
+  //     ] as ('Feed' | 'Treasury' | 'Events')[];
+
+  //     console.log('Available tabs:', availableTabs);
+
+  //     if (availableTabs.length === 0) {
+  //       console.log('No content available for this DAO');
+  //       setActiveTab(null);
+  //       return;
+  //     }
+
+  //     if (availableTabs.includes(dao.defaultTab as any)) {
+  //       setActiveTab(dao.defaultTab as 'Feed' | 'Treasury' | 'Events');
+  //     } else if (availableTabs.includes(DEFAULT_TAB)) {
+  //       setActiveTab(DEFAULT_TAB);
+  //     } else if (availableTabs.includes(SECONDARY_DEFAULT_TAB)) {
+  //       setActiveTab(SECONDARY_DEFAULT_TAB);
+  //     } else {
+  //       setActiveTab(availableTabs[0]);
+  //     }
+  //   };
+
+  //   determineActiveTab();
+  // }, [dao.defaultTab, hasTreasury, hasFeed, hasMatchingEvents]);
+
   useEffect(() => {
-    const determineActiveTab = () => {
-      const availableTabs = [
-        ...(hasTreasury ? ['Treasury'] : []),
-        ...(hasFeed ? ['Feed'] : []),
-        ...(hasMatchingEvents ? ['Events'] : []),
-      ] as ('Feed' | 'Treasury' | 'Events')[];
+    if (tab) {
+      setActiveTab(tab as 'Feed' | 'Treasury' | 'Events');
+    }
+  }, [tab]);
 
-      console.log('Available tabs:', availableTabs);
-
-      if (availableTabs.length === 0) {
-        console.log('No content available for this DAO');
-        setActiveTab(null);
-        return;
-      }
-
-      if (availableTabs.includes(dao.defaultTab as any)) {
-        setActiveTab(dao.defaultTab as 'Feed' | 'Treasury' | 'Events');
-      } else if (availableTabs.includes(DEFAULT_TAB)) {
-        setActiveTab(DEFAULT_TAB);
-      } else if (availableTabs.includes(SECONDARY_DEFAULT_TAB)) {
-        setActiveTab(SECONDARY_DEFAULT_TAB);
-      } else {
-        setActiveTab(availableTabs[0]);
-      }
-    };
-
-    determineActiveTab();
-  }, [dao.defaultTab, hasTreasury, hasFeed, hasMatchingEvents]);
+  const handleTabChange = (newTab: 'Feed' | 'Treasury' | 'Events') => {
+    setActiveTab(newTab);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, tab: newTab }, 
+    });
+  };
 
   const [expandedRows, setExpandedRows] = useState<{ [key: string]: boolean }>({});
   const [balances, setBalances] = useState<TreasuryBalance>({});
@@ -612,7 +631,7 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
         {tabs.map(({ name, icon: Icon }) => (
           <button
             key={name}
-            onClick={() => setActiveTab(name as 'Feed' | 'Treasury' | 'Events')}
+            onClick={() => handleTabChange(name as 'Feed' | 'Treasury' | 'Events')}
             className={css`
               padding: 0.5rem 1rem;
               background-color: ${activeTab === name ? '#e0e0e0' : '#f0f0f0'};

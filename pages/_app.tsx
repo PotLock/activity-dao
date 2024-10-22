@@ -42,6 +42,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <meta name="twitter:description" content="ActivityDAOs - the movement to building funded communities around every activity" />
         <meta name="twitter:image" content="/thumbnail.png" />
 
+        {/* to do - instead of import URL use next/font to prerender fonts for faster load time */}
         <style
           dangerouslySetInnerHTML={{
             __html: `@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400;500;600;700&display=swap');

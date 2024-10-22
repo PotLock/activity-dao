@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { css, keyframes } from '@emotion/css';
+import { DynaPuff } from 'next/font/google'; 
+
+const dynapuff = DynaPuff({ subsets: ['latin'] });
 
 const rainbow = keyframes`
   0%, 100% { background-position: 0% 50%; }
@@ -110,9 +113,9 @@ const LoadingAnimation: React.FC = () => {
         <h1
           className={css`
             font-size: 8vw;
-            max-font-size: 4rem;
+            max-font-size: 2rem;
             font-weight: bold;
-            font-family: var(--font-dynapuff);
+            font-family: ${dynapuff.style.fontFamily}; 
             display: flex;
             background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
             background-size: 200% auto;
