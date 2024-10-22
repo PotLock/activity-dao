@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { isValidEthereumAddressOrDomain } from '../utils/isEth';
+// mport { isValidEthereumAddressOrDomain } from '../utils/isEth';
 import { css } from "@emotion/css";
 import {
   TextField,
@@ -26,7 +26,7 @@ import {
 import { toast } from 'react-toastify';
 import daoData from "../data/daos.json";
 import { Octokit } from "@octokit/rest";
-import SafeImage from './SafeImage';
+// import SafeImage from './SafeImage';
 
 const allMaturityTags = Array.from(new Set(daoData.flatMap(dao => dao.maturity)));
 const allTags = Array.from(new Set(daoData.flatMap(dao => dao.tags)));
@@ -138,9 +138,10 @@ const SubmitDAOForm: React.FC = () => {
           if (!address.network || !address.address) {
             return 'Network and address are required for all treasury addresses';
           }
-          if (!isValidUrl(address.address) && !isValidEthereumAddressOrDomain(address.address)) {
-            return 'Invalid treasury address';
-          }
+          // Commented out Ethereum address validation
+          // if (!isValidUrl(address.address) && !isValidEthereumAddressOrDomain(address.address)) {
+          //   return 'Invalid treasury address';
+          // }
         }
         return '';
       case 'farcaster_channel':
