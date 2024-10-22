@@ -1,7 +1,6 @@
 import React, { forwardRef, useImperativeHandle, Ref } from 'react';
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
-import staticEvents from "../data/events.json";
 import { format, parseISO, isAfter, isBefore, isToday, isThisWeek, isThisMonth, isThisYear, startOfQuarter, endOfQuarter, endOfYear, addYears } from "date-fns";
 import { useState, useMemo, useEffect } from "react";
 import Component1 from "./featured-events";
@@ -16,7 +15,7 @@ import {
 } from "@mui/material";
 import { gql, GraphQLClient } from 'graphql-request';
 
-// Add this type definition
+// Update the Event type definition
 type Event = {
   date: string;
   name: string;
@@ -25,7 +24,7 @@ type Event = {
   image: string;
   dao: string;
   description: string;
-  isFeatured?: boolean;
+  id: string;
 };
 
 // Add these custom icon components
@@ -52,10 +51,9 @@ interface EventsListProps {
   hideDescription?: boolean;
   daoMode?: string;
   interestMode?: string;
-  eventsPerPage?: number;
 }
 
-const EventCard = ({ event }: { event: Event }) => {
+const EventCard = ({ event }: { event: { date: string; name: string; location: string; link: string; image: string; id: string } }) => {
   const eventDate = parseISO(event.date);
   const day = format(eventDate, "dd");
   const month = format(eventDate, "MMM").toUpperCase();
@@ -82,27 +80,10 @@ const EventCard = ({ event }: { event: Event }) => {
         @media screen and (min-width: 1051px) {
           flex: 0 0 calc(33.33% - 0.67rem);
         }
-        position: relative;
       `}
     >
-      {event.isFeatured && (
-        <div className={css`
-          position: absolute;
-          top: 10px;
-          left: 10px;
-          background-color: var(--color-gold-100);
-          color: white;
-          padding: 5px 10px;
-          border-radius: 15px;
-          font-size: 0.8rem;
-          font-weight: bold;
-          z-index: 1;
-        `}>
-          ⭐ Featured
-        </div>
-      )}
       <a
-        href={event.link}
+        href={`https://app.sola.day/event/detail/${event.id}`}
         target="_blank"
         rel="noopener noreferrer"
         className={css`
@@ -203,7 +184,7 @@ const ListEventCard = ({ event }: { event: Event }) => {
 
   return (
     <a
-      href={event.link}
+      href={`https://app.sola.day/event/detail/${event.id}`}
       target="_blank"
       rel="noopener noreferrer"
       className={css`
@@ -221,27 +202,10 @@ const ListEventCard = ({ event }: { event: Event }) => {
         &:hover {
           box-shadow: 0 0 0 3px var(--color-gold-100);
         }
-        position: relative;
       `}
     >
-      {event.isFeatured && (
-        <div className={css`
-          position: absolute;
-          top: 10px;
-          left: 10px;
-          background-color: var(--color-gold-100);
-          color: white;
-          padding: 5px 10px;
-          border-radius: 15px;
-          font-size: 0.8rem;
-          font-weight: bold;
-          z-index: 1;
-        `}>
-          ⭐ Featured
-        </div>
-      )}
       <img
-        src={event.image}
+        src={event.image || '/placeholder-image.jpg'} // Add a placeholder image
         alt={event.name}
         className={css`
           width: 100px;
@@ -272,7 +236,7 @@ const ListEventCard = ({ event }: { event: Event }) => {
             font-weight: 400;
           `}
         >
-          {event.location}
+          {event.location || 'Location not specified'}
         </p>
       </div>
       <div
@@ -398,7 +362,7 @@ const query = gql`
 `;
 
 // Function to fetch upcoming events
-async function fetchUpcomingEvents(): Promise<Event[]> {
+async function fetchUpcomingEvents() {
   const currentTime = new Date().toISOString();
   const twentyFourHoursLater = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
@@ -444,8 +408,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     hideHeader = false, 
     hideDescription = false, 
     daoMode,
-    interestMode,
-    eventsPerPage = 9 // Default to 9 events per page
+    interestMode
   } = props;
 
   console.log("EventsList rendered with mode:", mode);
@@ -456,7 +419,6 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery');
   const [hasMatchingEvents, setHasMatchingEvents] = useState(true);
   const [events, setEvents] = useState<Event[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
 
   useImperativeHandle(ref, () => ({
     hasMatchingEvents
@@ -478,19 +440,14 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
       if (fetchedEvents.length === 0) {
         console.log("No events fetched");
       }
-      // Combine fetched events with static events, marking static events as featured
-      const combinedEvents = [
-        ...staticEvents.map(event => ({ ...event, isFeatured: true })),
-        ...fetchedEvents
-      ];
-      setEvents(combinedEvents);
+      setEvents(fetchedEvents);
     });
   }, []);
 
   const filteredEvents = useMemo(() => {
     console.log("Filtering events with:", { searchTerm, selectedLocation, daoMode, interestMode });
     
-    const filtered = events
+    return events
       .filter((event: Event) => {
         const daoMatch = !daoMode || checkDaoSimilarity(event, daoMode);
         const interestMatch = !interestMode || checkInterestSimilarity(event, interestMode);
@@ -506,17 +463,8 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
         const locationMatch = selectedLocation === "" || event.location === selectedLocation;
 
         return searchMatch && locationMatch;
-      });
-
-    // Separate featured and non-featured events
-    const featuredEvents = filtered.filter(event => event.isFeatured);
-    const nonFeaturedEvents = filtered.filter(event => !event.isFeatured);
-
-    // Sort only non-featured events
-    nonFeaturedEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-    // Combine featured events (unsorted) with sorted non-featured events
-    return [...featuredEvents, ...nonFeaturedEvents];
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [events, searchTerm, selectedLocation, daoMode, interestMode]);
 
   const getCounts = useMemo(() => {
@@ -534,6 +482,11 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     };
 
     filteredEvents.forEach(event => {
+      if (!event.date) {
+        console.warn('Event without date:', event);
+        return; // Skip this event
+      }
+
       const eventDate = parseISO(event.date);
       if (isAfter(eventDate, now) || isToday(eventDate)) counts.upcoming++;
       if (isBefore(eventDate, now)) counts.past++;
@@ -550,6 +503,10 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
 
   const timeFilteredEvents = useMemo(() => {
     return filteredEvents.filter((event: Event) => {
+      if (!event.date) {
+        console.warn('Event without date:', event);
+        return false; // Skip this event
+      }
       const eventDate = parseISO(event.date);
       const now = new Date();
 
@@ -585,14 +542,6 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     const filteredLocations = filteredEvents.map(event => event.location);
     return Array.from(new Set(filteredLocations)).sort();
   }, [filteredEvents]);
-
-  const paginatedEvents = useMemo(() => {
-    const startIndex = (currentPage - 1) * eventsPerPage;
-    const endIndex = startIndex + eventsPerPage;
-    return timeFilteredEvents.slice(startIndex, endIndex);
-  }, [timeFilteredEvents, currentPage, eventsPerPage]);
-
-  const totalPages = Math.ceil(timeFilteredEvents.length / eventsPerPage);
 
   return (
     <div className={css`
@@ -797,7 +746,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 justify-content: flex-start;
                 width: 100%;
               `}>
-                {paginatedEvents.map((event, index) => (
+                {timeFilteredEvents.map((event, index) => (
                   <EventCard key={index} event={event} />
                 ))}
               </div>
@@ -807,34 +756,11 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 flex-direction: column;
                 width: 100%;
               `}>
-                {paginatedEvents.map((event, index) => (
+                {timeFilteredEvents.map((event, index) => (
                   <ListEventCard key={index} event={event} />
                 ))}
               </div>
             )}
-            
-            {/* Pagination controls */}
-            <div className={css`
-              display: flex;
-              justify-content: center;
-              margin-top: 2rem;
-            `}>
-              <button 
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span className={css`margin: 0 1rem;`}>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button 
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
           </div>
         ) : (
           <h3 className={css`
@@ -858,12 +784,20 @@ const EventsListComponent = EventsList as typeof EventsList & {
 };
 
 EventsListComponent.checkForEvents = async (daoName: string): Promise<boolean> => {
-  const fetchedEvents = await fetchUpcomingEvents();
-  const allEvents = [...fetchedEvents, ...staticEvents];
-  
-  return allEvents.some(event => 
-    checkDaoSimilarity(event, daoName) || checkInterestSimilarity(event, daoName)
-  );
+  const events = await fetchUpcomingEvents();
+  return events.some((event: any) => {
+    const eventObj: Event = {
+      date: event.start_time,
+      name: event.title,
+      location: event.location,
+      link: `/event/${event.id}`,
+      image: event.cover_url,
+      dao: event.owner?.username || 'Unknown',
+      description: `Event by ${event.owner?.username || 'Unknown'}`,
+      id: event.id // Add this line
+    };
+    return checkDaoSimilarity(eventObj, daoName) || checkInterestSimilarity(eventObj, daoName);
+  });
 };
 
 // Add this to the return type of the component
