@@ -65,12 +65,9 @@ const LoadingAnimation: React.FC = () => {
 
     animate();
 
-    const letterInterval = setInterval(() => {
-      setLoadedLetters((prev) => (prev < word.length ? prev + 1 : prev));
-    }, 100);
+ 
 
     return () => {
-      clearInterval(letterInterval);
       cancelAnimationFrame(animationRef.current!);
       window.removeEventListener('resize', resizeCanvas);
     };
