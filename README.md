@@ -116,13 +116,15 @@ npm run dev
 - `styles/` - CSS styles
 - `public/` - Static assets
 - `data/` - Data files (include events.json and interests.json which catalog events, daos, and interests with forecaster channels)
+- `contracts/` - Includes smart contracts
+- `types/` - TypeScript types
 
 ## Main Pages
 
 - Home
-- DAOs
+- DAOs Explore -> DAO Page
 - Events  
-- Feeds
+- Feed -> Interest Page
 
 ## Documentation
 

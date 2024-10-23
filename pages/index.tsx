@@ -15,6 +15,8 @@ import AcivityCards from "../components/how-it-works";
 import EventsList from "../components/events-list";
 import DAOsDescription from "../components/d-a-os-description";
 import OfficialPartners from "../components/official-partners";
+import BuiltWith from "../components/built-with";
+
 import Footer from "../components/Footer";
 import EmojiTicker from "../components/EmoijiTicker";
 import DaoMaturity from "../components/daoMaturity";
@@ -474,6 +476,7 @@ const Desktop: NextPage = () => {
           <PoweringCommunity />
           <DaoMaturity />
           <OfficialPartners />
+
         </section>
 
         {/* Background section */}
@@ -484,6 +487,8 @@ const Desktop: NextPage = () => {
           `}
         >
           <JoinActivityDAO />
+          <BuiltWith />
+
         </section>
       </div>
 

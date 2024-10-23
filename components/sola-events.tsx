@@ -1,7 +1,6 @@
 import React, { forwardRef, useImperativeHandle, Ref } from 'react';
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
-import staticEvents from "../data/events.json";
 import { format, parseISO, isAfter, isBefore, isToday, isThisWeek, isThisMonth, isThisYear, startOfQuarter, endOfQuarter, endOfYear, addYears } from "date-fns";
 import { useState, useMemo, useEffect } from "react";
 import Component1 from "./featured-events";
@@ -14,13 +13,18 @@ import {
   FormControl,
   IconButton
 } from "@mui/material";
-import dynamic from 'next/dynamic';
-import { Event, EventLocation } from '../types/event'; // Add this import
-import interests from '../data/interests.json';
 
-const MapComponent = dynamic(() => import('./MapComponent'), { ssr: false });
-
-// Add this type definition
+// Update the Event type definition
+type Event = {
+  date: string;
+  name: string;
+  location: string;
+  link: string;
+  image: string;
+  dao: string;
+  description: string;
+  id: string;
+};
 
 // Add these custom icon components
 const ViewListIcon = () => (
@@ -46,10 +50,9 @@ interface EventsListProps {
   hideDescription?: boolean;
   daoMode?: string;
   interestMode?: string;
-  eventsPerPage?: number;
 }
 
-const EventCard = ({ event }: { event: Event }) => {
+const EventCard = ({ event }: { event: { date: string; name: string; location: string; link: string; image: string; id: string } }) => {
   const eventDate = parseISO(event.date);
   const day = format(eventDate, "dd");
   const month = format(eventDate, "MMM").toUpperCase();
@@ -76,27 +79,10 @@ const EventCard = ({ event }: { event: Event }) => {
         @media screen and (min-width: 1051px) {
           flex: 0 0 calc(33.33% - 0.67rem);
         }
-        position: relative;
       `}
     >
-      {event.isFeatured && (
-        <div className={css`
-          position: absolute;
-          top: 10px;
-          left: 10px;
-          background-color: var(--color-gold-100);
-          color: white;
-          padding: 5px 10px;
-          border-radius: 15px;
-          font-size: 0.8rem;
-          font-weight: bold;
-          z-index: 1;
-        `}>
-          ⭐ Featured
-        </div>
-      )}
       <a
-        href={event.link}
+        href={`https://app.sola.day/event/detail/${event.id}`}
         target="_blank"
         rel="noopener noreferrer"
         className={css`
@@ -197,7 +183,7 @@ const ListEventCard = ({ event }: { event: Event }) => {
 
   return (
     <a
-      href={event.link}
+      href={`https://app.sola.day/event/detail/${event.id}`}
       target="_blank"
       rel="noopener noreferrer"
       className={css`
@@ -215,27 +201,10 @@ const ListEventCard = ({ event }: { event: Event }) => {
         &:hover {
           box-shadow: 0 0 0 3px var(--color-gold-100);
         }
-        position: relative;
       `}
     >
-      {event.isFeatured && (
-        <div className={css`
-          position: absolute;
-          top: 10px;
-          left: 10px;
-          background-color: var(--color-gold-100);
-          color: white;
-          padding: 5px 10px;
-          border-radius: 15px;
-          font-size: 0.8rem;
-          font-weight: bold;
-          z-index: 1;
-        `}>
-          ⭐ Featured
-        </div>
-      )}
       <img
-        src={event.image}
+        src={event.image || '/placeholder-image.jpg'} // Add a placeholder image
         alt={event.name}
         className={css`
           width: 100px;
@@ -266,7 +235,7 @@ const ListEventCard = ({ event }: { event: Event }) => {
             font-weight: 400;
           `}
         >
-          {event.location}
+          {event.location || 'Location not specified'}
         </p>
       </div>
       <div
@@ -360,7 +329,7 @@ function editDistance(s1: string, s2: string): number {
   return costs[s2.length];
 }
 
-// Define the GraphQL client
+// Define the GraphQL endpoint
 const endpoint = 'https://graph.sola.day/v1/graphql';
 
 async function fetchUpcomingEvents(): Promise<Event[]> {
@@ -398,8 +367,9 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
     twentyFourHoursLater: twentyFourHoursLater.split('.')[0] + 'Z'
   };
 
+  console.log("Fetching events with variables:", variables);
+
   try {
-    console.log("Fetching events...");
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -411,44 +381,15 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
       }),
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
     const data = await response.json();
     console.log("Original API response:", JSON.stringify(data, null, 2));
     
-    if (!data.data || !data.data.events || data.data.events.length === 0) {
+    if (!data.data.events || data.data.events.length === 0) {
       console.log("No events received from API");
       return [];
     }
 
-    const filteredEvents = data.data.events.filter((event: any) => {
-      const eventText = `${event.title} ${event.description || ''} ${event.owner?.username || ''}`.toLowerCase();
-      const eventWords = eventText.split(/\s+/);
-      
-      for (const interest of interests) {
-        const interestWords = interest.id_slug.toLowerCase().split(/\s+/);
-        for (const interestWord of interestWords) {
-          for (const eventWord of eventWords) {
-            const similarity = stringSimilarity(eventWord, interestWord);
-            if (similarity >= 0.8) {
-              console.log(`Event "${event.title}" matched:
-                Interest: ${interest.id_slug}
-                Matched words: "${eventWord}" ~ "${interestWord}"
-                Similarity: ${similarity.toFixed(2)}
-              `);
-              return true;
-            }
-          }
-        }
-      }
-      return false;
-    });
-
-    console.log(`Filtered ${filteredEvents.length} events out of ${data.data.events.length} total events`);
-
-    const mappedEvents = filteredEvents.map((event: any) => ({
+    const mappedEvents = data.data.events.map((event: any) => ({
       date: event.start_time,
       name: event.title,
       location: event.location || 'Location not specified',
@@ -459,7 +400,7 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
       id: event.id,
     }));
 
-    console.log("Mapped and filtered events:", mappedEvents);
+    console.log("Mapped events:", mappedEvents);
     return mappedEvents;
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -474,26 +415,17 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     hideHeader = false, 
     hideDescription = false, 
     daoMode,
-    interestMode,
-    eventsPerPage = 9 // Default to 9 events per page
+    interestMode
   } = props;
 
   console.log("EventsList rendered with mode:", mode);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState<EventLocation | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState("");
   const [timeFilter, setTimeFilter] = useState("upcoming");
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery');
   const [hasMatchingEvents, setHasMatchingEvents] = useState(true);
   const [events, setEvents] = useState<Event[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filters, setFilters] = useState({
-    search: "",
-    location: null as EventLocation | null,
-    time: "upcoming"
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useImperativeHandle(ref, () => ({
     hasMatchingEvents
@@ -510,31 +442,19 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
 
   useEffect(() => {
     console.log("Fetching events...");
-    setIsLoading(true);
-    setError(null);
     fetchUpcomingEvents().then(fetchedEvents => {
       console.log("Fetched events:", fetchedEvents);
       if (fetchedEvents.length === 0) {
         console.log("No events fetched");
       }
-      // Combine fetched events with static events, marking static events as featured
-      const combinedEvents = [
-        ...staticEvents.map(event => ({ ...event, isFeatured: true })),
-        ...fetchedEvents
-      ];
-      setEvents(combinedEvents);
-      setIsLoading(false);
-    }).catch(err => {
-      console.error("Error fetching events:", err);
-      setError("Failed to load events. Please try again later.");
-      setIsLoading(false);
+      setEvents(fetchedEvents);
     });
   }, []);
 
   const filteredEvents = useMemo(() => {
     console.log("Filtering events with:", { searchTerm, selectedLocation, daoMode, interestMode });
     
-    const filtered = events
+    return events
       .filter((event: Event) => {
         const daoMatch = !daoMode || checkDaoSimilarity(event, daoMode);
         const interestMatch = !interestMode || checkInterestSimilarity(event, interestMode);
@@ -547,20 +467,11 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
           (event.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
 
         // Apply location filter
-        const locationMatch = selectedLocation === null || event.location === selectedLocation.city;
+        const locationMatch = selectedLocation === "" || event.location === selectedLocation;
 
         return searchMatch && locationMatch;
-      });
-
-    // Separate featured and non-featured events
-    const featuredEvents = filtered.filter(event => event.isFeatured);
-    const nonFeaturedEvents = filtered.filter(event => !event.isFeatured);
-
-    // Sort only non-featured events
-    nonFeaturedEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-    // Combine featured events (unsorted) with sorted non-featured events
-    return [...featuredEvents, ...nonFeaturedEvents];
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [events, searchTerm, selectedLocation, daoMode, interestMode]);
 
   const getCounts = useMemo(() => {
@@ -578,6 +489,11 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     };
 
     filteredEvents.forEach(event => {
+      if (!event.date) {
+        console.warn('Event without date:', event);
+        return; // Skip this event
+      }
+
       const eventDate = parseISO(event.date);
       if (isAfter(eventDate, now) || isToday(eventDate)) counts.upcoming++;
       if (isBefore(eventDate, now)) counts.past++;
@@ -594,6 +510,10 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
 
   const timeFilteredEvents = useMemo(() => {
     return filteredEvents.filter((event: Event) => {
+      if (!event.date) {
+        console.warn('Event without date:', event);
+        return false; // Skip this event
+      }
       const eventDate = parseISO(event.date);
       const now = new Date();
 
@@ -629,41 +549,6 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     const filteredLocations = filteredEvents.map(event => event.location);
     return Array.from(new Set(filteredLocations)).sort();
   }, [filteredEvents]);
-
-  const paginatedEvents = useMemo(() => {
-    const startIndex = (currentPage - 1) * eventsPerPage;
-    const endIndex = startIndex + eventsPerPage;
-    return timeFilteredEvents.slice(startIndex, endIndex);
-  }, [timeFilteredEvents, currentPage, eventsPerPage]);
-
-  const totalPages = Math.ceil(timeFilteredEvents.length / eventsPerPage);
-
-  const groupedEvents = useMemo(() => {
-    const groups: { [key: string]: EventLocation } = {};
-    timeFilteredEvents.forEach(event => {
-      if (!groups[event.location]) {
-        groups[event.location] = {
-          city: event.location,
-          lat: 0, // You'll need to add latitude data to your events
-          lng: 0, // You'll need to add longitude data to your events
-          events: []
-        };
-      }
-      groups[event.location].events.push(event);
-    });
-    return Object.values(groups);
-  }, [timeFilteredEvents]);
-
-  const clearFilters = () => {
-    setFilters({
-      search: "",
-      location: null,
-      time: "upcoming"
-    });
-    setSearchTerm("");
-    setSelectedLocation(null);
-    setTimeFilter("upcoming");
-  };
 
   return (
     <div className={css`
@@ -770,10 +655,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
             variant="outlined"
             placeholder="Search events..."
             value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setFilters(prev => ({ ...prev, search: e.target.value }));
-            }}
+            onChange={(e) => setSearchTerm(e.target.value)}
             InputProps={{
               startAdornment: (
                 <img
@@ -796,14 +678,8 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
             <FormControl style={{ width: '150px' }}> 
               <InputLabel>Location</InputLabel>
               <Select
-                value={selectedLocation?.city || ''}
-                onChange={(e) => {
-                  const newLocation = locations.find(location => location === e.target.value)
-                    ? { city: e.target.value, lat: 0, lng: 0, events: [] }
-                    : null;
-                  setSelectedLocation(newLocation);
-                  setFilters(prev => ({ ...prev, location: newLocation }));
-                }}
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value as string)}
                 input={<OutlinedInput label="Location" />}
                 MenuProps={{
                   anchorOrigin: {
@@ -826,10 +702,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
               <InputLabel>Time</InputLabel>
               <Select
                 value={timeFilter}
-                onChange={(e) => {
-                  setTimeFilter(e.target.value as string);
-                  setFilters(prev => ({ ...prev, time: e.target.value as string }));
-                }}
+                onChange={(e) => setTimeFilter(e.target.value as string)}
                 input={<OutlinedInput label="Time" />}
                 MenuProps={{
                   anchorOrigin: {
@@ -854,19 +727,19 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 ))}
               </Select>
             </FormControl>
-            <IconButton onClick={() => setViewMode('gallery')}>
-              <ViewModuleIcon />
-            </IconButton>
-            <IconButton onClick={() => setViewMode('list')}>
-              <ViewListIcon />
+            <IconButton onClick={() => {
+              console.log("IconButton clicked. Current viewMode:", viewMode);
+              setViewMode(prevMode => {
+                const newMode = prevMode === 'gallery' ? 'list' : 'gallery';
+                console.log("Switching viewMode to:", newMode);
+                return newMode;
+              });
+            }}>
+              {viewMode === 'gallery' ? <ViewListIcon /> : <ViewModuleIcon />}
             </IconButton>
           </div>
         </div>
-        {isLoading ? (
-          <div>Loading events...</div>
-        ) : error ? (
-          <div>{error}</div>
-        ) : hasMatchingEvents ? (
+        {hasMatchingEvents ? (
           <div className={css`
             width: 100%;
             max-width: 100%;
@@ -880,7 +753,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 justify-content: flex-start;
                 width: 100%;
               `}>
-                {paginatedEvents.map((event, index) => (
+                {timeFilteredEvents.map((event, index) => (
                   <EventCard key={index} event={event} />
                 ))}
               </div>
@@ -890,34 +763,11 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 flex-direction: column;
                 width: 100%;
               `}>
-                {paginatedEvents.map((event, index) => (
+                {timeFilteredEvents.map((event, index) => (
                   <ListEventCard key={index} event={event} />
                 ))}
               </div>
             )}
-            
-            {/* Pagination controls */}
-            <div className={css`
-              display: flex;
-              justify-content: center;
-              margin-top: 2rem;
-            `}>
-              <button 
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span className={css`margin: 0 1rem;`}>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button 
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
           </div>
         ) : (
           <h3 className={css`
@@ -941,12 +791,10 @@ const EventsListComponent = EventsList as typeof EventsList & {
 };
 
 EventsListComponent.checkForEvents = async (daoName: string): Promise<boolean> => {
-  const fetchedEvents = await fetchUpcomingEvents();
-  const allEvents = [...fetchedEvents, ...staticEvents];
-  
-  return allEvents.some(event => 
-    checkDaoSimilarity(event, daoName) || checkInterestSimilarity(event, daoName)
-  );
+  const events = await fetchUpcomingEvents();
+  return events.some((event: Event) => {
+    return checkDaoSimilarity(event, daoName) || checkInterestSimilarity(event, daoName);
+  });
 };
 
 // Add this to the return type of the component

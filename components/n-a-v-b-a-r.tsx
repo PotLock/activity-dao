@@ -128,7 +128,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                     position: relative;
                   `}
                   alt=""
-                  src="/-emoji-light-bulb.svg"
+                  src="/activitymanicon.svg"
                 />
               </div>
               <div
