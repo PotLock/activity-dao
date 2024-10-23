@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import dynamic from 'next/dynamic';
 import { Event, EventLocation } from '../types/event'; // Add this import
+import interests from '../data/interests.json';
 
 const MapComponent = dynamic(() => import('./MapComponent'), { ssr: false });
 
@@ -398,6 +399,7 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
   };
 
   try {
+    console.log("Fetching events...");
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -409,15 +411,44 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
       }),
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
     console.log("Original API response:", JSON.stringify(data, null, 2));
     
-    if (!data.data.events || data.data.events.length === 0) {
+    if (!data.data || !data.data.events || data.data.events.length === 0) {
       console.log("No events received from API");
       return [];
     }
 
-    const mappedEvents = data.data.events.map((event: any) => ({
+    const filteredEvents = data.data.events.filter((event: any) => {
+      const eventText = `${event.title} ${event.description || ''} ${event.owner?.username || ''}`.toLowerCase();
+      const eventWords = eventText.split(/\s+/);
+      
+      for (const interest of interests) {
+        const interestWords = interest.id_slug.toLowerCase().split(/\s+/);
+        for (const interestWord of interestWords) {
+          for (const eventWord of eventWords) {
+            const similarity = stringSimilarity(eventWord, interestWord);
+            if (similarity >= 0.8) {
+              console.log(`Event "${event.title}" matched:
+                Interest: ${interest.id_slug}
+                Matched words: "${eventWord}" ~ "${interestWord}"
+                Similarity: ${similarity.toFixed(2)}
+              `);
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    });
+
+    console.log(`Filtered ${filteredEvents.length} events out of ${data.data.events.length} total events`);
+
+    const mappedEvents = filteredEvents.map((event: any) => ({
       date: event.start_time,
       name: event.title,
       location: event.location || 'Location not specified',
@@ -428,7 +459,7 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
       id: event.id,
     }));
 
-    console.log("Mapped events:", mappedEvents);
+    console.log("Mapped and filtered events:", mappedEvents);
     return mappedEvents;
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -461,6 +492,8 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     location: null as EventLocation | null,
     time: "upcoming"
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useImperativeHandle(ref, () => ({
     hasMatchingEvents
@@ -477,6 +510,8 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
 
   useEffect(() => {
     console.log("Fetching events...");
+    setIsLoading(true);
+    setError(null);
     fetchUpcomingEvents().then(fetchedEvents => {
       console.log("Fetched events:", fetchedEvents);
       if (fetchedEvents.length === 0) {
@@ -488,6 +523,11 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
         ...fetchedEvents
       ];
       setEvents(combinedEvents);
+      setIsLoading(false);
+    }).catch(err => {
+      console.error("Error fetching events:", err);
+      setError("Failed to load events. Please try again later.");
+      setIsLoading(false);
     });
   }, []);
 
@@ -822,7 +862,11 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
             </IconButton>
           </div>
         </div>
-        {hasMatchingEvents ? (
+        {isLoading ? (
+          <div>Loading events...</div>
+        ) : error ? (
+          <div>{error}</div>
+        ) : hasMatchingEvents ? (
           <div className={css`
             width: 100%;
             max-width: 100%;
