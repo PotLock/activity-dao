@@ -7,6 +7,7 @@ import interestsData from "../../data/interests.json";
 import EventsList from "../../components/events-list";
 import { useState } from 'react';
 import { FaRss, FaCalendarAlt } from "react-icons/fa";
+import {useRouter} from "next/router";
 
 type InterestPageProps = {
   interest: {
@@ -19,6 +20,8 @@ type InterestPageProps = {
 
 const InterestPage: NextPage<InterestPageProps> = ({ interest }) => {
   const [activeTab, setActiveTab] = useState('Feed');
+  const router = useRouter()
+  const {tab} = router.query;
 
   const renderTabContent = () => {
     switch (activeTab) {
