@@ -38,6 +38,32 @@
     "farcaster_user": ""
   },
   {
+    "name": "Taco DAO",
+    "id": "taco-dao",
+    "icon": "https://pbs.twimg.com/profile_images/1642206460640735233/BOgJ14V3_400x400.png",
+    "treasuryAddresses": [
+    ],
+    "description": "Tokenizing every tacqueria on Earth",
+    "url": "https://tacodao.xyz/",
+    "tags": [
+      "Food"
+    ],
+    "maturity": [
+      "Idea"
+    ],
+    "github": "",
+    "twitter": "https://x.com/_TacoDAO",
+    "exists": true,
+    "emoji": "",
+    "banner": "https://pbs.twimg.com/profile_banners/1365460292579299333/1680367594/1500x500",
+    "featured": true,
+    "order": 1,
+    "farcaster_channel": "tacos",
+    "telegram": "",
+    "discord": "",
+    "farcaster_user": ""
+  },
+  {
     "name": "Blunt DAO",
     "id": "blunt-dao",
     "icon": "bluntdaologobackground.png",

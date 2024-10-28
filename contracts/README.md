@@ -2,6 +2,11 @@
 
 The ActivityContract is a Solidity smart contract that manages activities and user interests. It allows administrators to add and delete activities, while users can show or remove interest in these activities.
 
+
+Testnet: Base Spolia Deployed Address [0x4d00852b2ff04a57210194ed21db1072fd26eb20](https://sepolia.basescan.org/address/0x4d00852b2ff04a57210194ed21db1072fd26eb20)
+Staging: 
+Mainnet
+
 ### Key Features
 
 - **Activity Management**: Admins can add and delete activities in batches.
