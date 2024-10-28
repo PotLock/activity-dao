@@ -365,18 +365,18 @@ const endpoint = 'https://graph.sola.day/v1/graphql';
 
 async function fetchUpcomingEvents(): Promise<Event[]> {
   const currentTime = new Date().toISOString();
-  const twentyFourHoursLater = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+  const oneYearLater = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString();
 
   const query = `
-    query FetchUpcomingEvents($currentTime: timestamp!, $twentyFourHoursLater: timestamp!) {
+    query FetchUpcomingEvents($currentTime: timestamp!, $oneYearLater: timestamp!) {
       events(
         where: {
           display: {_neq: "private"},
-          start_time: {_gte: $currentTime, _lte: $twentyFourHoursLater},
+          start_time: {_gte: $currentTime, _lte: $oneYearLater},
           status: {_in: ["open", "new", "normal"]}
         },
         order_by: {start_time: asc},
-        limit: 10
+        limit: 100
       ) {
         id
         title
@@ -395,7 +395,7 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
 
   const variables = {
     currentTime: currentTime.split('.')[0] + 'Z',
-    twentyFourHoursLater: twentyFourHoursLater.split('.')[0] + 'Z'
+    oneYearLater: oneYearLater.split('.')[0] + 'Z'
   };
 
   try {
@@ -432,7 +432,7 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
         for (const interestWord of interestWords) {
           for (const eventWord of eventWords) {
             const similarity = stringSimilarity(eventWord, interestWord);
-            if (similarity >= 0.8) {
+            if (similarity >= 0.7) {
               console.log(`Event "${event.title}" matched:
                 Interest: ${interest.id_slug}
                 Matched words: "${eventWord}" ~ "${interestWord}"
@@ -453,7 +453,7 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
       name: event.title,
       location: event.location || 'Location not specified',
       link: `https://app.sola.day/event/detail/${event.id}`,
-      image: event.cover_url || '/placeholder-image.jpg',
+      image: event.cover_url || 'https://pbs.twimg.com/profile_banners/1635444352959885313/1729576236/1500x500',
       dao: event.owner?.username || 'Unknown',
       description: `Event by ${event.owner?.username || 'Unknown'}`,
       id: event.id,
