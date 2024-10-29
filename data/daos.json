@@ -138,6 +138,34 @@
     "farcaster_user": ""
   },
   {
+    "name": "Links (Golf) DAO",
+    "id": "links-dao",
+    "icon": "https://pbs.twimg.com/profile_images/1686869495984652291/EWeRfv_e_400x400.jpg",
+    "treasuryAddresses": [
+    ],
+    "description": "A global community of golf enthusiasts in web3 reimagining the modern golf and leisure club",
+    "url": "https://linksdao.io/",
+    "tags": [
+      "Wellness",
+      "Sports"
+    ],
+    "maturity": [
+      "Idea",
+      "Regular Thing"
+    ],
+    "github": "",
+    "twitter": "https://twitter.com/LinksDAO",
+    "exists": true,
+    "emoji": "⛳️",
+    "banner": "https://pbs.twimg.com/profile_banners/1471201657367273472/1685571904/1500x500",
+    "featured": true,
+    "order": 4,
+    "farcaster_channel": "golf",
+    "telegram": "",
+    "discord": "https://discord.gg/LinksDAO",
+    "farcaster_user": ""
+  },
+  {
     "name": "TreeGens",
     "id": "treegens",
     "icon": "freepikexport20240924165639oj8b-3@2x.png",
