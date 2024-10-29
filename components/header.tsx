@@ -27,6 +27,7 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
             img:not(.handbook-icon) {
               display: none;
             }
+            padding: 3.5rem;
           }
         `,
         className,
@@ -206,9 +207,10 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
                 @media screen and (max-width: 1050px) {
                   font-size: var(--font-size-22xl);
                   line-height: 3.563rem;
+                  
                 }
                 @media screen and (max-width: 768px) {
-                  font-size: var(--font-size-xl);
+                  font-size: var(--font-size-16xl);
                   line-height: 2.5rem;
                 }
                 @media screen and (max-width: 450px) {
