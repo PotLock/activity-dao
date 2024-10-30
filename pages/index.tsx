@@ -19,15 +19,21 @@ import LoadingAnimation from "../components/LoadingAnimation";
 
 const Desktop: NextPage = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
-    // Simulate loading time
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+    // Only show loading animation on first load
+    if (!hasLoaded) {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        setHasLoaded(true);
+      }, 1500); // Reduced from 3000ms to 1500ms
 
-    return () => clearTimeout(timer);
-  }, []);
+      return () => clearTimeout(timer);
+    } else {
+      setIsLoading(false);
+    }
+  }, [hasLoaded]);
 
   if (isLoading) {
     return <LoadingAnimation />;

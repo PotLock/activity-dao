@@ -3,8 +3,9 @@ import Head from "next/head";
 import type { AppProps } from "next/app";
 import { ThemeProvider, createTheme } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
+import { Web3Provider } from "../components/Web3Provider";
+import { AuthKitProvider } from "@farcaster/auth-kit";
 import createGlobalStyle from "./styles/global";
-import { Web3Provider } from "../components/Web3Provider"; // Import the Web3Provider
 
 createGlobalStyle();
 
@@ -19,6 +20,19 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const muiTheme = createTheme();
 
+  const authKitConfig = {
+    rpcUrl: "https://mainnet.optimism.io",
+    domain: "activity.community",
+    siweUri: "https://activity.community/login",
+    version: "1",
+    statement: "Sign in to ActivityDAO",
+    storage: {
+      enabled: true,
+      persistUser: true,
+      storageType: 'localStorage'
+    },
+  };
+
   return (
     <Fragment>
       <Head>
@@ -32,7 +46,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         
         {/* New meta tags for improved SEO */}
         <meta name="description" content="ActivityDAOs - the movement to bootstrap the proliferation of activity-based communities" />
-        <meta name="keywords" content="ActivityDAO, Local Activities, Funding Activities, Web3, Ethereum, NounsDAO, DAO, decentralized, community, activities, blockchain, PizzaDAO, Fund Activities, DAOs, BluntDAO, SuanaDAO, GnarsDAO, Proof of Vibes" />
+        <meta name="keywords" content="ActivityDAO, Activity DAO, ActivityDAOs, Activity DAOs, Activtes DAO, Web3 Activities, DAO Activities, Active DAO, ActiveDAO, Local Activities, Funding Activities, Web3, Ethereum, NounsDAO, DAO, decentralized, community, activities, blockchain, PizzaDAO, Fund Activities, DAOs, BluntDAO, SuanaDAO, GnarsDAO, Proof of Vibes" />
         <meta property="og:title" content="ActivityDAO" />
         <meta property="og:description" content="ActivityDAOs - the movement to bootstrap the proliferation of activity-based communities" />
         <meta property="og:type" content="website" />
@@ -77,13 +91,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   gtag('config', 'G-7RG25GG1ZB');`}</script>
       </Head>
-      <Web3Provider> {/* Wrap your entire app with Web3Provider */}
-        <ThemeProvider theme={muiTheme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </Web3Provider>
+      <AuthKitProvider config={authKitConfig}>
+        <Web3Provider>
+          <ThemeProvider theme={muiTheme}>
+            <CssBaseline />
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </Web3Provider>
+      </AuthKitProvider>
     </Fragment>
   );
 }

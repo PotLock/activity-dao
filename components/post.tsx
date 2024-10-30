@@ -10,13 +10,13 @@ import toast from 'react-hot-toast';
  * To-DO
  * Add posting to farcaster
  * Add signin with farcaster to login
- * make it so their is different modes as a string passed in through propls like default vibes mode where proof of vibes toggle doesnt show and default to proof of vibes. 
+ * add logic for posting to change based on mode or whether passed from feed and then posts to feed
  */
 interface PostProps {
   allowImageUpload?: boolean;
   allowMarkdown?: boolean;
   mode?: 'default' | 'vibes-only' | 'vibes-hidden';
-  // Removed onSubmit from required props
+  feed?: string; // Add this line
 }
 
 // Add this helper function near the top of the component
@@ -32,8 +32,8 @@ const isValidUrl = (string: string) => {
 const Post: React.FC<PostProps> = ({ 
   allowImageUpload = true, 
   allowMarkdown = false, 
-  mode = 'default'
-  // Removed onSubmit from destructuring
+  mode = 'default',
+  feed // Add this line
 }) => {
   const [text, setText] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -199,7 +199,6 @@ const Post: React.FC<PostProps> = ({
     try {
       const imageUrl = imageHash ? `https://gateway.pinata.cloud/ipfs/${imageHash}` : undefined;
       
-      // Simplified text formatting using helper
       const finalText = text + (isProofOfVibes ? formatVibeCheckResults(true) : '');
 
       const proofOfVibes = isProofOfVibes ? {
@@ -207,7 +206,13 @@ const Post: React.FC<PostProps> = ({
         eventLink: eventLink || undefined
       } : undefined;
 
-      console.log('Submitting post with:', { finalText, imageUrl, proofOfVibes });
+      console.log('Submitting post with:', { 
+        finalText, 
+        imageUrl, 
+        proofOfVibes,
+        feed // Add this line - will be undefined if not provided
+      });
+
       // Removed onSubmit call
       setText('');
       setSelectedImage(null);

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { css, keyframes } from '@emotion/css';
+import { motion } from 'framer-motion';
 
 const rainbow = keyframes`
   0%, 100% { background-position: 0% 50%; }
@@ -79,77 +80,62 @@ const LoadingAnimation: React.FC = () => {
   }, []);
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
       className={css`
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
         background-color: var(--background-default-default);
-        z-index: 9999;
-        overflow: hidden;
       `}
     >
-      <canvas
-        ref={canvasRef}
+      <motion.h1
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
         className={css`
-          position: absolute;
-          top: 0;
-          left: 0;
+          font-family: var(--font-dynapuff);
+          color: var(--wwwgetminjiapp-black);
+          text-align: center;
+          margin-bottom: 2rem;
+          
+          @media screen and (max-width: 768px) {
+            font-size: 1.5rem;
+          }
+          
+          @media screen and (max-width: 480px) {
+            font-size: 1.2rem;
+          }
+        `}
+      >
+      </motion.h1>
+      
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ 
+          duration: 1,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className={css`
+          width: 40px;
+          height: 40px;
+          border: 3px solid var(--wwwgetminjiapp-candlelight);
+          border-top: 3px solid transparent;
+          border-radius: 50%;
+          
+          @media screen and (max-width: 480px) {
+            width: 30px;
+            height: 30px;
+          }
         `}
       />
-      <div
-        className={css`
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 2;
-        `}
-      >
-        <h1
-          className={css`
-            font-size: 4rem;
-            font-weight: bold;
-            font-family: var(--font-dynapuff);
-            display: flex;
-            background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: ${rainbow} 5s linear infinite;
-          `}
-        >
-          {letters.map((letter, index) => (
-            <span
-              key={index}
-              className={css`
-                opacity: ${index < loadedLetters ? 1 : 0};
-                transition: opacity 0.4s ease-in-out;
-              `}
-            >
-              {letter}
-            </span>
-          ))}
-        </h1>
-      </div>
-      <div
-        className={css`
-          position: absolute;
-          bottom: 20px;
-          right: 20px;
-          font-size: 2rem;
-        `}
-      >
-        {isFullHourglass ? '⏳' : '⌛'}
-      </div>
-    </div>
+    </motion.div>
   );
 };
 

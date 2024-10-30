@@ -6,6 +6,11 @@ import { ConnectKitButton } from "connectkit";
 import { useAccount } from "wagmi";
 import Image from 'next/image';
 import { RiHome5Line, RiNewspaperLine, RiCalendarEventLine, RiGroupLine } from "react-icons/ri";
+import "@farcaster/auth-kit/styles.css";
+import { SignInButton } from "@farcaster/auth-kit";
+import { AuthKitProvider } from "@farcaster/auth-kit";
+import { QRCode } from "react-qrcode-logo";
+
 
 export type NAVBARType = {
   className?: string;
@@ -15,31 +20,156 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
   const [activeLink, setActiveLink] = useState("");
   const router = useRouter();
   const { address, isConnected } = useAccount();
+  const [fid, setFid] = useState<number>();
+  const [signerId, setSignerId] = useState<string>();
+  const [deepLink, setDeepLink] = useState<string>();
+  const [openQR, setOpenQR] = useState(false);
 
+  // Add debug logging to useEffect
   useEffect(() => {
-    // Set the active link based on the current route
-    if (router.pathname === "/events") {
-      setActiveLink("events");
-    } else if (router.pathname.startsWith("/dao")) {
-      setActiveLink("daos");
-    } else if (router.pathname.startsWith("/interest") || router.pathname.startsWith("/feeds")) {
-      setActiveLink("feed");
-    } else if (router.pathname === "/") {
-      setActiveLink("home");
-    } else {
-      setActiveLink(""); // Set to an empty string for no active link
+    console.log('Current pathname:', router.pathname);
+    console.log('Current query:', router.query);
+    
+    const storedFid = localStorage.getItem('farcaster_fid');
+    const storedSignerId = localStorage.getItem('signer_id');
+    
+    console.log('Stored FID:', storedFid);
+    console.log('Stored Signer ID:', storedSignerId);
+    
+    if (storedFid) {
+      setFid(Number(storedFid));
     }
+    
+    if (storedSignerId) {
+      setSignerId(storedSignerId);
+    }
+
+    const path = router.pathname;
+    console.log('Setting active link for path:', path);
+    
+    if (path === "/events") {
+      setActiveLink("events");
+    } else if (path.startsWith("/dao")) {
+      setActiveLink("daos");
+    } else if (path.startsWith("/interest") || path.startsWith("/feeds")) {
+      setActiveLink("feed");
+    } else if (path === "/") {
+      setActiveLink("home");
+    }
+    
+    console.log('Active link set to:', activeLink);
   }, [router.pathname]);
 
+  // Modified handleNavigation with better error handling and debugging
+  const handleNavigation = async (path: string, linkId: string) => {
+    console.log('Attempting navigation to:', path);
+    console.log('Current pathname:', router.pathname);
+    
+    try {
+      setActiveLink(linkId);
+      // Use replace instead of push to avoid stacking history entries
+      await router.replace(path, undefined, { 
+        shallow: false,
+        scroll: true
+      });
+      console.log('Navigation successful');
+    } catch (error) {
+      console.error('Navigation failed:', error);
+    }
+  };
+
+  // Modified Logo click handler
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleNavigation('/', 'home');
+  };
+
+  // Update navLinks with exact paths
   const navLinks = [
-    { id: "home", label: "Home", href: "/#home", icon: RiHome5Line },
+    { id: "home", label: "Home", href: "/", icon: RiHome5Line },
     { id: "feed", label: "Feed", href: "/feeds", icon: RiNewspaperLine },
     { id: "events", label: "Events", href: "/events", icon: RiCalendarEventLine },
     { id: "daos", label: "DAOs", href: "/daos", icon: RiGroupLine },
   ];
 
+  // Add this debug useEffect
+  useEffect(() => {
+    console.log('Router ready state:', router.isReady);
+    console.log('Current pathname:', router.pathname);
+    console.log('Available routes:', navLinks.map(link => link.href));
+  }, [router.isReady]);
+
+  async function checkStorage() {
+    try {
+      if (typeof window != "undefined") {
+        const signer = localStorage.getItem("signer_id");
+        if (signer != null) {
+          setSignerId(signer);
+        } else if (fid) {
+          const signerReq = await fetch(`/api/signer?fid=${fid}`);
+          const signerRes = await signerReq.json();
+          if (signerRes.signers.length > 0) {
+            setSignerId(signerRes.signers[0].signer_uuid);
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function createSigner() {
+    try {
+      const signerReq = await fetch(`/api/signer`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fid }), // Send FID to API
+      });
+      const signerRes = await signerReq.json();
+      
+      if (signerRes.error) {
+        throw new Error(signerRes.error);
+      }
+
+      setDeepLink(signerRes.deep_link_url);
+      setOpenQR(true);
+
+      // Poll for signer approval
+      const pollStartTime = Date.now();
+      while (true) {
+        if (Date.now() - pollStartTime > 120000) {
+          alert("Request timed out");
+          setOpenQR(false);
+          break;
+        }
+        const pollReq = await fetch(`/api/poll?token=${signerRes.token}`);
+        const pollRes = await pollReq.json();
+        if (pollRes.state === "completed") {
+          setDeepLink(undefined);
+          setOpenQR(false);
+          setSignerId(signerRes.signer_id);
+          
+          // Store both FID and signer ID
+          localStorage.setItem("farcaster_fid", fid!.toString());
+          localStorage.setItem("signer_id", signerRes.signer_id);
+          break;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+    } catch (error) {
+      console.log(error);
+      setOpenQR(false);
+    }
+  }
+
   return (
-    <>
+    <AuthKitProvider config={{
+      rpcUrl: "https://mainnet.optimism.io",
+      domain: "example.com",
+      siweUri: "https://example.com/login"  // removed comma
+    }}>
       {/* Top Navbar */}
       <header
         className={[
@@ -98,7 +228,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                 padding: 0;
               }
             `}
-            onClick={() => window.location.href = '/#home'}
+            onClick={handleLogoClick}
           >
             <div
               className={css`
@@ -192,8 +322,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                   href={link.href}
                   onClick={(e) => {
                     e.preventDefault();
-                    setActiveLink(link.id);
-                    router.push(link.href);
+                    handleNavigation(link.href, link.id);
                   }}
                   className={css`
                     text-decoration: none;
@@ -249,64 +378,129 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
             ))}
           </nav>
 
-          {/* Connect Wallet Button */}
+          {/* Connect Wallet and Farcaster Buttons */}
           <div
             className={css`
-              width: 11.194rem;
               display: flex;
-              flex-direction: column;
-              align-items: flex-start;
-              justify-content: flex-start;
+              flex-direction: row;
+              align-items: center;
+              gap: 1rem;
               padding: var(--padding-base) 0rem 0rem;
               box-sizing: border-box;
               height: 100%;
               @media screen and (max-width: 1050px) {
-                width: auto;
                 padding: 0;
               }
             `}
           >
-            <ConnectKitButton.Custom>
-              {({ isConnected, show, truncatedAddress, ensName }) => {
-                return (
-                  <button
-                    onClick={show}
-                    className={css`
-                      align-self: stretch;
-                      height: 2.5rem;
-                      transition: all 0.3s ease;
-                      background: #facc15;
-                      border: none;
-                      border-radius: 8665.8px;
-                      color: #000;
-                      font-size: 16px;
-                      font-weight: 600;
-                      padding: 0 16px;
-                      cursor: pointer;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      &:hover {
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-                        animation: rainbow-glow 3s linear infinite;
-                      }
-                      @keyframes rainbow-glow {
-                        0% { box-shadow: 0 0 10px #ff0000; }
-                        14% { box-shadow: 0 0 10px #ff7f00; }
-                        28% { box-shadow: 0 0 10px #ffff00; }
-                        42% { box-shadow: 0 0 10px #00ff00; }
-                        57% { box-shadow: 0 0 10px #0000ff; }
-                        71% { box-shadow: 0 0 10px #8b00ff; }
-                        85% { box-shadow: 0 0 10px #ff00ff; }
-                        100% { box-shadow: 0 0 10px #ff0000; }
-                      }
-                    `}
-                  >
-                    {isConnected ? ensName ?? truncatedAddress : "Login"}
-                  </button>
-                );
-              }}
-            </ConnectKitButton.Custom>
+            {/* Connect Wallet Button */}
+            {/* Replace the false && with proper conditional rendering */}
+            {isConnected && (
+              <ConnectKitButton.Custom>
+                {({ isConnected, show, truncatedAddress, ensName }) => {
+                  return (
+                    <button
+                      onClick={show}
+                      className={css`
+                        align-self: stretch;
+                        height: 2.5rem;
+                        transition: all 0.3s ease;
+                        background: #facc15;
+                        border: none;
+                        border-radius: 8665.8px;
+                        color: #000;
+                        font-size: 16px;
+                        font-weight: 600;
+                        padding: 0 16px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        &:hover {
+                          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                          animation: rainbow-glow 3s linear infinite;
+                        }
+                      `}
+                    >
+                      {isConnected ? ensName ?? truncatedAddress : "Login"}
+                    </button>
+                  );
+                }}
+              </ConnectKitButton.Custom>
+            )}
+
+            <div
+              className={css`
+                .fc-container {
+                  height: 2.5rem;
+                  background: #facc15;
+                  border: none;
+                  border-radius: 8665.8px;
+                  color: #000;
+                  font-size: 16px;
+                  font-weight: 600;
+                  padding: 0 16px;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  &:hover {
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                    animation: rainbow-glow 3s linear infinite;
+                  }
+                }
+              `}
+            >
+              <SignInButton
+                onSuccess={({ fid, username }) => {
+                  if (!fid) return;
+                  console.log(`Hello, ${username}! Your fid is ${fid}.`);
+                  setFid(fid);
+                  localStorage.setItem('farcaster_fid', fid.toString());
+                  
+                  // Check if we already have a signer before creating a new one
+                  const existingSignerId = localStorage.getItem('signer_id');
+                  if (!existingSignerId) {
+                    createSigner();
+                  } else {
+                    setSignerId(existingSignerId);
+                  }
+                }}
+              />
+              {/* Create Signer Button */}
+              {/* {fid && !signerId && (
+                <button
+                  onClick={createSigner}
+                  className={css`
+                    height: 2.5rem;
+                    background: #facc15;
+                    border: none;
+                    border-radius: 8665.8px;
+                    color: #000;
+                    font-size: 16px;
+                    font-weight: 600;
+                    padding: 0 16px;
+                    cursor: pointer;
+                  `}
+                >
+                  Create Signer
+                </button>
+              )} */}
+              {openQR && (
+                <QRCode
+                  value={deepLink}
+                  size={200}
+                  logoImage="https://dweb.mypinata.cloud/ipfs/QmVLwvmGehsrNEvhcCnnsw5RQNseohgEkFNN1848zNzdng"
+                  logoWidth={50}
+                  logoHeight={50}
+                  logoPadding={5}
+                  logoPaddingStyle="square"
+                  qrStyle="dots"
+                  eyeRadius={15}
+                />
+              )}
+            </div>
+           
           </div>
         </div>
       </header>
@@ -335,8 +529,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
             href={link.href}
             onClick={(e) => {
               e.preventDefault();
-              setActiveLink(link.id);
-              router.push(link.href);
+              handleNavigation(link.href, link.id);
             }}
             className={css`
               display: flex;
@@ -369,7 +562,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
           </a>
         ))}
       </nav>
-    </>
+    </AuthKitProvider>
   );
 };
 
