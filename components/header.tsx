@@ -27,7 +27,7 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
             img:not(.handbook-icon) {
               display: none;
             }
-            padding: 3.5rem;
+            padding: 1.5rem;
           }
         `,
         className,

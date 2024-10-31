@@ -203,6 +203,9 @@ const Feed: NextPage<FeedProps> = ({ emoji, farcaster_channel }) => { // Updated
               display: flex; /* Added to enable flexbox */
               flex-direction: column; /* Stack children vertically */
               justify-content: flex-start; /* Align children to the start */
+              @media screen and (max-width: 1024px) {
+              
+              }
             `}>
               <div className={css`
                 display: flex; 
