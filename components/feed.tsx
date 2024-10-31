@@ -186,10 +186,10 @@ const Feed: NextPage<FeedProps> = ({ emoji, farcaster_channel }) => { // Updated
       {isLoading ? (
         <Skeleton count={5} height={150} style={{ marginBottom: '10px' }} /> // Skeleton for loading posts
       ) : (
-        <div className={css` 
-          display: flex; 
-          flex-wrap: wrap; /* Allow wrapping to the next line */
-          justify-content: space-between; /* Space between cards */
+        <div className={css`
+          display: flex;
+          flex-wrap: wrap; /* Allow cards to wrap to the next line */
+          margin: -5px; /* Adjust margin to account for card margins */
         `}>
           {posts.map((post: Post) => (
             <div key={post.hash} className={css`
@@ -203,8 +203,18 @@ const Feed: NextPage<FeedProps> = ({ emoji, farcaster_channel }) => { // Updated
               display: flex; /* Added to enable flexbox */
               flex-direction: column; /* Stack children vertically */
               justify-content: flex-start; /* Align children to the start */
-              @media screen and (max-width: 1024px) {
               
+              @media screen and (max-width: 1024px) {
+                flex: 1 1 calc(50% - 10px); /* 2 cards in a row on medium screens */
+              }
+
+              @media screen and (max-width: 768px) {
+                flex: 1 1 calc(100% - 10px); /* 1 card in a row on small screens */
+              }
+
+              @media screen and (max-width: 360px) {
+                flex: 1 1 calc(100% - 10px); /* Ensure 1 card in a row on very small screens */
+                
               }
             `}>
               <div className={css`
