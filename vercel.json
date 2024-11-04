@@ -5,6 +5,11 @@
         "destination": "https://x.com/activity_dao",
         "permanent": true
       },
+              {
+        "source": "/devcon-sheet",
+        "destination": "https://docs.google.com/spreadsheets/d/1jBYmeMt2D7KEI8Ki7H88MkMdqlM5-rIHVm1yAuEOuj8/edit?usp=sharing",
+        "permanent": true
+      },
       {
         "source": "/backlog",
         "destination": "https://github.com/orgs/PotLock/projects/18/views/1",
