@@ -7,6 +7,15 @@
     "image": "image3@2x.png",
     "link": "https://olympics.bluntdao.org",
     "dao": "Blunt DAO"
+  }
+    {
+    "name": "Run with Raga and RunDAO",
+    "description": "The inagural Blunt Olympics",
+    "date": "2024-11-7",
+    "location": "Chiang Mai, Thailand", 
+    "image": "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/event-covers/up/0c199d34-992a-4854-bebb-3b4b7c7d5b36",
+    "link": "https://lu.ma/dcsie5m3",
+    "dao": "Run DAO"
   },
   {
     "name": "Fight Circus Crypto Night",
