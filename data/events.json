@@ -7,7 +7,16 @@
     "image": "image3@2x.png",
     "link": "https://olympics.bluntdao.org",
     "dao": "Blunt DAO"
-  }
+  },
+    {
+    "name": "Web3 COSPLAY Night with CryptoJava",
+    "description": "​Who says Web3 has to be all serious? 🤖✨ This is the night where Web3 enthusiasts meet their favorite cosplay characters! It’s a fun, safe space to mingle, network, and show off your wildest cosplay costumes. Whether you're a crypto newbie or a blockchain pro, it's all about creating an unforgettable experience for our crypto fam. 🦸‍♂️🦸‍♀️",
+    "date": "2024-11-8",
+    "location": "Bangkok, Thailand", 
+    "image": "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/event-covers/pg/d3edfc65-973e-4ff0-9c6d-6b79afb7f6fd",
+    "link": "https://lu.ma/enepl181",
+    "dao": "Cosplay DAO"
+  },
     {
     "name": "Run with Raga and RunDAO",
     "description": "The inagural Blunt Olympics",
