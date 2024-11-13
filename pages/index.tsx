@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
+import { Inter, Alexandria, DynaPuff, Hanken_Grotesk } from 'next/font/google'; 
+
+
+const inter = Inter({ subsets: ['latin'] });
+const alexandria = Alexandria({ subsets: ['latin'] });
+const dynapuff = DynaPuff({ subsets: ['latin'] });
+const hankenGrotesk = Hanken_Grotesk({ subsets: ['latin'] });
+
 import NAVBAR from "../components/n-a-v-b-a-r";
 import Header from "../components/header";
 import AcivityCards from "../components/how-it-works";
@@ -24,7 +32,7 @@ const Desktop: NextPage = () => {
     // Simulate loading time
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 100);
 
     return () => clearTimeout(timer);
   }, []);
@@ -44,7 +52,7 @@ const Desktop: NextPage = () => {
         text-align: center;
         font-size: var(--font-size-21xl);
         color: var(--wwwgetminjiapp-black);
-        font-family: var(--font-dynapuff);
+        font-family: ${dynapuff.style.fontFamily}; 
       `}
     >
       {/* <Background /> */}
@@ -127,7 +135,7 @@ const Desktop: NextPage = () => {
               font-size: inherit;
               line-height: 3.844rem;
               font-weight: 600;
-              font-family: inherit;
+              font-family: ${dynapuff.style.fontFamily}; // Use the imported font
               @media screen and (max-width: 1050px) {
                 font-size: var(--font-size-13xl);
                 line-height: 3.063rem;
@@ -144,7 +152,7 @@ const Desktop: NextPage = () => {
               font-size: var(--font-size-5xl);
               line-height: 2.469rem;
               font-weight: 400;
-              font-family: var(--font-hanken-grotesk);
+              font-family: ${hankenGrotesk.style.fontFamily}; // Use the imported font
               margin-top: 0.5rem;
               @media screen and (max-width: 450px) {
                 font-size: var(--font-size-lgi);

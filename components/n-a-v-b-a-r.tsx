@@ -263,6 +263,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
               @media screen and (max-width: 1050px) {
                 width: auto;
                 padding: 0;
+                align-items: center; /* Center align items on mobile */
               }
             `}
           >
@@ -286,6 +287,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                       display: flex;
                       align-items: center;
                       justify-content: center;
+                      margin-top: 1rem; 
                       &:hover {
                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
                         animation: rainbow-glow 3s linear infinite;
@@ -299,6 +301,9 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                         71% { box-shadow: 0 0 10px #8b00ff; }
                         85% { box-shadow: 0 0 10px #ff00ff; }
                         100% { box-shadow: 0 0 10px #ff0000; }
+                      }
+                      @media screen and (max-width: 1050px) {
+                        margin-top: 1rem;
                       }
                     `}
                   >

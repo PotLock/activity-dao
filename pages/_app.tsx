@@ -5,7 +5,16 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import createGlobalStyle from "./styles/global";
 import { Web3Provider } from "../components/Web3Provider"; // Import the Web3Provider
-
+import { 
+  dynapuff, 
+  alexandria, 
+  manrope, 
+  hankenGrotesk, 
+  aclonica, 
+  inter, 
+  dmSans, 
+  nunitoSans 
+} from './styles/global' // Adjust the path to where your fonts are defined
 createGlobalStyle();
 
 export default function MyApp({ Component, pageProps }: AppProps) {
@@ -17,7 +26,18 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  const muiTheme = createTheme();
+  const muiTheme = createTheme({
+    typography: {
+      fontFamily: `${inter.style.fontFamily}, ${manrope.style.fontFamily}, sans-serif`,
+      h1: {
+        fontFamily: `${dynapuff.style.fontFamily}, sans-serif`,
+      },
+      h2: {
+        fontFamily: `${hankenGrotesk.style.fontFamily}, sans-serif`,
+      },
+  
+    },
+  });
 
   return (
     <Fragment>
@@ -44,26 +64,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
         <style
           dangerouslySetInnerHTML={{
-            __html: `@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Aclonica:wght@400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@700&display=swap');
+            __html: `
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
-@font-face {
-        font-family: "SF Pro Text";
-        src: url("/FontsFree-Net-SFProText-Bold.ttf");
-        font-weight: 700;
-      }
-@font-face {
-        font-family: "GT America";
-        src: url("/GT-America-Standard-Regular-Trial.otf");
-        font-weight: 500;
-      }
 `,
           }}
         />
@@ -81,7 +83,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={muiTheme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
-          <Component {...pageProps} />
+          <div className={`${dynapuff.className} ${alexandria.className} ${manrope.className} ${hankenGrotesk.variable}`}>
+            <Component {...pageProps} />
+          </div>
+          
         </ThemeProvider>
       </Web3Provider>
     </Fragment>

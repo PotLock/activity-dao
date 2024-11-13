@@ -191,7 +191,7 @@ const PoweringCommunity: NextPage<PoweringCommunityType> = ({ className = "" }) 
             flex-direction: row;
             align-items: flex-start;
             justify-content: center; // Change this to center
-            padding: 0rem var(--padding-100xl);
+           padding: 2.5rem;
             box-sizing: border-box;
             max-width: 100%;
             font-size: var(--font-size-5xl);
@@ -207,12 +207,14 @@ const PoweringCommunity: NextPage<PoweringCommunityType> = ({ className = "" }) 
               line-height: 2.469rem;
               font-weight: 400;
               font-family: inherit;
-              display: inline-block;
-              max-width: 80%; // Add this to limit the width of the subtitle
-              text-align: center; // Add this to center the text
+              display: block;
+              width: 100%;
+              text-align: center;
+              padding: 0rem;
               @media screen and (max-width: 450px) {
                 font-size: var(--font-size-lgi);
                 line-height: 2rem;
+                padding: 0rem;
               }
             `}
           >

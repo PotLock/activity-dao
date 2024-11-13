@@ -36,10 +36,10 @@ const Feeds: NextPage = () => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          width: 100%;
-          max-width: 1200px;
+          // width: 100%;
+          max-width: 100%;
           margin: 0 auto;
-          padding: 2rem 0;
+          padding: 1rem;
           padding-top: 6rem; // Added bottom padding
         `}
       >
