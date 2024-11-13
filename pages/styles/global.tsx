@@ -1,4 +1,5 @@
 import { injectGlobal } from "@emotion/css";
+
 import { DynaPuff, Alexandria, Manrope, Hanken_Grotesk, Aclonica, Inter, DM_Sans, Nunito_Sans } from "next/font/google";
 //import fonts from next/font -- significantly reduce layout shifts
 const dynapuff = DynaPuff({
@@ -22,6 +23,7 @@ const manrope = Manrope({
 const hankenGrotesk = Hanken_Grotesk({
   weight: ['400', '600', '700'],
   subsets: ['latin'],
+  variable: '--font-hanken-grotesk',
   display: "swap"
 })
 
@@ -49,6 +51,7 @@ const nunitoSans = Nunito_Sans({
   display: 'swap'
 });
 
+
 export default function createGlobalStyle() {
   injectGlobal`
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
@@ -73,7 +76,59 @@ export default function createGlobalStyle() {
 --ui-small-strong: 'GT America';
 --font-sf-pro-text: 'SF Pro Text';
 
-
+/* font sizes */
+--font-size-3xl: 1.375rem;
+--font-size-lg: 1.125rem;
+--font-size-5xl: 1.5rem;
+--font-size-lgi: 1.188rem;
+--font-size-37xl-1: 3.506rem;
+--font-size-15xl: 2.125rem;
+--font-size-26xl: 2.813rem;
+--font-size-sm-8: 0.863rem;
+--font-size-7xl-1: 1.631rem;
+--font-size-2xl: 1.313rem;
+--font-size-6xs-5: 0.406rem;
+--font-size-5xs-9: 0.494rem;
+--font-size-5xs-3: 0.456rem;
+--font-size-5xs: 0.5rem;
+--font-size-4xl: 1.438rem;
+--font-size-10xl: 1.813rem;
+--font-size-39xl: 3.625rem;
+--ui-small-strong-size: 0.875rem;
+--font-size-13xl: 2rem;
+--font-size-7xl: 1.625rem;
+--font-size-smi: 0.813rem;
+--font-size-56xl-2: 4.7rem;
+--font-size-41xl: 3.75rem;
+--font-size-21xl: 2.5rem;
+--font-size-lg-3: 1.144rem;
+--font-size-12xl: 1.938rem;
+--font-size-6xl: 1.563rem;
+--display-1-medium-size: 0.75rem;
+--font-size-27xl-5: 2.906rem;
+--font-size-9xl: 1.75rem;
+--font-size-18xl: 2.313rem;
+--font-size-sm-2: 0.825rem;
+--font-size-base: 1rem;
+--font-size-xs-4: 0.713rem;
+--font-size-9xl-4: 1.775rem;
+--font-size-xl: 1.25rem;
+--font-size-base-9: 1.056rem;
+--font-size-16xl: 2.188rem;
+--font-size-27xl: 2.875rem;
+--font-size-59xl-3: 4.894rem;
+--font-size-55xl-9: 4.681rem;
+--font-size-28xl: 2.938rem;
+--font-size-44xl: 3.938rem;
+--font-size-52xl-3: 4.456rem;
+--font-size-24xl: 2.688rem;
+--font-size-38xl: 3.563rem;
+--font-size-32xl: 3.188rem;
+--font-size-22xl: 2.563rem;
+--font-size-3xs-2: 0.575rem;
+--font-size-mini-3: 0.894rem;
+--font-size-mid-5: 1.094rem;
+--font-size-23xl-2: 2.638rem;
 
 /* Colors */
 --background-default-default: #fff;
@@ -341,14 +396,13 @@ export default function createGlobalStyle() {
 `;
 }
 
-
-export { 
-  dynapuff, 
-  alexandria, 
-  manrope, 
-  hankenGrotesk, 
-  aclonica, 
-  inter, 
-  dmSans, 
-  nunitoSans 
-};
+export {
+  dynapuff,
+  alexandria,
+  dmSans,
+  nunitoSans,
+  hankenGrotesk,
+  aclonica,
+  inter,
+  manrope
+}

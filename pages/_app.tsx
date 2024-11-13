@@ -26,7 +26,18 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  const muiTheme = createTheme();
+  const muiTheme = createTheme({
+    typography: {
+      fontFamily: `${inter.style.fontFamily}, ${manrope.style.fontFamily}, sans-serif`,
+      h1: {
+        fontFamily: `${dynapuff.style.fontFamily}, sans-serif`,
+      },
+      h2: {
+        fontFamily: `${hankenGrotesk.style.fontFamily}, sans-serif`,
+      },
+  
+    },
+  });
 
   return (
     <Fragment>
@@ -72,9 +83,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={muiTheme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
-          <div className={`${dynapuff.className} ${alexandria.className} ${manrope.className} ${hankenGrotesk.className} ${aclonica.className} ${inter.className} ${dmSans.className} ${nunitoSans.className}`}>
+          <div className={`${dynapuff.className} ${alexandria.className} ${manrope.className} ${hankenGrotesk.variable}`}>
             <Component {...pageProps} />
           </div>
+          
         </ThemeProvider>
       </Web3Provider>
     </Fragment>
