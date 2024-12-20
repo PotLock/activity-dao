@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import { css } from "@emotion/css";
 import { Button } from "@mui/material";
 import { FaCalendar, FaRegCalendar } from "react-icons/fa";
+import { useRouter } from 'next/router';
 
 type CommitCardType = {
   id: string;
@@ -79,6 +80,7 @@ export const commitData: CommitCardType[] = [
 ];
 
 const CommitCard: NextPage<CommitCardType> = ({ 
+  id, 
   avatarUrl, 
   title, 
   description, 
@@ -87,8 +89,11 @@ const CommitCard: NextPage<CommitCardType> = ({
   status,
   isCommitted 
 }) => {
+  const router = useRouter();
+
   return (
     <div
+      onClick={() => router.push(`/commit/${id}`)}
       className={css`
         width: calc(33.33% - 1.33rem);
         box-shadow: 0px 0px 0px 0.85px rgba(17, 24, 28, 0.08),
@@ -100,6 +105,11 @@ const CommitCard: NextPage<CommitCardType> = ({
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        &:hover {
+          transform: translateY(-2px);
+        }
 
         @media screen and (max-width: 768px) {
           width: 100%;
