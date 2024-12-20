@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { ConnectKitButton } from "connectkit";
 import { useAccount } from "wagmi";
 import Image from 'next/image';
-import { RiHome5Line, RiNewspaperLine, RiCalendarEventLine, RiGroupLine } from "react-icons/ri";
+import { RiHome5Line, RiNewspaperLine, RiCalendarEventLine, RiGroupLine, RiHandCoinLine } from "react-icons/ri";
 
 export type NAVBARType = {
   className?: string;
@@ -24,6 +24,8 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
       setActiveLink("daos");
     } else if (router.pathname.startsWith("/interest") || router.pathname.startsWith("/feeds")) {
       setActiveLink("feed");
+    } else if (router.pathname.startsWith("/commits")) {
+      setActiveLink("commits");
     } else if (router.pathname === "/") {
       setActiveLink("home");
     } else {
@@ -36,6 +38,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
     { id: "feed", label: "Feed", href: "/feeds", icon: RiNewspaperLine },
     { id: "events", label: "Events", href: "/events", icon: RiCalendarEventLine },
     { id: "daos", label: "DAOs", href: "/daos", icon: RiGroupLine },
+    { id: "commits", label: "Commits", href: "/commits", icon: RiHandCoinLine },
   ];
 
   return (
