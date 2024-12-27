@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
-import NAVBAR from "../components/n-a-v-b-a-r";
-import Footer from "../components/Footer";
-import CommitsDescription from "../components/commits-description";
+import NAVBAR from "../../components/n-a-v-b-a-r";
+import Footer from "../../components/Footer";
+import CommitsDescription from "../../components/commits-description";
 
 const Commits: NextPage = () => {
   return (
