@@ -11,6 +11,7 @@ import {
   ButtonGroup,
 } from "@mui/material";
 import CommitCard, { commitData } from './commit-card';
+import { FiPlus } from 'react-icons/fi';
 
 export type CommitsDescriptionType = {
   className?: string;
@@ -185,7 +186,8 @@ const CommitsDescription: NextPage<CommitsDescriptionType> = ({ className = "", 
         width: 100%;
       `}>
         <TextField
-          style={{ flex: 5 }}
+          style={{ flex: 4 }}
+          size="small"
           variant="outlined"
           placeholder="Search commits"
           value={searchTerm}
@@ -199,23 +201,54 @@ const CommitsDescription: NextPage<CommitsDescriptionType> = ({ className = "", 
                 style={{ marginRight: "8px" }}
               />
             ),
+            sx: {
+              borderRadius: '25px',
+              height: '44px',
+            }
           }}
         />
         <FormControl style={{ flex: 2 }}>
-          <InputLabel>Sort By</InputLabel>
           <Select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            label="Sort By"
+            size="small"
+            displayEmpty
+            sx={{
+              borderRadius: '25px',
+              height: '44px',
+            }}
           >
+            <MenuItem disabled value="">
+              <em>Sort By</em>
+            </MenuItem>
             <MenuItem value="most_recent">Most Recent</MenuItem>
-            <MenuItem value="oldest">Oldest</MenuItem>
-            <MenuItem value="highest_reward">Highest Reward</MenuItem>
-            <MenuItem value="lowest_reward">Lowest Reward</MenuItem>
-            <MenuItem value="highest_time">Highest Time</MenuItem>
-            <MenuItem value="lowest_time">Lowest Time</MenuItem>
+            <MenuItem value="stake_high">Stake Amount (High to Low)</MenuItem>
+            <MenuItem value="stake_low">Stake Amount (Low to High)</MenuItem>
+            <MenuItem value="my_commits">My Commits</MenuItem>
           </Select>
         </FormControl>
+        <Button
+          variant="contained"
+          href="/commits/create"
+          startIcon={<FiPlus size={16} strokeWidth={2} />}
+          sx={{
+            flex: 1,
+            borderRadius: '25px',
+            textTransform: 'none',
+            backgroundColor: '#facc15',
+            color: '#000',
+            border: 'none',
+            boxShadow: 'none',
+            whiteSpace: 'nowrap',
+            height: '44px',
+            '&:hover': {
+              backgroundColor: '#f59e0b',
+              boxShadow: 'none',
+            },
+          }}
+        >
+          Create Commit
+        </Button>
       </div>
 
       <div className={css`
