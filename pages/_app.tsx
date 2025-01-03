@@ -5,6 +5,8 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import createGlobalStyle from "./styles/global";
 import { Web3Provider } from "../components/Web3Provider"; // Import the Web3Provider
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 createGlobalStyle();
 
@@ -81,7 +83,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={muiTheme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
-          <Component {...pageProps} />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Component {...pageProps} />
+          </LocalizationProvider>
         </ThemeProvider>
       </Web3Provider>
     </Fragment>
