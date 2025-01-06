@@ -5,6 +5,7 @@ import { ButtonGroup, Button } from "@mui/material";
 import { FaRegCalendar, FaMapMarkerAlt, FaChevronRight } from "react-icons/fa";
 import NAVBAR from "../../components/n-a-v-b-a-r";
 import Footer from "../../components/Footer";
+import { ErrorBanner, SuccessBannerWithTimer, SuccessBanner } from '../../components/banners';
 
 const CommitDetail: NextPage = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -29,6 +30,8 @@ const CommitDetail: NextPage = () => {
           width: 100%;
           padding: 2rem;
         `}>
+
+
           {/* Event Image and Title Section */}
           <div className={css`
             display: flex;
@@ -389,6 +392,10 @@ const CommitDetail: NextPage = () => {
           {/* Tab Content */}
           {activeTab === "overview" ? (
             <div>
+          {/* banners */}
+          {/* <ErrorBanner />
+          <SuccessBannerWithTimer />
+          <SuccessBanner /> */}
               <h3 className={css`
                 font-weight: 600;
                 margin-bottom: 1rem;
