@@ -47,14 +47,66 @@ const CommitDetail: NextPage = () => {
               `}
             />
 
-            <h1 className={css`
-              text-align: left;
-              font-family: var(--font-hanken-grotesk);
-              font-weight: 600;
+            <div className={css`
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              width: 100%;
               margin-bottom: 1.5rem;
             `}>
-              Daily Morning Yoga Challenge
-            </h1>
+              <h1 className={css`
+                text-align: left;
+                font-family: var(--font-hanken-grotesk);
+                font-weight: 600;
+              `}>
+                Daily Morning Yoga Challenge
+              </h1>
+
+              <div className={css`
+                display: flex;
+                gap: 1rem;
+                @media (max-width: 768px) {
+                  display: none;
+                }
+              `}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: '#F3F4F6',
+                    color: '#000',
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    padding: '0.75rem 2rem',
+                    borderRadius: '25px',
+                    boxShadow: 'none',
+                    '&:hover': {
+                      backgroundColor: '#E5E7EB',
+                      boxShadow: 'none',
+                    },
+                  }}
+                >
+                  Add Reward
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: '#facc15',
+                    color: '#000',
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    padding: '0.75rem 2rem',
+                    borderRadius: '25px',
+                    boxShadow: 'none',
+                    '&:hover': {
+                      backgroundColor: '#f59e0b',
+                      boxShadow: 'none',
+                    },
+                  }}
+                >
+                  Join Commit
+                </Button>
+              </div>
+            </div>
 
             {/* Creator */}
             <div className={css`
@@ -327,24 +379,6 @@ const CommitDetail: NextPage = () => {
               `}>
                 Join our 10-day morning yoga challenge. Practice mindfulness and flexibility every day for better health and wellness.
               </p>
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: '#facc15',
-                  color: '#000',
-                  textTransform: 'none',
-                  fontWeight: 500,
-                  padding: '0.75rem 2rem',
-                  borderRadius: '25px',
-                  boxShadow: 'none',
-                  '&:hover': {
-                    backgroundColor: '#f59e0b',
-                    boxShadow: 'none',
-                  },
-                }}
-              >
-                Join Commit
-              </Button>
             </div>
           ) : (
             <div>
