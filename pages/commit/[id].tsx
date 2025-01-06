@@ -25,7 +25,7 @@ const CommitDetail: NextPage = () => {
         margin-top: 8rem;
       `}>
         <div className={css`
-          max-width: 800px;
+          max-width: 1024px;
           width: 100%;
           padding: 2rem;
         `}>
@@ -77,8 +77,9 @@ const CommitDetail: NextPage = () => {
                     textTransform: 'none',
                     fontWeight: 500,
                     padding: '0.75rem 2rem',
-                    borderRadius: '25px',
+                    borderRadius: '8px',
                     boxShadow: 'none',
+                    minWidth: '140px',
                     '&:hover': {
                       backgroundColor: '#E5E7EB',
                       boxShadow: 'none',
@@ -95,15 +96,16 @@ const CommitDetail: NextPage = () => {
                     textTransform: 'none',
                     fontWeight: 500,
                     padding: '0.75rem 2rem',
-                    borderRadius: '25px',
+                    borderRadius: '8px',
                     boxShadow: 'none',
+                    minWidth: '140px',
                     '&:hover': {
                       backgroundColor: '#f59e0b',
                       boxShadow: 'none',
                     },
                   }}
                 >
-                  Join Commit
+                  Commit
                 </Button>
               </div>
             </div>
