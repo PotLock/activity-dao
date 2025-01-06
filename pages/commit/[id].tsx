@@ -6,6 +6,7 @@ import { FaRegCalendar, FaMapMarkerAlt, FaChevronRight } from "react-icons/fa";
 import NAVBAR from "../../components/n-a-v-b-a-r";
 import Footer from "../../components/Footer";
 import { ErrorBanner, SuccessBannerWithTimer, SuccessBanner } from '../../components/banners';
+import RewardPools from '../../components/reward-pools';
 
 const CommitDetail: NextPage = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -506,6 +507,7 @@ const CommitDetail: NextPage = () => {
                   Copy
                 </Button>
               </div>
+              {/* <RewardPools /> */}
             </div>
           ) : (
             <div>
