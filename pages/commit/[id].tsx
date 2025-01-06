@@ -27,14 +27,13 @@ const CommitDetail: NextPage = () => {
         <div className={css`
           max-width: 800px;
           width: 100%;
-          border: 1px solid #E5E7EB;
-          border-radius: 16px;
           padding: 2rem;
         `}>
-          {/* Event Image */}
+          {/* Event Image and Title Section */}
           <div className={css`
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: flex-start;
             margin-bottom: 2rem;
           `}>
             <img 
@@ -44,38 +43,37 @@ const CommitDetail: NextPage = () => {
                 width: 120px;
                 height: 120px;
                 border-radius: 50%;
+                margin-bottom: 1.5rem;
               `}
             />
-          </div>
 
-          {/* Title */}
-          <h1 className={css`
-            text-align: center;
-            font-family: var(--font-hanken-grotesk);
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-          `}>
-            Daily Morning Yoga Challenge
-          </h1>
+            <h1 className={css`
+              text-align: left;
+              font-family: var(--font-hanken-grotesk);
+              font-weight: 600;
+              margin-bottom: 1.5rem;
+            `}>
+              Daily Morning Yoga Challenge
+            </h1>
 
-          {/* Creator */}
-          <div className={css`
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-          `}>
-            <img 
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=1"
-              alt="Creator"
-              className={css`
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-              `}
-            />
-            <span>Created by 0x1234...5678</span>
+            {/* Creator */}
+            <div className={css`
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              margin-bottom: 2rem;
+            `}>
+              <img 
+                src="https://api.dicebear.com/7.x/avataaars/svg?seed=1"
+                alt="Creator"
+                className={css`
+                  width: 24px;
+                  height: 24px;
+                  border-radius: 50%;
+                `}
+              />
+              <span>Created by 0x1234...5678</span>
+            </div>
           </div>
 
           {/* Date and Location */}
