@@ -392,12 +392,113 @@ const CommitDetail: NextPage = () => {
               <h3 className={css`
                 font-weight: 600;
                 margin-bottom: 1rem;
-              `}>About Event</h3>
+              `}>Description</h3>
               <p className={css`
-                margin-bottom: 2rem;
+                margin-bottom: 1.5rem;
+                color: #6B7280;
               `}>
                 Join our 10-day morning yoga challenge. Practice mindfulness and flexibility every day for better health and wellness.
               </p>
+
+              <hr className={css`
+                border: none;
+                border-top: 1px solid #E5E7EB;
+                margin: 1.5rem 0;
+              `} />
+
+              {/* Verification Method Section */}
+              <h3 className={css`
+                font-weight: 600;
+                margin-bottom: 1rem;
+              `}>Verification Method</h3>
+              
+              <div className={css`
+                background: white;
+                border: 1px solid #E5E7EB;
+                border-radius: 8px;
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+              `}>
+                <h4 className={css`
+                  font-weight: 600;
+                  font-size: 1.125rem;
+                  margin-bottom: 0.75rem;
+                `}>Individual QR Code</h4>
+                
+                <p className={css`
+                  color: #6B7280;
+                  font-size: 0.875rem;
+                `}>
+                  Upon joining you'll receive the unique QR code. The event organizer will scan this code to verify your attendance.
+                </p>
+              </div>
+
+              <hr className={css`
+                border: none;
+                border-top: 1px solid #E5E7EB;
+                margin: 1.5rem 0;
+              `} />
+
+              {/* Refer Friends Section */}
+              <h3 className={css`
+                font-weight: 600;
+                margin-bottom: 1rem;
+              `}>Refer Friends</h3>
+              
+              <p className={css`
+                color: #6B7280;
+                font-size: 0.875rem;
+                margin-bottom: 1rem;
+              `}>
+                Share this event and earn 1% of the creator fee for each friend who committed
+              </p>
+
+              <div className={css`
+                display: flex;
+                gap: 0.75rem;
+                align-items: center;
+              `}>
+                <div className={css`
+                  flex: 1;
+                  background: white;
+                  border: 1px solid #E5E7EB;
+                  border-radius: 8px;
+                  padding: 0.75rem;
+                `}>
+                  <input 
+                    type="text"
+                    value="https://activity.community/commit/123"
+                    readOnly
+                    className={css`
+                      width: 100%;
+                      border: none;
+                      background: transparent;
+                      color: #6B7280;
+                      font-size: 0.875rem;
+                      outline: none;
+                    `}
+                  />
+                </div>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: '#facc15',
+                    color: '#000',
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    boxShadow: 'none',
+                    minWidth: 'auto',
+                    '&:hover': {
+                      backgroundColor: '#f59e0b',
+                      boxShadow: 'none',
+                    },
+                  }}
+                >
+                  Copy
+                </Button>
+              </div>
             </div>
           ) : (
             <div>
