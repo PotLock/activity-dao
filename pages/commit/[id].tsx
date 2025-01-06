@@ -114,19 +114,36 @@ const CommitDetail: NextPage = () => {
             <div className={css`
               display: flex;
               align-items: center;
-              gap: 0.5rem;
-              margin-bottom: 2rem;
+              gap: 1rem;
             `}>
-              <img 
-                src="https://api.dicebear.com/7.x/avataaars/svg?seed=1"
-                alt="Creator"
-                className={css`
-                  width: 24px;
-                  height: 24px;
-                  border-radius: 50%;
-                `}
-              />
-              <span>Created by 0x1234...5678</span>
+              <div className={css`
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+              `}>
+                <img 
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=1"
+                  alt="Creator"
+                  className={css`
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                  `}
+                />
+                <span>Created by 0x1234...5678</span>
+              </div>
+
+              <span className={css`
+                padding: 4px 12px;
+                border-radius: 16px;
+                border: 1px solid #F97316;
+                color: #F97316;
+                background-color: rgba(249, 115, 22, 0.1);
+                font-size: 14px;
+                font-family: var(--font-hanken-grotesk);
+              `}>
+                In Progress
+              </span>
             </div>
           </div>
 
