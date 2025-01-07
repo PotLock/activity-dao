@@ -7,9 +7,27 @@ import NAVBAR from "../../components/n-a-v-b-a-r";
 import Footer from "../../components/Footer";
 import { ErrorBanner, SuccessBannerWithTimer, SuccessBanner } from '../../components/banners';
 import RewardPools from '../../components/reward-pools';
+import MobileInstructionsPopup from '../../components/popups/mobile-instructions-popup';
+import ScanQRCodePopup from '../../components/popups/scan-qr-code-popup';
+import ConfirmParticipantPopup from '../../components/popups/confirm-participant-popup';
+import BatchApprovePopup from '../../components/popups/batch-approve-popup';
+import ResolveCommitPopup from '../../components/popups/resolve-commit-popup';
+import DistributeRewardPopup from '../../components/popups/distribute-reward-popup';
+import AddRewardPoolPopup from '../../components/popups/add-reward-pool-popup';
+import ConfirmCommitmentPopup from '../../components/popups/confirm-commitment-popup';
 
 const CommitDetail: NextPage = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const [mobileInstructionsOpen, setMobileInstructionsOpen] = useState(false);
+  const [scanQROpen, setScanQROpen] = useState(false);
+  const [confirmParticipantOpen, setConfirmParticipantOpen] = useState(false);
+  const [batchApproveOpen, setBatchApproveOpen] = useState(false);
+  const [resolveCommitOpen, setResolveCommitOpen] = useState(false);
+  const [distributeRewardOpen, setDistributeRewardOpen] = useState(false);
+  const [addRewardPoolOpen, setAddRewardPoolOpen] = useState(false);
+  const [confirmCommitmentOpen, setConfirmCommitmentOpen] = useState(false);
+
+  const isAdmin = true;
 
   return (
     <div className={css`
@@ -551,6 +569,145 @@ const CommitDetail: NextPage = () => {
           )}
         </div>
       </main>
+
+      <div className={css`
+        margin-top: 4rem;
+        padding: 2rem;
+        background: #F9FAFB;
+        border-radius: 12px;
+      `}>
+        <h3 className={css`
+          font-weight: 600;
+          margin-bottom: 1.5rem;
+        `}>Test Popups</h3>
+
+        <div className={css`
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 1rem;
+        `}>
+          <Button
+            variant="contained"
+            onClick={() => setMobileInstructionsOpen(true)}
+            sx={{ backgroundColor: '#F3F4F6', color: '#000' }}
+          >
+            Mobile Instructions
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => setScanQROpen(true)}
+            sx={{ backgroundColor: '#F3F4F6', color: '#000' }}
+          >
+            Scan QR Code
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => setConfirmParticipantOpen(true)}
+            sx={{ backgroundColor: '#F3F4F6', color: '#000' }}
+          >
+            Confirm Participant
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => setBatchApproveOpen(true)}
+            sx={{ backgroundColor: '#F3F4F6', color: '#000' }}
+          >
+            Batch Approve
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => setResolveCommitOpen(true)}
+            sx={{ backgroundColor: '#F3F4F6', color: '#000' }}
+          >
+            Resolve Commit
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => setDistributeRewardOpen(true)}
+            sx={{ backgroundColor: '#F3F4F6', color: '#000' }}
+          >
+            Distribute Reward
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => setAddRewardPoolOpen(true)}
+            sx={{ backgroundColor: '#F3F4F6', color: '#000' }}
+          >
+            Add Reward Pool
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => setConfirmCommitmentOpen(true)}
+            sx={{ backgroundColor: '#F3F4F6', color: '#000' }}
+          >
+            Confirm Commitment
+          </Button>
+        </div>
+      </div>
+
+      {/* Add all popups */}
+      <MobileInstructionsPopup 
+        open={mobileInstructionsOpen}
+        onClose={() => setMobileInstructionsOpen(false)}
+      />
+
+      <ScanQRCodePopup 
+        open={scanQROpen}
+        onClose={() => setScanQROpen(false)}
+        onContinue={() => {
+          setScanQROpen(false);
+          setConfirmParticipantOpen(true);
+        }}
+      />
+
+      <ConfirmParticipantPopup 
+        open={confirmParticipantOpen}
+        onClose={() => setConfirmParticipantOpen(false)}
+        onVerify={() => setConfirmParticipantOpen(false)}
+      />
+
+      <BatchApprovePopup 
+        open={batchApproveOpen}
+        onClose={() => setBatchApproveOpen(false)}
+        onApprove={(selectedIds) => {
+          console.log('Selected IDs:', selectedIds);
+          setBatchApproveOpen(false);
+        }}
+      />
+
+      <ResolveCommitPopup 
+        open={resolveCommitOpen}
+        onClose={() => setResolveCommitOpen(false)}
+        onConfirm={() => setResolveCommitOpen(false)}
+      />
+
+      <DistributeRewardPopup 
+        open={distributeRewardOpen}
+        onClose={() => setDistributeRewardOpen(false)}
+        onConfirm={() => setDistributeRewardOpen(false)}
+        rewards={[
+          { logo: "https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=040", amount: "20", token: "USDC" },
+          { logo: "https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=040", amount: "15", token: "USDC" },
+        ]}
+        verifiedCount={28}
+      />
+
+      <AddRewardPoolPopup 
+        open={addRewardPoolOpen}
+        onClose={() => setAddRewardPoolOpen(false)}
+      />
+
+      <ConfirmCommitmentPopup 
+        open={confirmCommitmentOpen}
+        onClose={() => setConfirmCommitmentOpen(false)}
+      />
 
       <Footer />
     </div>
