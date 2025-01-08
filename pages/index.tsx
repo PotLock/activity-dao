@@ -15,24 +15,8 @@ import DaoMaturity from "../components/daoMaturity";
 import Evolution from "../components/evolution";
 import PoweringCommunity from "../components/dao-model";
 import JoinActivityDAO from "../components/join-activityDAO";
-import LoadingAnimation from "../components/LoadingAnimation";
 
 const Desktop: NextPage = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate loading time
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
-    return <LoadingAnimation />;
-  }
-
   return (
     <div
       className={css`
