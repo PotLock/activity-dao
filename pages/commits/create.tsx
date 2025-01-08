@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Button, 
   TextField, 
@@ -44,6 +44,12 @@ const CreateCommit: NextPage = () => {
     { name: '', value: '' }
   ]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [dateErrors, setDateErrors] = useState({
+    eventDates: '',
+    commitDates: '',
+  });
+  const [joinCommitDate, setJoinCommitDate] = useState<Date | null>(null);
+  const [claimRewardDate, setClaimRewardDate] = useState<Date | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -55,6 +61,43 @@ const CreateCommit: NextPage = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const validateDates = () => {
+    const now = new Date();
+    const errors = {
+      eventDates: '',
+      commitDates: '',
+    };
+
+    if (dateRange[0] && dateRange[0] < now) {
+      errors.eventDates = 'Start date cannot be in the past';
+    } else if (dateRange[0] && dateRange[1] && dateRange[0] > dateRange[1]) {
+      errors.eventDates = 'End date must be after start date';
+    }
+
+    if (joinCommitDate && joinCommitDate < now) {
+      errors.commitDates = 'Join commit date cannot be in the past';
+    } else if (claimRewardDate && claimRewardDate < now) {
+      errors.commitDates = 'Claim reward date cannot be in the past';
+    } else if (joinCommitDate && claimRewardDate && joinCommitDate > claimRewardDate) {
+      errors.commitDates = 'Claim reward date must be after join commit date';
+    }
+
+    setDateErrors(errors);
+    return !errors.eventDates && !errors.commitDates;
+  };
+
+  useEffect(() => {
+    validateDates();
+  }, [dateRange, joinCommitDate, claimRewardDate]);
+
+  const handleSubmit = () => {
+    if (!validateDates()) {
+      // Show error message or prevent submission
+      return;
+    }
+    // Proceed with form submission
   };
 
   return (
@@ -265,7 +308,10 @@ const CreateCommit: NextPage = () => {
                   value={dateRange[0]}
                   onChange={(newValue) => setDateRange([newValue, dateRange[1]])}
                   slotProps={{
-                    textField: { size: 'small' },
+                    textField: { 
+                      size: 'small',
+                      error: !!dateErrors.eventDates,
+                    },
                   }}
                 />
               </div>
@@ -275,10 +321,20 @@ const CreateCommit: NextPage = () => {
                   value={dateRange[1]}
                   onChange={(newValue) => setDateRange([dateRange[0], newValue])}
                   slotProps={{
-                    textField: { size: 'small' },
+                    textField: { 
+                      size: 'small',
+                      error: !!dateErrors.eventDates,
+                    },
                   }}
                 />
               </div>
+              {dateErrors.eventDates && (
+                <p className={css`
+                  color: #d32f2f;
+                  font-size: 0.75rem;
+                  margin-top: 0.25rem;
+                `}>{dateErrors.eventDates}</p>
+              )}
               <div>
                 <label className={labelStyle}>Location</label>
                 <TextField
@@ -473,20 +529,37 @@ const CreateCommit: NextPage = () => {
             `}>
               <div>
                 <label className={labelStyle}>Join Commit Date and Time</label>
-                <TextField
-                  type="datetime-local"
-                  fullWidth
-                  size="small"
+                <DateTimePicker
+                  value={joinCommitDate}
+                  onChange={setJoinCommitDate}
+                  slotProps={{
+                    textField: { 
+                      size: 'small',
+                      error: !!dateErrors.commitDates,
+                    },
+                  }}
                 />
               </div>
               <div>
                 <label className={labelStyle}>Claim Reward Date and Time</label>
-                <TextField
-                  type="datetime-local"
-                  fullWidth
-                  size="small"
+                <DateTimePicker
+                  value={claimRewardDate}
+                  onChange={setClaimRewardDate}
+                  slotProps={{
+                    textField: { 
+                      size: 'small',
+                      error: !!dateErrors.commitDates,
+                    },
+                  }}
                 />
               </div>
+              {dateErrors.commitDates && (
+                <p className={css`
+                  color: #d32f2f;
+                  font-size: 0.75rem;
+                  margin-top: 0.25rem;
+                `}>{dateErrors.commitDates}</p>
+              )}
             </div>
 
             <div className={css`margin-bottom: 2rem;`}>
