@@ -18,6 +18,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import NAVBAR from "../../components/n-a-v-b-a-r";
 import Footer from "../../components/Footer";
 import { ethers } from 'ethers';
+import LocationAutocomplete from '../../components/LocationAutocomplete';
 
 const labelStyle = css`
   font-size: 0.875rem;
@@ -55,6 +56,8 @@ const CreateCommit: NextPage = () => {
   const [partnerAddress, setPartnerAddress] = useState('');
   const [partnerAddressError, setPartnerAddressError] = useState('');
   const [isValidatingENS, setIsValidatingENS] = useState(false);
+  const [location, setLocation] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -416,9 +419,12 @@ const CreateCommit: NextPage = () => {
               )}
               <div>
                 <label className={labelStyle}>Location</label>
-                <TextField
-                  fullWidth
-                  size="small"
+                <LocationAutocomplete
+                  value={location}
+                  onChange={(value, loc) => {
+                    setLocation(value);
+                    setSelectedLocation(loc);
+                  }}
                   placeholder="Enter location"
                 />
               </div>
