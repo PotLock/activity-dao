@@ -284,7 +284,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                 const handleClick = () => {
                   if (isConnected) {
                     setShowDropdown(!showDropdown);
-                  } else {
+                  } else if (show) {
                     show();
                   }
                 };
