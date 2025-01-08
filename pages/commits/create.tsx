@@ -122,15 +122,23 @@ const CreateCommit: NextPage = () => {
 
     // Check if it's an ENS name
     if (address.toLowerCase().endsWith('.eth')) {
+      const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID;
+      if (!alchemyId) {
+        setPartnerAddressError('Configuration error: Alchemy ID not set');
+        return false;
+      }
+
       try {
         setIsValidatingENS(true);
-        const provider = new ethers.JsonRpcProvider(
-          process.env.NEXT_PUBLIC_ETHEREUM_RPC_URL
+        const provider = new ethers.AlchemyProvider(
+          'mainnet',
+          alchemyId
         );
+
         const resolvedAddress = await provider.resolveName(address);
         
         if (!resolvedAddress) {
-          setPartnerAddressError('Invalid ENS name');
+          setPartnerAddressError('Could not resolve ENS name');
           return false;
         }
         
@@ -138,7 +146,8 @@ const CreateCommit: NextPage = () => {
         setPartnerAddress(resolvedAddress);
         return true;
       } catch (error) {
-        setPartnerAddressError('Error resolving ENS name');
+        console.error('ENS resolution error:', error);
+        setPartnerAddressError('Error resolving ENS name. Please try again');
         return false;
       } finally {
         setIsValidatingENS(false);
