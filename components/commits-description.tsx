@@ -23,6 +23,31 @@ const CommitsDescription: NextPage<CommitsDescriptionType> = ({ className = "", 
   const [sortBy, setSortBy] = useState("most_recent");
   const [selectedTab, setSelectedTab] = useState("all");
 
+  // Filter commits based on selected tab and search term
+  const filteredCommits = commitData.filter(commit => {
+    const matchesSearch = commit.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         commit.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesTab = selectedTab === "all" ? true :
+                      selectedTab === "ongoing" ? commit.status === "in_progress" :
+                      selectedTab === "upcoming" ? commit.status === "upcoming" : false;
+    
+    return matchesSearch && matchesTab;
+  });
+
+  // Sort commits based on selected sort option
+  const sortedCommits = [...filteredCommits].sort((a, b) => {
+    switch (sortBy) {
+      case "stake_high":
+        return b.stakeAmount - a.stakeAmount;
+      case "stake_low":
+        return a.stakeAmount - b.stakeAmount;
+      case "most_recent":
+      default:
+        return new Date(b.dateRange[0]).getTime() - new Date(a.dateRange[0]).getTime();
+    }
+  });
+
   return (
     <div
       className={[
@@ -251,6 +276,7 @@ const CommitsDescription: NextPage<CommitsDescriptionType> = ({ className = "", 
         </Button>
       </div>
 
+      {/* Display filtered and sorted commits */}
       <div className={css`
         display: flex;
         flex-wrap: wrap;
@@ -258,7 +284,7 @@ const CommitsDescription: NextPage<CommitsDescriptionType> = ({ className = "", 
         width: 100%;
         margin-top: 2rem;
       `}>
-        {commitData.map((commit) => (
+        {sortedCommits.map((commit) => (
           <CommitCard key={commit.id} {...commit} />
         ))}
       </div>

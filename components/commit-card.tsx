@@ -9,41 +9,39 @@ type CommitCardType = {
   avatarUrl: string;
   title: string;
   description: string;
-  stakeAmount: string;
-  dateRange: string;
+  stakeAmount: number;
+  dateRange: [string, string];
   status: "in_progress" | "available" | "upcoming";
-  isCommitted: boolean;
+  isCommitted?: boolean;
 };
 
 // Dummy data
 export const commitData: CommitCardType[] = [
   {
     id: "1",
-    avatarUrl: `bluntdaologobackground.png`,
-    title: "Daily Morning Yoga Challenge",
-    description: "Join our 10-day morning yoga challenge. Practice mindfulness and flexibility every day for better health and wellness.",
-    stakeAmount: "10 USDC",
-    dateRange: "April 1-10",
+    avatarUrl: "/bluntdaologobackground.png",
+    title: "Morning Run Club",
+    description: "Join us for daily morning runs blah blah blah blah blah blah blah blah blah blah blah blah blah blah",
+    stakeAmount: 0.1,
+    dateRange: ["2024-03-01", "2024-03-31"],
     status: "in_progress",
-    isCommitted: true,
   },
   {
     id: "2",
-    avatarUrl: `bluntdaologobackground.png`,
-    title: "5K Running Challenge",
-    description: "Challenge yourself to run 5K every day for a week. Track your progress and compete with others.",
-    stakeAmount: "5 USDC",
-    dateRange: "April 5-12",
-    status: "available",
-    isCommitted: false,
+    avatarUrl: "/bluntdaologobackground.png",
+    title: "Weekend Hiking Group",
+    description: "Weekly hiking adventures blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah",
+    stakeAmount: 0.2,
+    dateRange: ["2024-04-01", "2024-04-30"],
+    status: "upcoming",
   },
   {
     id: "3",
     avatarUrl: "bluntdaologobackground.png",
     title: "30 Days of Meditation",
     description: "Start your meditation journey with this 30-day challenge. Build a daily practice of mindfulness.",
-    stakeAmount: "0.15 ETH",
-    dateRange: "April 1-30",
+    stakeAmount: 0.15,
+    dateRange: ["2024-04-01", "2024-04-30"],
     status: "in_progress",
     isCommitted: false,
   },
@@ -52,9 +50,9 @@ export const commitData: CommitCardType[] = [
     avatarUrl: "bluntdaologobackground.png",
     title: "Weekly Basketball Meetup",
     description: "Join our weekly basketball sessions. Improve your game and meet new players.",
-    stakeAmount: "0.08 ETH",
-    dateRange: "April 1-30",
-    status: "in_progress",
+    stakeAmount: 0.08,
+    dateRange: ["2024-04-01", "2024-04-30"],
+    status: "upcoming",
     isCommitted: true,
   },
   {
@@ -62,8 +60,8 @@ export const commitData: CommitCardType[] = [
     avatarUrl: "bluntdaologobackground.png",
     title: "Daily Swimming Challenge",
     description: "Swim 1km daily for 2 weeks. Perfect your technique and build endurance.",
-    stakeAmount: "0.12 ETH",
-    dateRange: "April 15-29",
+    stakeAmount: 0.12,
+    dateRange: ["2024-04-15", "2024-04-29"],
     status: "upcoming",
     isCommitted: false,
   },
@@ -72,9 +70,9 @@ export const commitData: CommitCardType[] = [
     avatarUrl: "bluntdaologobackground.png",
     title: "Photography Workshop Series",
     description: "Learn photography basics through daily assignments and feedback sessions.",
-    stakeAmount: "0.2 ETH",
-    dateRange: "April 10-24",
-    status: "upcoming",
+    stakeAmount: 0.2,
+    dateRange: ["2024-04-10", "2024-04-24"],
+    status: "in_progress",
     isCommitted: false,
   }
 ];
@@ -104,6 +102,14 @@ const getStatusStyles = (status: "in_progress" | "available" | "upcoming") => {
         text: "Upcoming"
       };
   }
+};
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { 
+    month: 'short', 
+    day: 'numeric' 
+  });
 };
 
 const CommitCard: NextPage<CommitCardType> = ({ 
@@ -200,6 +206,7 @@ const CommitCard: NextPage<CommitCardType> = ({
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
+        gap: 1rem;
       `}>
         <div>
           <p className={css`
@@ -247,10 +254,10 @@ const CommitCard: NextPage<CommitCardType> = ({
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            justify-content: flex-end;
+            white-space: nowrap;
           `}>
             <FaRegCalendar size={14} />
-            <span>{dateRange}</span>
+            <span>{formatDate(dateRange[0])} - {formatDate(dateRange[1])}</span>
           </p>
         </div>
       </div>
