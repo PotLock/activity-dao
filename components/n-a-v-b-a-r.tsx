@@ -284,7 +284,14 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                 const handleClick = () => {
                   if (isConnected) {
                     setShowDropdown(!showDropdown);
-                  } else if (show) {
+                  } else if (typeof show === 'function') {
+                    show();
+                  }
+                };
+
+                const handleDisconnect = () => {
+                  if (typeof show === 'function') {
+                    setShowDropdown(false);
                     show();
                   }
                 };
@@ -354,10 +361,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                           <span>Profile</span>
                         </button>
                         <button
-                          onClick={() => {
-                            setShowDropdown(false);
-                            show();
-                          }}
+                          onClick={handleDisconnect}
                           className={css`
                             width: 100%;
                             padding: 0.75rem 1rem;
