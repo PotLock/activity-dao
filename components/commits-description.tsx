@@ -283,6 +283,23 @@ const CommitsDescription: NextPage<CommitsDescriptionType> = ({ className = "", 
         gap: 2rem;
         width: 100%;
         margin-top: 2rem;
+
+        /* Card wrapper styles */
+        & > * {
+          width: calc(33.33% - 1.33rem); /* Default: 3 cards per row */
+          
+          @media screen and (max-width: 1200px) {
+            width: calc(33.33% - 1.33rem); /* Medium screens: 3 cards per row */
+          }
+          
+          @media screen and (max-width: 900px) {
+            width: calc(50% - 1rem); /* Smaller screens: 2 cards per row */
+          }
+          
+          @media screen and (max-width: 600px) {
+            width: 100%; /* Mobile: 1 card per row */
+          }
+        }
       `}>
         {sortedCommits.map((commit) => (
           <CommitCard key={commit.id} {...commit} />
