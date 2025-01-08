@@ -79,6 +79,33 @@ export const commitData: CommitCardType[] = [
   }
 ];
 
+// Add this helper function to get status styles
+const getStatusStyles = (status: "in_progress" | "available" | "upcoming") => {
+  switch (status) {
+    case "in_progress":
+      return {
+        color: "#F97316",
+        borderColor: "#F97316",
+        backgroundColor: "rgba(249, 115, 22, 0.1)",
+        text: "In Progress"
+      };
+    case "available":
+      return {
+        color: "#10B981",
+        borderColor: "#10B981",
+        backgroundColor: "rgba(16, 185, 129, 0.1)",
+        text: "Available"
+      };
+    case "upcoming":
+      return {
+        color: "#6366F1",
+        borderColor: "#6366F1",
+        backgroundColor: "rgba(99, 102, 241, 0.1)",
+        text: "Upcoming"
+      };
+  }
+};
+
 const CommitCard: NextPage<CommitCardType> = ({ 
   id, 
   avatarUrl, 
@@ -90,6 +117,7 @@ const CommitCard: NextPage<CommitCardType> = ({
   isCommitted 
 }) => {
   const router = useRouter();
+  const statusStyles = getStatusStyles(status);
 
   return (
     <div
@@ -133,13 +161,13 @@ const CommitCard: NextPage<CommitCardType> = ({
         <span className={css`
           padding: 4px 12px;
           border-radius: 16px;
-          border: 1px solid #F97316;
-          color: #F97316;
-          background-color: rgba(249, 115, 22, 0.1);
+          border: 1px solid ${statusStyles.borderColor};
+          color: ${statusStyles.color};
+          background-color: ${statusStyles.backgroundColor};
           font-size: 14px;
           font-family: var(--font-hanken-grotesk);
         `}>
-          In Progress
+          {statusStyles.text}
         </span>
       </div>
 
