@@ -10,12 +10,14 @@ import {
   FormControl,
   InputLabel,
   Alert,
-  IconButton 
+  IconButton,
+  CircularProgress
 } from "@mui/material";
 import { FaCamera, FaQrcode, FaClipboardCheck } from "react-icons/fa";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import NAVBAR from "../../components/n-a-v-b-a-r";
 import Footer from "../../components/Footer";
+import { ethers } from 'ethers';
 
 const labelStyle = css`
   font-size: 0.875rem;
@@ -50,6 +52,9 @@ const CreateCommit: NextPage = () => {
   });
   const [joinCommitDate, setJoinCommitDate] = useState<Date | null>(null);
   const [claimRewardDate, setClaimRewardDate] = useState<Date | null>(null);
+  const [partnerAddress, setPartnerAddress] = useState('');
+  const [partnerAddressError, setPartnerAddressError] = useState('');
+  const [isValidatingENS, setIsValidatingENS] = useState(false);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -92,13 +97,78 @@ const CreateCommit: NextPage = () => {
     validateDates();
   }, [dateRange, joinCommitDate, claimRewardDate]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateDates()) {
-      // Show error message or prevent submission
       return;
     }
+
+    if (allowPartner) {
+      const isValidPartner = await validateAddress(partnerAddress);
+      if (!isValidPartner) {
+        return;
+      }
+    }
+
     // Proceed with form submission
   };
+
+  const validateAddress = async (address: string) => {
+    setPartnerAddressError('');
+    
+    if (!address) {
+      setPartnerAddressError('Address is required');
+      return false;
+    }
+
+    // Check if it's an ENS name
+    if (address.toLowerCase().endsWith('.eth')) {
+      try {
+        setIsValidatingENS(true);
+        const provider = new ethers.JsonRpcProvider(
+          process.env.NEXT_PUBLIC_ETHEREUM_RPC_URL
+        );
+        const resolvedAddress = await provider.resolveName(address);
+        
+        if (!resolvedAddress) {
+          setPartnerAddressError('Invalid ENS name');
+          return false;
+        }
+        
+        // Update the address field with the resolved address
+        setPartnerAddress(resolvedAddress);
+        return true;
+      } catch (error) {
+        setPartnerAddressError('Error resolving ENS name');
+        return false;
+      } finally {
+        setIsValidatingENS(false);
+      }
+    }
+
+    // Validate regular Ethereum address
+    try {
+      const isValidAddress = ethers.isAddress(address);
+      if (!isValidAddress) {
+        setPartnerAddressError('Invalid Ethereum address');
+        return false;
+      }
+      return true;
+    } catch (error) {
+      setPartnerAddressError('Invalid address format');
+      return false;
+    }
+  };
+
+  // Debounced address validation
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (partnerAddress) {
+        validateAddress(partnerAddress);
+      }
+    }, 500); // Wait 500ms after last change before validating
+
+    return () => clearTimeout(handler);
+  }, [partnerAddress]);
 
   return (
     <div className={css`
@@ -640,7 +710,9 @@ const CreateCommit: NextPage = () => {
                 align-items: center;
                 margin-bottom: 1rem;
               `}>
-                <h2 className={sectionHeadingStyle} style={{ margin: 0 }}>Allow Accountability Partner</h2>
+                <h2 className={sectionHeadingStyle} style={{ margin: 0 }}>
+                  Allow Accountability Partner
+                </h2>
                 <Switch
                   checked={allowPartner}
                   onChange={(e) => setAllowPartner(e.target.checked)}
@@ -653,8 +725,22 @@ const CreateCommit: NextPage = () => {
                   <TextField
                     fullWidth
                     size="small"
-                    placeholder="0x..."
+                    placeholder="0x... or ENS name"
+                    value={partnerAddress}
+                    onChange={(e) => setPartnerAddress(e.target.value)}
+                    error={!!partnerAddressError}
+                    helperText={partnerAddressError || (isValidatingENS ? 'Validating ENS...' : '')}
+                    InputProps={{
+                      endAdornment: isValidatingENS && (
+                        <CircularProgress size={20} />
+                      ),
+                    }}
                   />
+                  <p className={css`
+                    color: #6B7280;
+                    font-size: 0.875rem;
+                    margin-top: 0.5rem;
+                  `}>Enter an Ethereum address (0x...) or ENS name (.eth)</p>
                 </div>
               )}
             </div>
