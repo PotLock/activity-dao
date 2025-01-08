@@ -13,6 +13,7 @@ export type NAVBARType = {
 
 const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
   const [activeLink, setActiveLink] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
   const router = useRouter();
   const { address, isConnected } = useAccount();
 
@@ -40,6 +41,14 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
     { id: "daos", label: "DAOs", href: "/daos", icon: RiGroupLine },
     { id: "commits", label: "Commits", href: "/commits", icon: RiHandCoinLine },
   ];
+
+  // Add function to handle profile click
+  const handleProfileClick = () => {
+    if (address) {
+      window.open(`https://base.blockscout.com/address/${address}`, '_blank');
+    }
+    setShowDropdown(false);
+  };
 
   return (
     <>
@@ -263,6 +272,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
               padding: var(--padding-base) 0rem 0rem;
               box-sizing: border-box;
               height: 100%;
+              position: relative;
               @media screen and (max-width: 1050px) {
                 width: auto;
                 padding: 0;
@@ -271,42 +281,106 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
           >
             <ConnectKitButton.Custom>
               {({ isConnected, show, truncatedAddress, ensName }) => {
+                const handleClick = () => {
+                  if (isConnected) {
+                    setShowDropdown(!showDropdown);
+                  } else {
+                    show();
+                  }
+                };
+
                 return (
-                  <button
-                    onClick={show}
-                    className={css`
-                      align-self: stretch;
-                      height: 2.5rem;
-                      transition: all 0.3s ease;
-                      background: #facc15;
-                      border: none;
-                      border-radius: 8665.8px;
-                      color: #000;
-                      font-size: 16px;
-                      font-weight: 600;
-                      padding: 0 16px;
-                      cursor: pointer;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      &:hover {
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-                        animation: rainbow-glow 3s linear infinite;
-                      }
-                      @keyframes rainbow-glow {
-                        0% { box-shadow: 0 0 10px #ff0000; }
-                        14% { box-shadow: 0 0 10px #ff7f00; }
-                        28% { box-shadow: 0 0 10px #ffff00; }
-                        42% { box-shadow: 0 0 10px #00ff00; }
-                        57% { box-shadow: 0 0 10px #0000ff; }
-                        71% { box-shadow: 0 0 10px #8b00ff; }
-                        85% { box-shadow: 0 0 10px #ff00ff; }
-                        100% { box-shadow: 0 0 10px #ff0000; }
-                      }
-                    `}
-                  >
-                    {isConnected ? ensName ?? truncatedAddress : "Login"}
-                  </button>
+                  <div className={css`position: relative;`}>
+                    <button
+                      onClick={handleClick}
+                      className={css`
+                        align-self: stretch;
+                        height: 2.5rem;
+                        transition: all 0.3s ease;
+                        background: #facc15;
+                        border: none;
+                        border-radius: 8665.8px;
+                        color: #000;
+                        font-size: 16px;
+                        font-weight: 600;
+                        padding: 0 16px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        &:hover {
+                          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                        }
+                      `}
+                    >
+                      {isConnected ? ensName ?? truncatedAddress : "Login"}
+                    </button>
+
+                    {isConnected && showDropdown && (
+                      <div
+                        className={css`
+                          position: absolute;
+                          top: 100%;
+                          right: 0;
+                          margin-top: 0.5rem;
+                          background: white;
+                          border-radius: 12px;
+                          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                          padding: 0.5rem;
+                          min-width: 160px;
+                          z-index: 1000;
+                        `}
+                      >
+                        <button
+                          onClick={handleProfileClick}
+                          className={css`
+                            width: 100%;
+                            padding: 0.75rem 1rem;
+                            background: none;
+                            border: none;
+                            border-radius: 8px;
+                            text-align: left;
+                            cursor: pointer;
+                            font-size: 14px;
+                            color: #000;
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            &:hover {
+                              background: #f3f4f6;
+                            }
+                          `}
+                        >
+                          <span>Profile</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowDropdown(false);
+                            show();
+                          }}
+                          className={css`
+                            width: 100%;
+                            padding: 0.75rem 1rem;
+                            background: none;
+                            border: none;
+                            border-radius: 8px;
+                            text-align: left;
+                            cursor: pointer;
+                            font-size: 14px;
+                            color: #dc2626;
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            &:hover {
+                              background: #f3f4f6;
+                            }
+                          `}
+                        >
+                          <span>Disconnect</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 );
               }}
             </ConnectKitButton.Custom>
