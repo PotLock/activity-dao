@@ -1,14 +1,59 @@
 import { injectGlobal } from "@emotion/css";
 
+import { DynaPuff, Alexandria, Manrope, Hanken_Grotesk, Aclonica, Inter, DM_Sans, Nunito_Sans } from "next/font/google";
+//import fonts from next/font -- significantly reduce layout shifts
+const dynapuff = DynaPuff({
+  weight: ['400', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap'
+})
+
+const alexandria = Alexandria({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap'
+})
+
+const manrope = Manrope({
+  weight: ['400', '500', '700'],
+  subsets : ['latin'],
+  display: "swap"
+})
+
+const hankenGrotesk = Hanken_Grotesk({
+  weight: ['400', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-hanken-grotesk',
+  display: "swap"
+})
+
+const aclonica = Aclonica({
+  weight: ['400'],
+  subsets: ['latin'],
+  display: "swap"
+})
+
+const inter = Inter({
+  weight: ['400'],
+  subsets: ['latin'],
+  display: 'swap'
+});
+
+const dmSans = DM_Sans({
+  weight: [ '700'],
+  subsets: ['latin'],
+  display: 'swap'
+});
+
+const nunitoSans = Nunito_Sans({
+  weight: ['700'],
+  subsets: ['latin'],
+  display: 'swap'
+});
+
+
 export default function createGlobalStyle() {
-  injectGlobal`@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Aclonica:wght@400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@700&display=swap');
+  injectGlobal`
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 @font-face {
@@ -28,14 +73,6 @@ export default function createGlobalStyle() {
 :root {
 
 /* fonts */
---font-nunito-sans: 'Nunito Sans';
---display-1-medium: Manrope;
---font-hanken-grotesk: 'Hanken Grotesk';
---font-dynapuff: DynaPuff;
---font-alexandria: Alexandria;
---font-inter: Inter;
---font-dm-sans: 'DM Sans';
---font-aclonica: Aclonica;
 --ui-small-strong: 'GT America';
 --font-sf-pro-text: 'SF Pro Text';
 
@@ -357,4 +394,15 @@ export default function createGlobalStyle() {
 --button-primary: 0px 2px 5px rgba(20, 88, 201, 0.17), 0px -2px 0.3px rgba(14, 56, 125, 0.18) inset, 0px 2px 1px rgba(255, 255, 255, 0.22) inset;
 }
 `;
+}
+
+export {
+  dynapuff,
+  alexandria,
+  dmSans,
+  nunitoSans,
+  hankenGrotesk,
+  aclonica,
+  inter,
+  manrope
 }
