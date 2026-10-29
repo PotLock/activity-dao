@@ -302,7 +302,7 @@ const ListEventCard = ({ event }: { event: Event }) => {
 // Add these functions at the top of your file
 function checkDaoSimilarity(event: Event, mode: string): boolean {
   if (!mode) return true;
-  const fields = [event.dao, event.name, event.description];
+  const fields = [event.dao, event.name, event.description].filter((field): field is string => typeof field === 'string');
   return fields.some(field => 
     stringSimilarity(field.toLowerCase(), mode.toLowerCase()) >= 0.9
   );
@@ -310,7 +310,7 @@ function checkDaoSimilarity(event: Event, mode: string): boolean {
 
 function checkInterestSimilarity(event: Event, mode: string): boolean {
   if (!mode) return true;
-  const fields = [event.dao, event.name, event.description];
+  const fields = [event.dao, event.name, event.description].filter((field): field is string => typeof field === 'string');
   const modeWords = mode.toLowerCase().split(/\s+/);
   return fields.some(field => {
     const fieldWords = field.toLowerCase().split(/\s+/);
@@ -400,7 +400,12 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
 
   try {
     console.log("Fetching events...");
-    const response = await fetch(endpoint, {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    let response: Response;
+    try {
+      response = await fetch(endpoint, {
+      signal: controller.signal,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -409,7 +414,10 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
         query,
         variables,
       }),
-    });
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
