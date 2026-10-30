@@ -642,7 +642,8 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 flex-direction: row;
                 align-items: flex-start;
                 justify-content: flex-start;
-                padding: 0rem var(--padding-512xl);
+                padding: 0 1rem;
+                box-sizing: border-box;
                 width: 100%;
               `}
             >
@@ -697,7 +698,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box;
-        padding: ${mode === "explore" ? "2rem" : "1rem"};
+        padding: ${mode === "explore" ? "clamp(0.75rem, 3vw, 2rem)" : "clamp(0.5rem, 2vw, 1rem)"};
       `} id="events-list">
         <div className={css`
           display: flex;
@@ -706,14 +707,13 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
           margin-bottom: 2rem;
           align-items: center;
           width: 100%;
-          @media (max-width: 768px) {
-            flex-wrap: wrap;
-          }
+          flex-wrap: wrap;
         `}>
           <TextField
-            style={{ flex: '1 1 auto' }}
+            style={{ flex: '1 1 240px', minWidth: 0 }}
             variant="outlined"
-            placeholder="Search events..."
+            label="Search events"
+            placeholder="Event name or description"
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -725,6 +725,8 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                   width="16px"
                   height="16px"
                   src="/search.svg"
+                  alt=""
+                  aria-hidden="true"
                   style={{ marginRight: "8px" }}
                 />
               ),
@@ -733,14 +735,19 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
           <div className={css`
             display: flex;
             gap: 1rem;
-            flex: 0 0 auto;
+            flex: 1 1 340px;
+            flex-wrap: wrap;
+            min-width: 0;
+            align-items: center;
             @media (max-width: 768px) {
               width: 100%;
             }
           `}>
-            <FormControl style={{ width: '150px' }}> 
-              <InputLabel>Location</InputLabel>
+            <FormControl style={{ flex: '1 1 140px', minWidth: 0 }}>
+              <InputLabel id="event-location-label">Location</InputLabel>
               <Select
+                labelId="event-location-label"
+                id="event-location-filter"
                 value={selectedLocation?.city || ''}
                 onChange={(e) => {
                   const newLocation = locations.find(location => location === e.target.value)
@@ -767,9 +774,11 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 ))}
               </Select>
             </FormControl>
-            <FormControl style={{ width: '150px' }}>
-              <InputLabel>Time</InputLabel>
+            <FormControl style={{ flex: '1 1 140px', minWidth: 0 }}>
+              <InputLabel id="event-time-label">Time</InputLabel>
               <Select
+                labelId="event-time-label"
+                id="event-time-filter"
                 value={timeFilter}
                 onChange={(e) => {
                   setTimeFilter(e.target.value as string);
@@ -799,10 +808,22 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 ))}
               </Select>
             </FormControl>
-            <IconButton onClick={() => setViewMode('gallery')}>
+            <IconButton
+              title="Gallery view"
+              aria-label="Gallery view"
+              aria-pressed={viewMode === 'gallery'}
+              color={viewMode === 'gallery' ? 'primary' : 'default'}
+              onClick={() => setViewMode('gallery')}
+              sx={{ minWidth: 44, minHeight: 44 }}>
               <ViewModuleIcon />
             </IconButton>
-            <IconButton onClick={() => setViewMode('list')}>
+            <IconButton
+              title="List view"
+              aria-label="List view"
+              aria-pressed={viewMode === 'list'}
+              color={viewMode === 'list' ? 'primary' : 'default'}
+              onClick={() => setViewMode('list')}
+              sx={{ minWidth: 44, minHeight: 44 }}>
               <ViewListIcon />
             </IconButton>
           </div>
@@ -865,16 +886,35 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
 
           </div>
         ) : (
-          <h3 className={css`
-            text-align: center;
-            width: 100%;
-            margin-top: 2rem;
-            color: var(--color-gray-500);
+          <div role="status" className={css`
+            text-align:center;width:100%;margin-top:24px;padding:26px 16px;
+            border:1px solid #e6ddbd;border-radius:16px;background:#fffdf5;
+            color:#3b3526;font-family:var(--font-hanken-grotesk);
           `}>
-            {daoMode || interestMode 
-              ? `No events found for ${daoMode || interestMode}`
-              : "No upcoming events are listed right now. Check back soon or explore ActivityDAOs to find a community."}
-          </h3>
+            <h3 className={css`font-size:22px;line-height:1.3;margin:0 0 12px;color:#27241d`}>
+              No matching events
+            </h3>
+            <p className={css`line-height:1.6;margin:0 0 18px`}>
+              {daoMode || interestMode
+                ? `No events found for ${daoMode || interestMode}. Try a different filter or explore other communities.`
+                : "No events match your filters. Try another date, location, or keyword."}
+            </p>
+            {daoMode || interestMode ? (
+              <a href="/events" className={css`
+                display:inline-flex;align-items:center;min-height:44px;
+                padding:10px 20px;background:#facc15;color:#171717;text-decoration:none;
+                border-radius:24px;font-weight:700;
+                &:focus-visible {outline:3px solid #715513;outline-offset:3px;}
+              `}>Browse all events</a>
+            ) : (
+              <button type="button" onClick={clearFilters}
+                className={css`min-height:44px;padding:10px 20px;background:#facc15;border:0;
+                  border-radius:24px;font-weight:700;cursor:pointer;color:#171717;
+                  &:focus-visible {outline:3px solid #715513;outline-offset:3px;}`}>
+                Clear filters
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>
