@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { ConnectKitButton } from "connectkit";
 import { useAccount } from "wagmi";
 import Image from 'next/image';
-import { RiHome5Line, RiNewspaperLine, RiCalendarEventLine, RiGroupLine } from "react-icons/ri";
+import { RiHome5Line, RiNewspaperLine, RiCalendarEventLine, RiGroupLine, RiBookOpenLine } from "react-icons/ri";
 
 export type NAVBARType = {
   className?: string;
@@ -24,6 +24,8 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
       setActiveLink("daos");
     } else if (router.pathname.startsWith("/interest") || router.pathname.startsWith("/feeds")) {
       setActiveLink("feed");
+    } else if (router.pathname.startsWith("/handbook")) {
+      setActiveLink("handbook");
     } else if (router.pathname === "/") {
       setActiveLink("home");
     } else {
@@ -36,6 +38,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
     { id: "feed", label: "Feed", href: "/feeds", icon: RiNewspaperLine },
     { id: "events", label: "Events", href: "/events", icon: RiCalendarEventLine },
     { id: "daos", label: "DAOs", href: "/daos", icon: RiGroupLine },
+    { id: "handbook", label: "Handbook", href: "/handbook", icon: RiBookOpenLine },
   ];
 
   return (
@@ -190,6 +193,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
               >
                 <a
                   href={link.href}
+                  aria-current={activeLink === link.id ? "page" : undefined}
                   onClick={(e) => {
                     e.preventDefault();
                     setActiveLink(link.id);
@@ -312,7 +316,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
       </header>
 
       {/* Mobile Bottom Navbar */}
-      <nav
+      <nav aria-label="Mobile primary navigation"
         className={css`
           display: none;
           @media screen and (max-width: 1050px) {
@@ -323,7 +327,9 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
             width: 100%;
             background-color: var(--background-default-default);
             justify-content: space-around;
-            padding: 0.5rem 0;
+            padding: 0.35rem 0 max(0.35rem, env(safe-area-inset-bottom));
+            min-height: 64px;
+            box-sizing: border-box;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             z-index: 1001;
           }
@@ -333,6 +339,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
           <a
             key={link.id}
             href={link.href}
+            aria-current={activeLink === link.id ? "page" : undefined}
             onClick={(e) => {
               e.preventDefault();
               setActiveLink(link.id);
@@ -344,7 +351,13 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
               align-items: center;
               text-decoration: none;
               color: ${activeLink === link.id ? 'var(--color-gold-100)' : 'inherit'};
-              font-size: 0.75rem;
+              font-size: clamp(0.62rem, 2.4vw, 0.75rem);
+              flex: 1 1 0;
+              min-width: 0;
+              gap: 2px;
+              padding: 0.5rem 0.15rem;
+              border-radius: 8px;
+              &:focus-visible { outline: 3px solid #806100; outline-offset: -2px; }
               font-weight: ${activeLink === link.id ? '600' : 'normal'};
               position: relative;
               padding: 0.25rem 0;
@@ -365,7 +378,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
             `}
           >
             <link.icon size={24} />
-            <span>{link.label}</span>
+            <span className={css`max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap`}>{link.label}</span>
           </a>
         ))}
       </nav>
