@@ -25,7 +25,7 @@ const cleanText = (raw: string) => raw
   .replace(/\\\{/g, "{").replace(/\\\}/g, "}");
 const Handbook: NextPage = () => {
   const [query, setQuery] = useState("");
-  const [expanded, setExpanded] = useState<string[]>([]);
+  const [expanded, setExpanded] = useState<string[]>(chapters.map(chapter => chapter.id));
   const [verbatim, setVerbatim] = useState(false);
   const visible = useMemo(() => chapters.filter(chapter =>
     (chapter.title + " " + cleanText(chapter.content)).toLowerCase().includes(query.trim().toLowerCase())
@@ -51,7 +51,7 @@ const Handbook: NextPage = () => {
       <aside className={css`background:#ffe58c;border-radius:20px;padding:24px;align-self:start;min-width:0`}>
         <label htmlFor="handbook-search">Search all {chapters.length} sections</label>
         <input id="handbook-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search chapters and content" className={css`display:block;width:100%;min-height:44px;padding:10px;margin:12px 0;border:2px solid #171717;border-radius:8px`} />
-        <button type="button" onClick={() => setVerbatim(!verbatim)} aria-pressed={verbatim} className={css`padding:10px;border-radius:8px;cursor:pointer`}>{verbatim ? "Readable view" : "Show exact Notion markup"}</button>
+        <div className={css`display:flex;flex-wrap:wrap;gap:8px;margin:12px 0`}><button type="button" onClick={() => setExpanded(chapters.map(chapter => chapter.id))} className={css`padding:10px;border-radius:8px;cursor:pointer`}>Expand all</button><button type="button" onClick={() => setExpanded([])} className={css`padding:10px;border-radius:8px;cursor:pointer`}>Collapse all</button></div><button type="button" onClick={() => setVerbatim(!verbatim)} aria-pressed={verbatim} className={css`padding:10px;border-radius:8px;cursor:pointer`}>{verbatim ? "Readable view" : "Show exact Notion markup"}</button>
         <nav aria-label="Handbook chapters"><ol className={css`padding-left:20px;line-height:1.8`}>{visible.map(chapter => <li key={chapter.id}><a href={`#${chapter.id}`}>{chapter.title}</a></li>)}</ol></nav>
       </aside>
       <article className={css`min-width:0`}>
