@@ -16,14 +16,7 @@ import PoweringCommunity from "../components/dao-model";
 import JoinActivityDAO from "../components/join-activityDAO";
 
 const Desktop: NextPage = () => {
-  return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
-    return <LoadingAnimation />;
-  }
-
-  return (
+return (
     <div
       className={css`
         width: 100%;
