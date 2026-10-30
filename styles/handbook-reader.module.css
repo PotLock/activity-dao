@@ -1,4 +1,3 @@
-:root {}
 .page { min-height: 100vh; background: #fffdf6; color: #212016; padding: clamp(16px,3vw,48px); font-family: 'Hanken Grotesk',system-ui,-apple-system,sans-serif; }
 .skipLink { position: absolute; left: 12px; top: -100px; background: #ffda58; color: #171717; padding: 10px 16px; z-index: 100; border-radius: 10px; }
 .skipLink:focus { top: 10px; }
