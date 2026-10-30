@@ -27,9 +27,18 @@ const Handbook: NextPage = () => {
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<string[]>(chapters.map(chapter => chapter.id));
   const [verbatim, setVerbatim] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<string | null>(null);
   const visible = useMemo(() => chapters.filter(chapter =>
     (chapter.title + " " + cleanText(chapter.content)).toLowerCase().includes(query.trim().toLowerCase())
   ), [query]);
+  const copySection = async (id: string, content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopyStatus(id);
+    } catch {
+      setCopyStatus(null);
+    }
+  };
   const toggle = (id: string) => setExpanded(previous =>
     previous.includes(id) ? previous.filter(item => item !== id) : [...previous, id]);
   return <main className={css`min-height:100vh;background:#fffdf3;color:#171717;font-family:system-ui,sans-serif;padding:clamp(20px,4vw,64px)`}>
@@ -60,6 +69,7 @@ const Handbook: NextPage = () => {
         {visible.map(chapter => <section id={chapter.id} key={chapter.id} className={css`background:white;border:1px solid #e7dfc9;border-radius:18px;padding:clamp(16px,3vw,28px);margin-bottom:18px;scroll-margin-top:24px`}>
           <h2 className={css`font-size:clamp(22px,3vw,32px);overflow-wrap:anywhere`}>{chapter.title}</h2>
           <button type="button" aria-expanded={expanded.includes(chapter.id)} aria-controls={`${chapter.id}-content`} onClick={() => toggle(chapter.id)} className={css`border:1px solid #171717;background:#ffe58c;border-radius:8px;padding:10px 16px;cursor:pointer;min-height:44px`}>{expanded.includes(chapter.id) ? "Collapse section" : "Read section"}</button>
+          <div className={css`display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;align-items:center`}><button type="button" onClick={() => copySection(chapter.id, chapter.content)} className={css`border:1px solid #171717;border-radius:8px;background:white;padding:10px 16px;min-height:44px;cursor:pointer`}>{copyStatus === chapter.id ? "Copied original copy" : "Copy original copy"}</button><a href={`#${chapter.id}`} className={css`padding:10px`}>Section permalink</a></div>
           <div id={`${chapter.id}-content`} hidden={!expanded.includes(chapter.id)}>
             <pre className={css`white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font:inherit;line-height:1.7;margin-top:20px`}>{verbatim ? chapter.content : cleanText(chapter.content)}</pre>
           </div>
