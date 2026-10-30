@@ -54,6 +54,12 @@ interface EventsListProps {
 
 // Curated historical events can have no published registration URL.
 // Render those records as readable cards without misleading dead links.
+const eventImageUrl = (event: Event): string => {
+  const value = typeof event.image === "string" ? event.image.trim() : "";
+  if (/^https?:\/\//i.test(value) || value.startsWith("/")) return value;
+  return value ? `/${value}` : "/activitymanicon.svg";
+};
+
 const EventCardLink = ({ event, className, children }: {
   event: Event;
   className: string;
@@ -129,7 +135,7 @@ const EventCard = ({ event }: { event: Event }) => {
         <div
           className={css`
             flex: 1;
-            background-image: url(${event.image});
+            background-image: url("${eventImageUrl(event)}");
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -255,7 +261,7 @@ const ListEventCard = ({ event }: { event: Event }) => {
         </div>
       )}
       <img
-        src={event.image}
+        src={eventImageUrl(event)}
         alt={event.name}
         className={css`
           width: 100px;
