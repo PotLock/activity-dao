@@ -1,0 +1,21 @@
+{
+  "source": "https://app.notion.com/p/2979c91a779e46659a5646438af3324c",
+  "chapters": [
+    {
+      "title": "UX Example",
+      "content": "## UX <span discussion-urls=\"discussion://2979c91a-779e-4665-9a56-46438af3324c/10fc1f4b-a97e-8033-ac0b-ec5de7b86cfa/114c1f4b-a97e-8099-9aa4-001c98843a8c\">Example</span>\n\n<columns>\n<column ratio=\"50\">\nCase Study: BluntDAO Proof of Sesh (PoS)\n</column>\n<column ratio=\"50\">\n<link-preview url=\"https://app.notion.com/p/2979c91a779e46659a5646438af3324c#110c1f4ba97e804ebd52c7fa81abf0ed\" source=\"https://www.figma.com/design/iw9ePuP780GyXPnjgVQboZ/BLUNTDAO?node-id=897-1169\" />\n</column>\n</columns>\n\n"
+    },
+    {
+      "title": "Proofing",
+      "content": "### Proofing\n\n<columns>\n<column ratio=\"50\">\n<image source=\"notion-file-block://110c1f4b-a97e-8096-aabf-c96f9438abb3/87f9250c-4ef6-42d2-a303-e9fc67a74ddb?space_id=6c38d1ed-922a-430f-8e01-9ad029c40ab5&name=Screenshot_2024-09-28_at_10.20.51_PM.png\" />\n</column>\n<column ratio=\"50\">\n<image source=\"notion-file-block://110c1f4b-a97e-804c-aa5b-c566b640002b/a1fa0471-61ad-46cc-ae12-bc52fa46d8a5?space_id=6c38d1ed-922a-430f-8e01-9ad029c40ab5&name=Feeds.png\" />\n</column>\n</columns>\n\n<p />\n\n"
+    },
+    {
+      "title": "Training & Slashing",
+      "content": "### Training & Slashing\n\n<columns>\n<column ratio=\"43.75\">\n<image source=\"notion-file-block://110c1f4b-a97e-8045-a9e1-e6337ec7cad6/725f475e-11b8-4e15-beb8-99fb8ced7b62?space_id=6c38d1ed-922a-430f-8e01-9ad029c40ab5&name=aitrainingpageblunts.png\" />\n</column>\n<column ratio=\"56.25\">\n<image source=\"notion-file-block://110c1f4b-a97e-8001-9dc0-e6ef444c2c73/e376b4e4-66cc-44f3-80b2-f9d23ef8362d?space_id=6c38d1ed-922a-430f-8e01-9ad029c40ab5&name=trainingigfblunts.gif\" />\n</column>\n</columns>\n\nTraining serves as a way to rewards experts and train computer vision models. This also serves as a reputation slashing mechanism for evidence that hasn’t been approved by members for the Proof of Sesh hile improving the <span discussion-urls=\"discussion://2979c91a-779e-4665-9a56-46438af3324c/110c1f4b-a97e-8080-bc20-cfb5ef953bf3/114c1f4b-a97e-80c5-bb60-001c5a8ebcda\">model</span>.\n\n<h3>\nGamification / Leaderabord \n</h3>\n\n<image source=\"notion-file-block://110c1f4b-a97e-805c-b216-c3f44d32c205/7f277d33-353a-409c-bcd4-e1bfa7bf332c?space_id=6c38d1ed-922a-430f-8e01-9ad029c40ab5&name=Screenshot_2024-09-28_at_11.07.46_PM.png\" />\n\n<image source=\"notion-file-block://110c1f4b-a97e-80b2-af34-e07b83868e79/e07fb031-5b11-4d54-8edc-64dd72593015?space_id=6c38d1ed-922a-430f-8e01-9ad029c40ab5&name=Leaderboard.png\" />\n\n<p>\nGamification is the act of building incentivies whther nonmonetary like reputation, or access to funding. \n</p>\n\n"
+    },
+    {
+      "title": "Points",
+      "content": "### Points\n\nBased on the <span discussion-urls=\"discussion://2979c91a-779e-4665-9a56-46438af3324c/113c1f4b-a97e-80b7-bbff-e88cd689cb0a/113c1f4b-a97e-8074-a8d9-001c44777aa3\">streaks</span>, frequency of onboarding, onboarding active members (referrral + web of trust), points can be developed as a reputaiton system. This can be in the form of badges that are non transferable tokens that can be used for permissining in things of governance.. This can also be sued for trancking for a TGE events or used for advanced slashing and stakin g mechanism.\n\n<p />\n\n<p />\n\n<p />\n\n"
+    }
+  ]
+}
