@@ -1,9 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { css } from "@emotion/css";
+import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import {
+  FaArrowUp, FaBars, FaBookOpen, FaCheck, FaChevronDown, FaChevronLeft, FaChevronUp,
+  FaChevronRight, FaCode, FaCompress, FaCopy, FaExpand,
+  FaExternalLinkAlt, FaLink, FaTimes
+} from "react-icons/fa";
 import part1 from "../data/handbook/part-1.json";
 import part2 from "../data/handbook/part-2.json";
 import part3 from "../data/handbook/part-3.json";
@@ -11,47 +15,30 @@ import part4 from "../data/handbook/part-4.json";
 import part5 from "../data/handbook/part-5.json";
 import part6 from "../data/handbook/part-6.json";
 import part7 from "../data/handbook/part-7.json";
+import { handbookMarkdown, handbookSearchText } from "../utils/handbook-format";
+import styles from "../styles/handbook-reader.module.css";
 
 const source = "https://app.notion.com/p/2979c91a779e46659a5646438af3324c";
-const chapters = [part1, part2, part3, part4, part5, part6, part7].flatMap(part => part.chapters).map((chapter, index) => ({
-  ...chapter,
-  id: `chapter-${index + 1}`,
-}));
-const cleanText = (raw: string) => raw
-  .replace(/<image[^>]*source="([^"]+)"[^>]*\/>/g, "[Original Notion image: $1]")
-  .replace(/<video[^>]*source="([^"]+)"[^>]*\/>/g, "[Original video: $1]")
-  .replace(/<database[^>]*url="([^"]+)"[^>]*>[\s\S]*?<\/database>/g, "[Original Notion database: $1]")
-  .replace(/<mention[^>]*url="([^"]+)"[^>]*\/>/g, "[Notion reference: $1]")
-  .replace(/<[^>]*>/g, "")
-  .replace(/\\\{/g, "{").replace(/\\\}/g, "}");
-// Convert Notion-flavored markup into readable Markdown without changing the saved source.
-// Unsupported embeds remain clearly attributed to their original Notion version.
-const readableMarkdown = (raw: string) => raw
-  .replace(/^#{1,3} [^\n]+\n/, "")
-  .replace(/<image\b[^>]*\/>/g, "\n\n> Image: view this illustration in the original Notion handbook.\n\n")
-  .replace(/<video\b[^>]*\/>/g, "\n\n> Video: view the recording in the original Notion handbook.\n\n")
-  .replace(/<database\b[^>]*>([\s\S]*?)<\/database>/g, "\n\n> Notion database: $1 (open in the source handbook).\n\n")
-  .replace(/<link-preview\b[^>]*\/>/g, "\n\n> Linked resource: see the original handbook.\n\n")
-  .replace(/<table-of-contents\b[^>]*\/>/g, "")
-  .replace(/<li\b[^>]*>/g, "\n- ")
-  .replace(/<\/li>/g, "\n")
-  .replace(/<(?:p|div|column|columns|callout|toggle|h[1-6]|ul|ol)\b[^>]*>/g, "\n")
-  .replace(/<\/(?:p|div|column|columns|callout|toggle|h[1-6]|ul|ol)>/g, "\n")
-  .replace(/<[^>]+>/g, "")
-  .replace(/\\\{/g, "{").replace(/\\\}/g, "}")
-  .replace(/\n{3,}/g, "\n\n")
-  .trim();
-
 const handbookUrl = "https://activity-dao-omega.vercel.app/handbook";
+const chapters = [part1, part2, part3, part4, part5, part6, part7]
+  .flatMap(part => part.chapters)
+  .map((chapter, index) => ({
+    ...chapter,
+    id: "chapter-" + (index + 1),
+    number: index + 1,
+    readable: handbookMarkdown(chapter.content),
+    searchable: handbookSearchText(chapter.content)
+  }));
+
 const handbookJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "CreativeWork",
   name: "The ActivityDAO Handbook — The Activity Proliferation Cookbook",
-  description: "A working handbook for activity-based community formation, funding, participation proof and governance.",
+  description: "A working handbook for community-led activities, funding, proof and governance.",
   inLanguage: "en",
   url: handbookUrl,
   isBasedOn: source,
-  hasPart: chapters.map((chapter) => ({
+  hasPart: chapters.map(chapter => ({
     "@type": "CreativeWork",
     name: chapter.title,
     url: handbookUrl + "#" + chapter.id
@@ -59,74 +46,258 @@ const handbookJsonLd = JSON.stringify({
 }).replace(/</g, "\\u003c");
 
 const Handbook: NextPage = () => {
+  // On wide screens the TOC is a sticky sidebar; on mobile it is a compact disclosure.
+  const [desktopTocOpen, setDesktopTocOpen] = useState(true);
+  const [mobileTocOpen, setMobileTocOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<string[]>(chapters.map(chapter => chapter.id));
-  const [verbatim, setVerbatim] = useState(false);
-  const [copyStatus, setCopyStatus] = useState<string | null>(null);
-  const visible = useMemo(() => chapters.filter(chapter =>
-    (chapter.title + " " + cleanText(chapter.content)).toLowerCase().includes(query.trim().toLowerCase())
-  ), [query]);
-  const copySection = async (id: string, content: string) => {
+  const [sourceMode, setSourceMode] = useState(false);
+  const [copiedChapter, setCopiedChapter] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  const visibleChapters = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return needle
+      ? chapters.filter(chapter => chapter.title.toLowerCase().includes(needle) || chapter.searchable.includes(needle))
+      : chapters;
+  }, [query]);
+
+  // Keep the contents sidebar aligned with the section in the reading viewport.
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(entries => {
+      const inView = entries.filter(entry => entry.isIntersecting);
+      if (inView.length) {
+        inView.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        setActiveSection(inView[0].target.id);
+      }
+    }, { rootMargin: "-10% 0px -65% 0px" });
+    visibleChapters.forEach(chapter => {
+      const section = document.getElementById(chapter.id);
+      if (section) observer.observe(section);
+    });
+    return () => observer.disconnect();
+  }, [visibleChapters]);
+
+  const toggleChapter = (id: string) => {
+    setExpanded(previous =>
+      previous.includes(id) ? previous.filter(value => value !== id) : [...previous, id]);
+  };
+
+  const navigateToChapter = (id: string) => {
+    setActiveSection(id);
+    setExpanded(previous => previous.includes(id) ? previous : [...previous, id]);
+    setMobileTocOpen(false);
+  };
+
+  const copyOriginal = async (id: string, content: string) => {
     try {
       await navigator.clipboard.writeText(content);
-      setCopyStatus(id);
+      setCopiedChapter(id);
     } catch {
-      setCopyStatus(null);
+      setCopiedChapter(null);
     }
   };
-  const toggle = (id: string) => setExpanded(previous =>
-    previous.includes(id) ? previous.filter(item => item !== id) : [...previous, id]);
-  return <main className={css`min-height:100vh;background:#fffdf3;color:#171717;font-family:system-ui,sans-serif;padding:clamp(20px,4vw,64px)`}>
-    <Head>
-      <title>ActivityDAO Handbook | The Activity Proliferation Cookbook</title>
-      <meta name="description" content="Read the ActivityDAO handbook: activity funding, proof of participation, governance, reputation, and community operations." />
-      <meta name="robots" content="index,follow,max-snippet:-1" />
-      <link rel="canonical" href={handbookUrl} />
-      <meta property="og:url" content={handbookUrl} />
-      <meta name="twitter:card" content="summary" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: handbookJsonLd }} />
-      <meta property="og:title" content="ActivityDAO Handbook" />
-      <meta property="og:description" content="The Activity Proliferation Cookbook — original handbook and practical community-building mechanisms." />
-    </Head>
-    <nav aria-label="Breadcrumb" className={css`display:flex;gap:8px;flex-wrap:wrap;font-size:14px;line-height:1.8`}><Link href="/">ActivityDAO</Link><span aria-hidden="true">/</span><span aria-current="page">Handbook</span><span className={css`margin-left:auto`}><Link href="/daos">Explore communities</Link></span></nav>
-    <header className={css`max-width:1000px;margin:48px auto`}>
-      <p>📗 THE ACTIVITY PROLIFERATION COOKBOOK</p>
-      <h1 className={css`font-size:clamp(36px,6vw,72px);line-height:1.1;margin:12px 0`}>The ActivityDAO Handbook</h1>
-      <p className={css`font-size:clamp(17px,2vw,22px);line-height:1.5`}>Explore the original handbook section by section. This historical working draft is preserved from Notion; references and proposed features are not necessarily current.</p>
-      <a href={source} target="_blank" rel="noopener noreferrer">Original Notion handbook ↗</a>
-    </header>
-    <div className={css`max-width:1120px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:24px`}>
-      <aside className={css`background:#ffe58c;border-radius:20px;padding:24px;align-self:start;min-width:0`}>
-        <label htmlFor="handbook-search">Search all {chapters.length} sections</label>
-        <input id="handbook-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search chapters and content" className={css`display:block;width:100%;min-height:44px;padding:10px;margin:12px 0;border:2px solid #171717;border-radius:8px`} />
-        <div className={css`display:flex;flex-wrap:wrap;gap:8px;margin:12px 0`}><button type="button" onClick={() => setExpanded(chapters.map(chapter => chapter.id))} className={css`padding:10px;border-radius:8px;cursor:pointer`}>Expand all</button><button type="button" onClick={() => setExpanded([])} className={css`padding:10px;border-radius:8px;cursor:pointer`}>Collapse all</button></div><button type="button" onClick={() => setVerbatim(!verbatim)} aria-pressed={verbatim} className={css`padding:10px;border-radius:8px;cursor:pointer`}>{verbatim ? "Readable view" : "Show exact Notion markup"}</button>
-        <nav aria-label="Handbook chapters"><ol className={css`padding-left:20px;line-height:1.8`}>{visible.map(chapter => <li key={chapter.id}><a href={`#${chapter.id}`}>{chapter.title}</a></li>)}</ol></nav>
-      </aside>
-      <article className={css`min-width:0`}>
-        <p role="status">{visible.length} of {chapters.length} sections shown</p>
-        {visible.length === 0 && <p>No matching sections. Try another keyword.</p>}
-        {visible.map(chapter => <section id={chapter.id} key={chapter.id} className={css`background:white;border:1px solid #e7dfc9;border-radius:18px;padding:clamp(16px,3vw,28px);margin-bottom:18px;scroll-margin-top:24px`}>
-          <h2 className={css`font-size:clamp(22px,3vw,32px);overflow-wrap:anywhere`}>{chapter.title}</h2>
-          <button type="button" aria-expanded={expanded.includes(chapter.id)} aria-controls={`${chapter.id}-content`} onClick={() => toggle(chapter.id)} className={css`border:1px solid #171717;background:#ffe58c;border-radius:8px;padding:10px 16px;cursor:pointer;min-height:44px`}>{expanded.includes(chapter.id) ? "Collapse section" : "Read section"}</button>
-          <div className={css`display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;align-items:center`}><button type="button" onClick={() => copySection(chapter.id, chapter.content)} className={css`border:1px solid #171717;border-radius:8px;background:white;padding:10px 16px;min-height:44px;cursor:pointer`}>{copyStatus === chapter.id ? "Copied original copy" : "Copy original copy"}</button><a href={`#${chapter.id}`} className={css`padding:10px`}>Section permalink</a></div>
-          <div id={`${chapter.id}-content`} hidden={!expanded.includes(chapter.id)}>
-            {verbatim ? (
-              <pre className={css`white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font-size:14px;line-height:1.65;margin-top:20px`}>{chapter.content}</pre>
-            ) : (
-              <div className={css`line-height:1.75;font-size:clamp(16px,1.7vw,18px);overflow-wrap:anywhere;margin-top:20px;
-                & p { margin:0 0 1rem; } & h1,& h2,& h3 { line-height:1.25;margin:1.8rem 0 1rem;font-weight:700; }
-                & ul,& ol { padding-left:1.5rem;margin:1rem 0; } & li { margin-bottom:.5rem; }
-                & a { color:#123b92;text-decoration:underline;text-underline-offset:3px; }
-                & blockquote { border-left:4px solid #e8bc31;background:#fff9de;padding:10px 16px;margin:16px 0; }
-                & code { overflow-wrap:anywhere; } & hr { border:0;border-top:1px solid #ddd;margin:24px 0; }
-                & img { max-width:100%;height:auto; }
-              `}><ReactMarkdown>{readableMarkdown(chapter.content)}</ReactMarkdown></div>
-            )}
+
+  const sidebarClassName = [
+    styles.sidebar,
+    desktopTocOpen ? "" : styles.sidebarCollapsed
+  ].filter(Boolean).join(" ");
+
+  const tocBodyClassName = [
+    styles.sidebarContent,
+    desktopTocOpen ? "" : styles.sidebarContentDesktopClosed,
+    mobileTocOpen ? styles.sidebarContentMobileOpen : ""
+  ].filter(Boolean).join(" ");
+
+  return (
+    <div id="handbook-top" className={styles.page}>
+      <Head>
+        <title>ActivityDAO Handbook | The Activity Proliferation Cookbook</title>
+        <meta name="description" content="Read the ActivityDAO handbook on activity-based communities, proof of participation, funding, reputation and governance." />
+        <meta name="robots" content="index,follow,max-snippet:-1" />
+        <link rel="canonical" href={handbookUrl} />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="ActivityDAO Handbook" />
+        <meta property="og:description" content="The Activity Proliferation Cookbook — read the original working handbook and community-building mechanisms." />
+        <meta property="og:url" content={handbookUrl} />
+        <meta name="twitter:card" content="summary" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: handbookJsonLd }} />
+      </Head>
+
+      <a href="#handbook-content" className={styles.skipLink}>Skip to handbook content</a>
+      <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
+        <Link href="/">ActivityDAO</Link>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Handbook</span>
+        <span className={styles.breadcrumbEnd}><Link href="/daos">Explore communities</Link></span>
+      </nav>
+
+      <header className={styles.hero}>
+        <p className={styles.eyebrow}>📗 The Activity Proliferation Cookbook</p>
+        <h1 className={styles.heroTitle}>The ActivityDAO Handbook</h1>
+        <p className={styles.heroDescription}>
+          Find. Do. Prove. Fund. Explore how people build sustainable communities around
+          shared activities, with the original handbook text kept intact.
+        </p>
+        <a className={styles.sourceLink} href={source} target="_blank" rel="noopener noreferrer">
+          Original Notion handbook <FaExternalLinkAlt size={12} aria-hidden="true" />
+        </a>
+        <span className={styles.historicalNote}>
+          Working draft originally written in 2024. Proposed mechanisms and references may not reflect current product capabilities.
+        </span>
+      </header>
+
+      <div className={[styles.workspace,desktopTocOpen ? styles.workspaceOpen : styles.workspaceCollapsed].join(" ")}>
+        <aside className={sidebarClassName} aria-label="Handbook table of contents">
+          <div className={styles.tocHead}>
+            <h2 className={styles.tocHeading}><FaBookOpen aria-hidden="true" /> Contents</h2>
+            <button
+              type="button"
+              className={styles.desktopToggle}
+              title={desktopTocOpen ? "Collapse table of contents" : "Expand table of contents"}
+              aria-label={desktopTocOpen ? "Collapse table of contents" : "Expand table of contents"}
+              aria-expanded={desktopTocOpen}
+              aria-controls="handbook-toc-list"
+              onClick={() => setDesktopTocOpen(value => !value)}
+            >
+              {desktopTocOpen ? <FaChevronLeft aria-hidden="true" /> : <FaChevronRight aria-hidden="true" />}
+            </button>
+            <button
+              type="button"
+              className={styles.mobileToggle}
+              title={mobileTocOpen ? "Close table of contents" : "Open table of contents"}
+              aria-label={mobileTocOpen ? "Close table of contents" : "Open table of contents"}
+              aria-expanded={mobileTocOpen}
+              aria-controls="handbook-toc-list"
+              onClick={() => setMobileTocOpen(value => !value)}
+            >
+              <span className={styles.mobileToggleLabel}>
+                {mobileTocOpen ? <FaTimes aria-hidden="true" /> : <FaBars aria-hidden="true" />}
+                Contents · {chapters.length} sections
+              </span>
+              {mobileTocOpen ? <FaChevronUp aria-hidden="true" /> : <FaChevronDown aria-hidden="true" />}
+            </button>
           </div>
-        </section>)}
-        <p>Some images, embedded databases and interactive Notion blocks are represented as source references in the readable view. Use the exact-markup view or original Notion page to inspect their provenance.</p>
-      </article>
+
+          <div id="handbook-toc-list" className={tocBodyClassName}>
+            <label className={styles.searchLabel} htmlFor="handbook-search">Search the handbook</label>
+            <input
+              id="handbook-search"
+              type="search"
+              className={styles.searchInput}
+              value={query}
+              onChange={event => setQuery(event.target.value)}
+              placeholder="Find a section or concept"
+            />
+            <div className={styles.tocToolbar} aria-label="Reading controls">
+              <button type="button" className={styles.iconButton}
+                title="Expand all sections" aria-label="Expand all sections"
+                onClick={() => setExpanded(chapters.map(chapter => chapter.id))}>
+                <FaExpand aria-hidden="true" />
+              </button>
+              <button type="button" className={styles.iconButton}
+                title="Collapse all sections" aria-label="Collapse all sections"
+                onClick={() => setExpanded([])}>
+                <FaCompress aria-hidden="true" />
+              </button>
+              <span className={styles.chapterCount}>{visibleChapters.length} of {chapters.length}</span>
+            </div>
+            <hr className={styles.tocDivider} />
+            <nav aria-label="Handbook chapters">
+              <ol className={styles.tocList}>
+                {visibleChapters.map(chapter => (
+                  <li key={chapter.id} className={styles.tocItem}>
+                    <a href={"#" + chapter.id}
+                      className={[styles.tocLink, activeSection === chapter.id ? styles.tocLinkActive : ""].join(" ")}
+                      aria-current={activeSection === chapter.id ? "location" : undefined}
+                      onClick={() => navigateToChapter(chapter.id)}>
+                      <span className={styles.tocNumber}>{String(chapter.number).padStart(2, "0")}</span>
+                      <span>{chapter.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </div>
+        </aside>
+
+        <main id="handbook-content" className={styles.article}>
+          <div className={styles.readerBar}>
+            <span className={styles.readerBarLabel}>Reading · {visibleChapters.length} sections</span>
+            <div className={styles.readerActions}>
+              <span className={styles.readerStatus}>View:</span>
+              <button type="button" aria-label="Readable formatted view" title="Readable formatted view"
+                aria-pressed={!sourceMode}
+                className={[styles.iconButton,!sourceMode ? styles.iconButtonActive : ""].join(" ")}
+                onClick={() => setSourceMode(false)}><FaBookOpen aria-hidden="true" /></button>
+              <button type="button" aria-label="Exact Notion source view" title="Exact Notion source view"
+                aria-pressed={sourceMode}
+                className={[styles.iconButton,sourceMode ? styles.iconButtonActive : ""].join(" ")}
+                onClick={() => setSourceMode(true)}><FaCode aria-hidden="true" /></button>
+            </div>
+          </div>
+
+          {visibleChapters.length === 0 ? (
+            <div className={styles.emptyState} role="status">
+              <h2>No matching sections</h2>
+              <p>Try searching for funding, governance, reputation, or proof of activity.</p>
+              <button type="button" className={styles.iconButton} onClick={() => setQuery("")}
+                title="Clear handbook search" aria-label="Clear handbook search">
+                <FaTimes aria-hidden="true" />
+              </button>
+            </div>
+          ) : visibleChapters.map(chapter => {
+            const isOpen = expanded.includes(chapter.id);
+            return (
+              <section className={styles.section} id={chapter.id} key={chapter.id}>
+                <div className={styles.sectionHeader}>
+                  <div className={styles.sectionTitleGroup}>
+                    <span className={styles.sectionNumber}>Section {String(chapter.number).padStart(2, "0")}</span>
+                    <h2 className={styles.sectionHeading}>{chapter.title}</h2>
+                  </div>
+                  <div className={styles.sectionActions}>
+                    <button type="button" className={styles.iconButton}
+                      title={isOpen ? "Collapse section" : "Expand section"}
+                      aria-label={(isOpen ? "Collapse " : "Expand ") + chapter.title}
+                      aria-expanded={isOpen} aria-controls={chapter.id + "-content"}
+                      onClick={() => toggleChapter(chapter.id)}>
+                      {isOpen ? <FaChevronDown aria-hidden="true" /> : <FaChevronRight aria-hidden="true" />}
+                    </button>
+                    <button type="button" className={styles.iconButton}
+                      title="Copy original Notion section" aria-label={"Copy original text of " + chapter.title}
+                      onClick={() => copyOriginal(chapter.id, chapter.content)}>
+                      {copiedChapter === chapter.id
+                        ? <FaCheck aria-hidden="true" />
+                        : <FaCopy aria-hidden="true" />}
+                    </button>
+                    <a href={"#" + chapter.id} className={styles.iconButton}
+                      title="Direct link to section" aria-label={"Direct link to " + chapter.title}>
+                      <FaLink aria-hidden="true" />
+                    </a>
+                  </div>
+                </div>
+                {copiedChapter === chapter.id && <span className={styles.srOnly} role="status">Section copied</span>}
+                <div className={styles.sectionBody} id={chapter.id + "-content"} hidden={!isOpen}>
+                  {sourceMode ? (
+                    <pre className={styles.sourceCode}>{chapter.content}</pre>
+                  ) : (
+                    <div className={styles.prose}>
+                      <ReactMarkdown>{chapter.readable || "See the original Notion handbook for this section."}</ReactMarkdown>
+                    </div>
+                  )}
+                </div>
+              </section>
+            );
+          })}
+          <footer className={styles.footer}>
+            Media and Notion database embeds are linked or attributed to their original source.
+            Exact original copy remains available through the source-view icon.
+            <p><a href="#handbook-top" className={styles.backToTop}><FaArrowUp aria-hidden="true" /> Back to top</a></p>
+          </footer>
+        </main>
+      </div>
     </div>
-  </main>;
+  );
 };
 export default Handbook;
