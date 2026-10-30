@@ -8,6 +8,7 @@ import {
   FaChevronRight, FaCode, FaCompress, FaCopy, FaExpand,
   FaExternalLinkAlt, FaLink, FaTimes, FaMinus, FaPlus, FaArrowLeft, FaArrowRight
 } from "react-icons/fa";
+import preamble from "../data/handbook/preamble.json";
 import part1 from "../data/handbook/part-1.json";
 import part2 from "../data/handbook/part-2.json";
 import part3 from "../data/handbook/part-3.json";
@@ -190,6 +191,12 @@ const Handbook: NextPage = () => {
         <span className={styles.historicalNote}>
           Working draft originally written in 2024 · {chapters.length} sections · Approximately {totalReadMinutes} minutes of reading. Proposed mechanisms may not reflect current product capabilities.
         </span>
+        <details className={styles.originalDraft}>
+          <summary className={styles.originalDraftSummary}>Original 2024 introduction (verbatim)</summary>
+          <div className={styles.originalDraftContent}>
+            <ReactMarkdown>{handbookMarkdown(preamble.content)}</ReactMarkdown>
+          </div>
+        </details>
       </header>
 
       <div className={[styles.workspace,desktopTocOpen ? styles.workspaceOpen : styles.workspaceCollapsed].join(" ")}>
