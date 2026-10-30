@@ -2,6 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const communities = require("../data/daos.json");
 const events = require("../data/events.json");
+const handbookPreamble = require("../data/handbook/preamble.json");
 const handbookParts = Array.from({ length: 7 }, (_, index) =>
   require(`../data/handbook/part-${index + 1}.json`)
 );
@@ -48,4 +49,13 @@ test("the imported handbook preserves all original sections and source attributi
     assert.ok(typeof chapter.title === "string" && chapter.title.trim(), "Empty chapter title");
     assert.ok(typeof chapter.content === "string" && chapter.content.trim(), "Empty chapter source");
   }
+});
+
+test("handbook preserves the original WIP preamble and original artwork reference", () => {
+  assert.equal(handbookPreamble.source,
+    "https://app.notion.com/p/2979c91a779e46659a5646438af3324c");
+  assert.match(handbookPreamble.content, /version 0\.0\.1 \(WIP\)/);
+  assert.match(handbookPreamble.content, /Funding Activity-Based Communities/);
+  assert.match(handbookPreamble.content, /The Activity Proliferation Cookbook/);
+  assert.match(handbookPreamble.content, /CommunityActivtiesAreAPublicGood\.png/);
 });
