@@ -8,7 +8,7 @@ import { Web3Provider } from "../components/Web3Provider"; // Import the Web3Pro
 
 createGlobalStyle();
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps, router }: AppProps) {
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
@@ -77,13 +77,19 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   gtag('config', 'G-7RG25GG1ZB');`}</script>
       </Head>
-      <Web3Provider> {/* Wrap your entire app with Web3Provider */}
+      {router.pathname === "/handbook" || router.pathname === "/404" ? (
         <ThemeProvider theme={muiTheme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <Component {...pageProps} />
         </ThemeProvider>
-      </Web3Provider>
+      ) : (
+        <Web3Provider>
+          <ThemeProvider theme={muiTheme}>
+            <CssBaseline />
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </Web3Provider>
+      )}
     </Fragment>
   );
 }
