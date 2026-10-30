@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 import {
   FaArrowUp, FaBars, FaBookOpen, FaCheck, FaChevronDown, FaChevronLeft, FaChevronUp,
   FaChevronRight, FaCode, FaCompress, FaCopy, FaExpand,
-  FaExternalLinkAlt, FaLink, FaTimes
+  FaExternalLinkAlt, FaLink, FaTimes, FaMinus, FaPlus, FaArrowLeft, FaArrowRight
 } from "react-icons/fa";
 import part1 from "../data/handbook/part-1.json";
 import part2 from "../data/handbook/part-2.json";
@@ -27,8 +27,11 @@ const chapters = [part1, part2, part3, part4, part5, part6, part7]
     id: "chapter-" + (index + 1),
     number: index + 1,
     readable: handbookMarkdown(chapter.content),
-    searchable: handbookSearchText(chapter.content)
+    searchable: handbookSearchText(chapter.content),
+    readMinutes: Math.max(1, Math.ceil(handbookSearchText(chapter.content).split(/\s+/).filter(Boolean).length / 200))
   }));
+
+const totalReadMinutes = chapters.reduce((total, chapter) => total + chapter.readMinutes, 0);
 
 const handbookJsonLd = JSON.stringify({
   "@context": "https://schema.org",
@@ -54,6 +57,8 @@ const Handbook: NextPage = () => {
   const [sourceMode, setSourceMode] = useState(false);
   const [copiedChapter, setCopiedChapter] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [textSize, setTextSize] = useState(1);
+  const [readingProgress, setReadingProgress] = useState(0);
 
   const visibleChapters = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -78,6 +83,26 @@ const Handbook: NextPage = () => {
     });
     return () => observer.disconnect();
   }, [visibleChapters]);
+
+  // Measure progress across the article, not the entire marketing page.
+  useEffect(() => {
+    const onScroll = () => {
+      const article = document.getElementById("handbook-content");
+      if (!article) return;
+      const articleTop = article.getBoundingClientRect().top + window.scrollY;
+      const end = articleTop + article.offsetHeight - window.innerHeight * 0.5;
+      const progress = Math.round(100 * (window.scrollY - articleTop) / Math.max(1, end - articleTop));
+      const bounded = Math.min(100, Math.max(0, progress));
+      setReadingProgress(previous => previous === bounded ? previous : bounded);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [visibleChapters, expanded, sourceMode, textSize]);
 
   const toggleChapter = (id: string) => {
     setExpanded(previous =>
@@ -112,6 +137,9 @@ const Handbook: NextPage = () => {
 
   return (
     <div id="handbook-top" className={styles.page}>
+      <div className={styles.progressTrack} role="progressbar" aria-label="Reading progress" aria-valuenow={readingProgress} aria-valuemin={0} aria-valuemax={100}>
+        <div className={styles.progressFill} style={{ width: `${readingProgress}%` }} />
+      </div>
       <Head>
         <title>ActivityDAO Handbook | The Activity Proliferation Cookbook</title>
         <meta name="description" content="Read the ActivityDAO handbook on activity-based communities, proof of participation, funding, reputation and governance." />
@@ -144,7 +172,7 @@ const Handbook: NextPage = () => {
           Original Notion handbook <FaExternalLinkAlt size={12} aria-hidden="true" />
         </a>
         <span className={styles.historicalNote}>
-          Working draft originally written in 2024. Proposed mechanisms and references may not reflect current product capabilities.
+          Working draft originally written in 2024 · {chapters.length} sections · Approximately {totalReadMinutes} minutes of reading. Proposed mechanisms may not reflect current product capabilities.
         </span>
       </header>
 
@@ -224,8 +252,21 @@ const Handbook: NextPage = () => {
 
         <main id="handbook-content" className={styles.article}>
           <div className={styles.readerBar}>
-            <span className={styles.readerBarLabel}>Reading · {visibleChapters.length} sections</span>
+            <span className={styles.readerBarLabel}>Reading · {visibleChapters.length} sections · {readingProgress}%</span>
             <div className={styles.readerActions}>
+              <span className={styles.readerStatus}>Text size</span>
+              <button type="button" className={styles.iconButton} title="Decrease text size"
+                aria-label="Decrease handbook text size" disabled={textSize === 0}
+                onClick={() => setTextSize(previous => Math.max(0, previous - 1))}>
+                <FaMinus aria-hidden="true" />
+              </button>
+              <span className={styles.readerScale} aria-label={"Text size " + (textSize + 1) + " of 3"}>A</span>
+              <button type="button" className={styles.iconButton} title="Increase text size"
+                aria-label="Increase handbook text size" disabled={textSize === 2}
+                onClick={() => setTextSize(previous => Math.min(2, previous + 1))}>
+                <FaPlus aria-hidden="true" />
+              </button>
+              <span className={styles.actionDivider} aria-hidden="true" />
               <span className={styles.readerStatus}>View:</span>
               <button type="button" aria-label="Readable formatted view" title="Readable formatted view"
                 aria-pressed={!sourceMode}
@@ -247,13 +288,13 @@ const Handbook: NextPage = () => {
                 <FaTimes aria-hidden="true" />
               </button>
             </div>
-          ) : visibleChapters.map(chapter => {
+          ) : visibleChapters.map((chapter, index) => {
             const isOpen = expanded.includes(chapter.id);
             return (
               <section className={styles.section} id={chapter.id} key={chapter.id}>
                 <div className={styles.sectionHeader}>
                   <div className={styles.sectionTitleGroup}>
-                    <span className={styles.sectionNumber}>Section {String(chapter.number).padStart(2, "0")}</span>
+                    <span className={styles.sectionNumber}>Section {String(chapter.number).padStart(2, "0")} · ≈{chapter.readMinutes} min read</span>
                     <h2 className={styles.sectionHeading}>{chapter.title}</h2>
                   </div>
                   <div className={styles.sectionActions}>
@@ -282,10 +323,26 @@ const Handbook: NextPage = () => {
                   {sourceMode ? (
                     <pre className={styles.sourceCode}>{chapter.content}</pre>
                   ) : (
-                    <div className={styles.prose}>
+                    <div className={styles.prose} style={{ fontSize: [16, 18, 20][textSize] }}>
                       <ReactMarkdown>{chapter.readable || "See the original Notion handbook for this section."}</ReactMarkdown>
                     </div>
                   )}
+                  <nav className={styles.sectionFooter} aria-label={"Navigate from " + chapter.title}>
+                    {index > 0 ? (
+                      <a className={styles.navLink} href={"#" + visibleChapters[index - 1].id}
+                        onClick={() => navigateToChapter(visibleChapters[index - 1].id)}>
+                        <FaArrowLeft size={12} aria-hidden="true" /> Previous section
+                      </a>
+                    ) : <span />}
+                    {index < visibleChapters.length - 1 ? (
+                      <a className={styles.navLink} href={"#" + visibleChapters[index + 1].id}
+                        onClick={() => navigateToChapter(visibleChapters[index + 1].id)}>
+                        Next section <FaArrowRight size={12} aria-hidden="true" />
+                      </a>
+                    ) : (
+                      <a className={styles.navLink} href="#handbook-top">Back to beginning <FaArrowUp size={12} aria-hidden="true" /></a>
+                    )}
+                  </nav>
                 </div>
               </section>
             );
