@@ -25,6 +25,23 @@ export default function createGlobalStyle() {
     body {
       margin: 0; line-height: normal;
     }
+    html { scroll-padding-top: 96px; }
+    :where(a, button, input, select, textarea):focus-visible {
+      outline: 3px solid #8a6000;
+      outline-offset: 3px;
+    }
+    @media screen and (max-width: 1050px) {
+      /* Reserve space for the fixed mobile tab bar, including iOS safe areas. */
+      body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto !important; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
 :root {
 
 /* fonts */
