@@ -10,7 +10,7 @@
 .heroDescription { max-width: 800px; font-size: clamp(16px,1.8vw,20px); line-height: 1.7; margin: 0 0 16px; color: #494537; }
 .sourceLink { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #2c3712; text-underline-offset: 4px; }
 .historicalNote { display: block; margin-top: 8px; font-size: 13px; color: #675e41; }
-.workspace { max-width: 1190px; margin: 0 auto; display: grid; align-items: start; gap: clamp(20px,2.6vw,34px); }
+.workspace { max-width: 1190px; margin: 0 auto; display: grid; align-items: flex-start; gap: clamp(20px,2.6vw,34px); }
 .workspaceOpen { grid-template-columns: minmax(230px,276px) minmax(0,1fr); }
 .workspaceCollapsed { grid-template-columns: 64px minmax(0,1fr); }
 .sidebar { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; overscroll-behavior: contain; min-width: 0; background: #fff1bd; border: 1px solid #e5cf79; border-radius: 18px; padding: 18px; }
@@ -34,7 +34,7 @@
 .tocDivider { height: 1px; border: 0; margin: 12px 0; background: #d8bd64; }
 .tocList { margin: 0; padding: 0; list-style: none; }
 .tocItem { margin-bottom: 2px; }
-.tocLink { display: flex; align-items: start; gap: 10px; color: #302811; text-decoration: none; font-size: 13px; line-height: 1.45; padding: 10px 9px; border-radius: 9px; overflow-wrap: anywhere; }
+.tocLink { display: flex; align-items: flex-start; gap: 10px; color: #302811; text-decoration: none; font-size: 13px; line-height: 1.45; padding: 10px 9px; border-radius: 9px; overflow-wrap: anywhere; }
 .tocLink:hover, .tocLinkActive { background: rgba(246,190,36,.3); }
 .tocLinkActive { font-weight: 800; }
 .tocNumber { color: #715e27; font-size: 11px; flex: 0 0 19px; padding-top: 2px; font-variant-numeric: tabular-nums; }
