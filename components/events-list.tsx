@@ -647,13 +647,13 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     return Array.from(new Set(filteredLocations)).sort();
   }, [filteredEvents]);
 
+  const pageSize = Math.max(1, eventsPerPage);
+  const totalPages = Math.max(1, Math.ceil(timeFilteredEvents.length / pageSize));
+  const displayedPage = Math.min(currentPage, totalPages);
   const paginatedEvents = useMemo(() => {
-    const startIndex = (currentPage - 1) * eventsPerPage;
-    const endIndex = startIndex + eventsPerPage;
-    return timeFilteredEvents.slice(startIndex, endIndex);
-  }, [timeFilteredEvents, currentPage, eventsPerPage]);
-
-  const totalPages = Math.max(1, Math.ceil(timeFilteredEvents.length / Math.max(1, eventsPerPage)));
+    const startIndex = (displayedPage - 1) * pageSize;
+    return timeFilteredEvents.slice(startIndex, startIndex + pageSize);
+  }, [timeFilteredEvents, displayedPage, pageSize]);
 
   const groupedEvents = useMemo(() => {
     const groups: { [key: string]: EventLocation } = {};
@@ -914,27 +914,27 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
             )}
             
             {/* Pagination controls */}
-            <div className={css`
-              display: flex;
-              justify-content: center;
-              margin-top: 2rem;
+            {totalPages > 1 && <nav aria-label="Event results pagination" className={css`
+              display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+              gap:12px;margin-top:24px;font-family:var(--font-hanken-grotesk);
             `}>
-              <button 
+              <button type="button"
+                className={css`min-height:44px;padding:9px 18px;border:1px solid currentColor;
+                  border-radius:24px;background:transparent;cursor:pointer;
+                  &:disabled { opacity:.4;cursor:not-allowed; }
+                  &:focus-visible { outline:3px solid #a47b08;outline-offset:2px; }`}
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span className={css`margin: 0 1rem;`}>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button 
+                disabled={displayedPage === 1}>Previous</button>
+              <span aria-live="polite">Page {displayedPage} of {totalPages}</span>
+              <button type="button"
+                className={css`min-height:44px;padding:9px 18px;border:1px solid currentColor;
+                  border-radius:24px;background:transparent;cursor:pointer;
+                  &:disabled { opacity:.4;cursor:not-allowed; }
+                  &:focus-visible { outline:3px solid #a47b08;outline-offset:2px; }`}
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
+                disabled={displayedPage === totalPages}>Next</button>
+            </nav>}
+
           </div>
         ) : (
           <h3 className={css`
