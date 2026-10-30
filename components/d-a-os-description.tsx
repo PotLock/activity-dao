@@ -59,12 +59,13 @@ type DAO = {
 const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const maturityTags = dao.maturity.slice(-3).reverse();
+  const maturityTags = (dao.maturity || []).slice(-3).reverse();
 
   return (
     <div
       className={css`
         width: calc(33.33% - 1.33rem); // Set width to 1/3 of container minus gap
+        min-width: 0;
         box-shadow: 0px 0px 0px 0.85px rgba(17, 24, 28, 0.08),
           0px 0.8px 1.7px -0.85px rgba(17, 24, 28, 0.08),
           0px 1.7px 3.4px rgba(17, 24, 28, 0.04);
@@ -168,7 +169,7 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
               gap: 2px;
             `}
           >
-            {dao.tags.map((tag, index) => (
+            {(dao.tags || []).map((tag, index) => (
               <Tag key={index} text={tag} color={pastelColors[(index + 3) % pastelColors.length]} />
             ))}
           </div>
