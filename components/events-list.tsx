@@ -52,6 +52,32 @@ interface EventsListProps {
   eventsPerPage?: number;
 }
 
+// Curated historical events can have no published registration URL.
+// Render those records as readable cards without misleading dead links.
+const eventImageUrl = (event: Event): string => {
+  const value = typeof event.image === "string" ? event.image.trim() : "";
+  if (/^https?:\/\//i.test(value) || value.startsWith("/")) return value;
+  return value ? `/${value}` : "/activitymanicon.svg";
+};
+
+const EventCardLink = ({ event, className, children }: {
+  event: Event;
+  className: string;
+  children: React.ReactNode;
+}) => {
+  const href = typeof event.link === "string" ? event.link.trim() : "";
+  const isValidUrl = /^https?:\/\//i.test(href);
+  return isValidUrl ? (
+    <a href={href} target="_blank" rel="noopener noreferrer"
+      aria-label={`View event details: ${event.name}`}
+      className={className}>{children}</a>
+  ) : (
+    <div className={className} aria-label={`${event.name}; registration link unavailable`}>
+      {children}
+    </div>
+  );
+};
+
 const EventCard = ({ event }: { event: Event }) => {
   const eventDate = parseISO(event.date);
   const day = format(eventDate, "dd");
@@ -59,7 +85,6 @@ const EventCard = ({ event }: { event: Event }) => {
 
   return (
     <div
-      id="event-query"
       className={css`
         flex: 1 0 100%;
         height: 22.875rem;
@@ -98,10 +123,7 @@ const EventCard = ({ event }: { event: Event }) => {
           ⭐ Featured
         </div>
       )}
-      <a
-        href={event.link}
-        target="_blank"
-        rel="noopener noreferrer"
+      <EventCardLink event={event}
         className={css`
           text-decoration: none;
           color: inherit;
@@ -113,7 +135,7 @@ const EventCard = ({ event }: { event: Event }) => {
         <div
           className={css`
             flex: 1;
-            background-image: url(${event.image});
+            background-image: url("${eventImageUrl(event)}");
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -162,6 +184,7 @@ const EventCard = ({ event }: { event: Event }) => {
               text-align: left;
               display: block;
             `}>{event.name}</b>
+            {!event.link?.trim() && <small className={css`font-size:12px;color:#66561b`}>Registration link unavailable</small>}
             <div
               className={css`
                 display: flex;
@@ -188,7 +211,7 @@ const EventCard = ({ event }: { event: Event }) => {
             </div>
           </div>
         </div>
-      </a>
+      </EventCardLink>
     </div>
   );
 };
@@ -199,10 +222,7 @@ const ListEventCard = ({ event }: { event: Event }) => {
   const month = format(eventDate, "MMM").toUpperCase();
 
   return (
-    <a
-      href={event.link}
-      target="_blank"
-      rel="noopener noreferrer"
+    <EventCardLink event={event}
       className={css`
         display: flex;
         align-items: center;
@@ -212,6 +232,9 @@ const ListEventCard = ({ event }: { event: Event }) => {
         color: inherit;
         transition: box-shadow 0.3s ease;
         width: 100%;
+        gap: 12px;
+        flex-wrap: wrap;
+        &:focus-visible { outline: 3px solid #8a6000; outline-offset: 2px; }
         &:last-child {
           border-bottom: none;
         }
@@ -238,19 +261,21 @@ const ListEventCard = ({ event }: { event: Event }) => {
         </div>
       )}
       <img
-        src={event.image}
+        src={eventImageUrl(event)}
         alt={event.name}
         className={css`
           width: 100px;
           height: 100px;
           object-fit: cover;
           border-radius: var(--br-3xs);
-          margin-right: 1rem;
+          flex-shrink: 0;
+          max-width: 30%;
         `}
       />
       <div
         className={css`
           flex: 1;
+          min-width: 135px;
         `}
       >
         <h3
@@ -271,6 +296,7 @@ const ListEventCard = ({ event }: { event: Event }) => {
         >
           {event.location}
         </p>
+        {!event.link?.trim() && <p className={css`font-size:12px;color:#66561b;margin-top:8px`}>Registration link unavailable</p>}
       </div>
       <div
         className={css`
@@ -298,7 +324,7 @@ const ListEventCard = ({ event }: { event: Event }) => {
           {month}
         </b>
       </div>
-    </a>
+    </EventCardLink>
   );
 };
 
