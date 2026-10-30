@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import {
-  FaArrowUp, FaBars, FaBookOpen, FaCheck, FaChevronDown, FaChevronLeft,
+  FaArrowUp, FaBars, FaBookOpen, FaCheck, FaChevronDown, FaChevronLeft, FaChevronUp,
   FaChevronRight, FaCode, FaCompress, FaCopy, FaExpand,
   FaExternalLinkAlt, FaLink, FaTimes
 } from "react-icons/fa";
@@ -53,6 +53,7 @@ const Handbook: NextPage = () => {
   const [expanded, setExpanded] = useState<string[]>(chapters.map(chapter => chapter.id));
   const [sourceMode, setSourceMode] = useState(false);
   const [copiedChapter, setCopiedChapter] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const visibleChapters = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -61,12 +62,30 @@ const Handbook: NextPage = () => {
       : chapters;
   }, [query]);
 
+  // Keep the contents sidebar aligned with the section in the reading viewport.
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(entries => {
+      const inView = entries.filter(entry => entry.isIntersecting);
+      if (inView.length) {
+        inView.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        setActiveSection(inView[0].target.id);
+      }
+    }, { rootMargin: "-10% 0px -65% 0px" });
+    visibleChapters.forEach(chapter => {
+      const section = document.getElementById(chapter.id);
+      if (section) observer.observe(section);
+    });
+    return () => observer.disconnect();
+  }, [visibleChapters]);
+
   const toggleChapter = (id: string) => {
     setExpanded(previous =>
       previous.includes(id) ? previous.filter(value => value !== id) : [...previous, id]);
   };
 
   const navigateToChapter = (id: string) => {
+    setActiveSection(id);
     setExpanded(previous => previous.includes(id) ? previous : [...previous, id]);
     setMobileTocOpen(false);
   };
@@ -157,7 +176,7 @@ const Handbook: NextPage = () => {
                 {mobileTocOpen ? <FaTimes aria-hidden="true" /> : <FaBars aria-hidden="true" />}
                 Contents · {chapters.length} sections
               </span>
-              {mobileTocOpen ? <FaChevronDown aria-hidden="true" /> : <FaChevronRight aria-hidden="true" />}
+              {mobileTocOpen ? <FaChevronUp aria-hidden="true" /> : <FaChevronDown aria-hidden="true" />}
             </button>
           </div>
 
@@ -189,7 +208,9 @@ const Handbook: NextPage = () => {
               <ol className={styles.tocList}>
                 {visibleChapters.map(chapter => (
                   <li key={chapter.id} className={styles.tocItem}>
-                    <a href={"#" + chapter.id} className={styles.tocLink}
+                    <a href={"#" + chapter.id}
+                      className={[styles.tocLink, activeSection === chapter.id ? styles.tocLinkActive : ""].join(" ")}
+                      aria-current={activeSection === chapter.id ? "location" : undefined}
                       onClick={() => navigateToChapter(chapter.id)}>
                       <span className={styles.tocNumber}>{String(chapter.number).padStart(2, "0")}</span>
                       <span>{chapter.title}</span>
