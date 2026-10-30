@@ -2,7 +2,7 @@ import React, { forwardRef, useImperativeHandle, Ref } from 'react';
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
 import staticEvents from "../data/events.json";
-import { format, parseISO, isAfter, isBefore, isToday, isThisWeek, isThisMonth, isThisYear, startOfQuarter, endOfQuarter, endOfYear, addYears } from "date-fns";
+import { format, parseISO, isAfter, isBefore, isToday, isThisWeek, isThisMonth, isThisYear, startOfQuarter, endOfQuarter, endOfYear, addYears, isValid } from "date-fns";
 import { useState, useMemo, useEffect } from "react";
 import Component1 from "./featured-events";
 import { 
@@ -19,6 +19,10 @@ import { Event, EventLocation } from '../types/event'; // Add this import
 import interests from '../data/interests.json';
 
 const MapComponent = dynamic(() => import('./MapComponent'), { ssr: false });
+const curatedEvents: Event[] = staticEvents
+  .filter(event => !Number.isNaN(new Date(event.date).getTime()))
+  .map(event => ({ ...event, isFeatured: true })) as Event[];
+
 
 // Add this type definition
 
@@ -424,7 +428,7 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
     }
 
     const data = await response.json();
-    console.log("Original API response:", JSON.stringify(data, null, 2));
+    // Avoid logging potentially large third-party responses in production.
     
     if (!data.data || !data.data.events || data.data.events.length === 0) {
       console.log("No events received from API");
@@ -467,7 +471,7 @@ async function fetchUpcomingEvents(): Promise<Event[]> {
       id: event.id,
     }));
 
-    console.log("Mapped and filtered events:", mappedEvents);
+
     return mappedEvents;
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -493,7 +497,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
   const [timeFilter, setTimeFilter] = useState("upcoming");
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery');
   const [hasMatchingEvents, setHasMatchingEvents] = useState(true);
-  const [events, setEvents] = useState<Event[]>(() => staticEvents.filter(event => { const date = new Date(event.date); return !Number.isNaN(date.getTime()) && date.getTime() >= Date.now() - 86400000; }).map(event => ({ ...event, isFeatured: true })) as Event[]);
+  const [events, setEvents] = useState<Event[]>(curatedEvents);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     search: "",
@@ -506,6 +510,11 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
   useImperativeHandle(ref, () => ({
     hasMatchingEvents
   }));
+
+  // Keep pagination consistent after changing any search or date filter.
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedLocation, timeFilter, daoMode, interestMode]);
 
   useEffect(() => {
     console.log("useEffect triggered. Setting viewMode based on mode:", mode);
@@ -520,13 +529,13 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     console.log("Fetching events...");
     setError(null);
     fetchUpcomingEvents().then(fetchedEvents => {
-      console.log("Fetched events:", fetchedEvents);
+  
       if (fetchedEvents.length === 0) {
         console.log("No events fetched");
       }
       // Combine fetched events with static events, marking static events as featured
       const combinedEvents = [
-        ...staticEvents.filter(event => { const date = new Date(event.date); return !Number.isNaN(date.getTime()) && date.getTime() >= Date.now() - 86400000; }).map(event => ({ ...event, isFeatured: true })),
+        ...curatedEvents,
         ...fetchedEvents
       ];
       setEvents(combinedEvents);
@@ -539,7 +548,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
   }, []);
 
   const filteredEvents = useMemo(() => {
-    console.log("Filtering events with:", { searchTerm, selectedLocation, daoMode, interestMode });
+
     
     const filtered = events
       .filter((event: Event) => {
@@ -602,6 +611,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
   const timeFilteredEvents = useMemo(() => {
     return filteredEvents.filter((event: Event) => {
       const eventDate = parseISO(event.date);
+      if (!isValid(eventDate)) return false;
       const now = new Date();
 
       switch (timeFilter) {
@@ -643,7 +653,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
     return timeFilteredEvents.slice(startIndex, endIndex);
   }, [timeFilteredEvents, currentPage, eventsPerPage]);
 
-  const totalPages = Math.ceil(timeFilteredEvents.length / eventsPerPage);
+  const totalPages = Math.max(1, Math.ceil(timeFilteredEvents.length / Math.max(1, eventsPerPage)));
 
   const groupedEvents = useMemo(() => {
     const groups: { [key: string]: EventLocation } = {};
@@ -949,7 +959,7 @@ const EventsListComponent = EventsList as typeof EventsList & {
 
 EventsListComponent.checkForEvents = async (daoName: string): Promise<boolean> => {
   const fetchedEvents = await fetchUpcomingEvents();
-  const allEvents = [...fetchedEvents, ...staticEvents];
+  const allEvents = [...fetchedEvents, ...curatedEvents.filter(event => new Date(event.date).getTime() >= Date.now() - 86400000)];
   
   return allEvents.some(event => 
     checkDaoSimilarity(event, daoName) || checkInterestSimilarity(event, daoName)
