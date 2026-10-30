@@ -25,6 +25,8 @@ jobs:
           cache: npm
       # Existing lockfile is out of sync with package.json. Match the working Vercel install
       # until the lockfile is regenerated and validated in a dedicated follow-up.
+      - name: Validate curated content
+        run: node --test tests/content.test.cjs
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Build and validate types
