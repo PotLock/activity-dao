@@ -197,3 +197,50 @@
 @media (prefers-reduced-motion: reduce) {
   .progressFill { transition: none; }
 }
+
+/* Editorial activity loop: four on-brand steps without another API or image dependency. */
+.activityFlow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  list-style: none;
+  gap: 10px;
+  max-width: 1060px;
+  padding: 0;
+  margin: 26px 0 22px;
+}
+.activityStep {
+  min-width: 0;
+  border: 1px solid #e1d4a7;
+  border-radius: 14px;
+  background: #fff8df;
+  padding: clamp(12px, 1.6vw, 18px);
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.activityStep:nth-child(2) { background: #f0f8e8; border-color: #cee1bb; }
+.activityStep:nth-child(3) { background: #eef4ff; border-color: #ccd8f0; }
+.activityStep:nth-child(4) { background: #fdf0f5; border-color: #efd1dc; }
+.stepNumber {
+  flex: 0 0 auto;
+  color: #5b4b21;
+  font-size: 13px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.stepCopy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.stepCopy strong { font-size: clamp(17px, 2vw, 23px); line-height: 1.2; color: #202018; font-family: DynaPuff, system-ui, sans-serif; }
+.stepCopy small { font-size: 12px; line-height: 1.4; color: #4f4d42; }
+.contributePrompt {
+  margin: 16px 0 0;
+  padding: 16px;
+  border-radius: 12px;
+  background: #fff8de;
+  border: 1px solid #ead699;
+}
+@media (max-width: 780px) {
+  .activityFlow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 380px) {
+  .activityStep { align-items: flex-start; flex-direction: column; gap: 6px; }
+}
