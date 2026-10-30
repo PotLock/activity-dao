@@ -1,11 +1,12 @@
 import type { NextPage, GetServerSideProps } from "next";
+import Head from "next/head";
 import { css } from "@emotion/css";
 import NAVBAR from "../../components/n-a-v-b-a-r";
 import Footer from "../../components/Footer";
 import EventsList, { EventsListReturnType } from "../../components/events-list";
 import { FaTwitter, FaGithub, FaGlobe, FaRss, FaMoneyBillWave, FaCalendarAlt, FaDiscord, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import daoData from "../../data/daos.json";
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Feed from "../../components/feed";
 import { isValidEthereumAddressOrDomain } from "../../utils/isEth";
 import axios from 'axios';
@@ -140,55 +141,14 @@ const getImageSrc = (path: string) => {
 };
 
 const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
-  const [hasMatchingEvents, setHasMatchingEvents] = useState<boolean | null>(null);
-  const [activeTab, setActiveTab] = useState<'Feed' | 'Treasury' | 'Events' | null>(null);
-  const eventsChecked = useRef(false);
-
+  const [activeTab, setActiveTab] = useState<'Overview' | 'Feed' | 'Treasury' | 'Events'>('Overview');
   const hasTreasury = dao.treasuryAddresses.length > 0;
-  const hasFeed = !!dao.farcaster_channel;
+  const hasFeed = Boolean(dao.farcaster_channel);
 
+  // Every DAO has a useful first-party overview, even when external activity APIs fail.
   useEffect(() => {
-    const checkForEvents = async () => {
-      if (!eventsChecked.current) {
-        const eventsExist = await EventsList.checkForEvents(dao.name);
-        setHasMatchingEvents(eventsExist);
-        eventsChecked.current = true;
-        console.log(`Events exist for ${dao.name}: ${eventsExist}`);
-      }
-    };
-
-    checkForEvents();
-  }, [dao.name]);
-
-  useEffect(() => {
-    const determineActiveTab = () => {
-      const availableTabs = [
-        ...(hasTreasury ? ['Treasury'] : []),
-        ...(hasFeed ? ['Feed'] : []),
-        ...(hasMatchingEvents ? ['Events'] : []),
-      ] as ('Feed' | 'Treasury' | 'Events')[];
-
-      console.log('Available tabs:', availableTabs);
-
-      if (availableTabs.length === 0) {
-        console.log('No content available for this DAO');
-        setActiveTab(null);
-        return;
-      }
-
-      if (availableTabs.includes(dao.defaultTab as any)) {
-        setActiveTab(dao.defaultTab as 'Feed' | 'Treasury' | 'Events');
-      } else if (availableTabs.includes(DEFAULT_TAB)) {
-        setActiveTab(DEFAULT_TAB);
-      } else if (availableTabs.includes(SECONDARY_DEFAULT_TAB)) {
-        setActiveTab(SECONDARY_DEFAULT_TAB);
-      } else {
-        setActiveTab(availableTabs[0]);
-      }
-    };
-
-    determineActiveTab();
-  }, [dao.defaultTab, hasTreasury, hasFeed, hasMatchingEvents]);
+    setActiveTab('Overview');
+  }, [dao.id]);
 
   const [expandedRows, setExpandedRows] = useState<{ [key: string]: boolean }>({});
   const [balances, setBalances] = useState<TreasuryBalance>({});
@@ -440,31 +400,20 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
   };
 
   const renderTabContent = () => {
-    if (!activeTab) {
-      return (
-        <div className={css`
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 300px;
-          text-align: center;
-        `}>
-          <img
-            src="/empty-state.svg"
-            alt="No Content"
-            className={css`
-              width: 150px;
-              height: 150px;
-              margin-bottom: 1rem;
-            `}
-          />
-          <p>This DAO has no content to display.</p>
-        </div>
-      );
-    }
-
     switch (activeTab) {
+      case 'Overview':
+        return <section className={css`font-family:var(--font-hanken-grotesk);line-height:1.65;max-width:850px;padding:clamp(12px,2vw,24px)`}>
+          <h2 className={css`font-size:clamp(22px,3vw,30px);margin:0 0 16px`}>About {dao.name}</h2>
+          <p>{dao.description}</p>
+          {dao.tags.length > 0 && <p><strong>Activities and interests:</strong> {dao.tags.join(', ')}</p>}
+          {dao.maturity.length > 0 && <p><strong>Community maturity:</strong> {dao.maturity.join(' · ')}</p>}
+          {dao.url && <a href={dao.url} target="_blank" rel="noopener noreferrer"
+            className={css`display:inline-flex;align-items:center;min-height:44px;background:#facc15;border-radius:24px;color:#171717;padding:10px 20px;font-weight:700;text-decoration:none;
+              &:focus-visible {outline:3px solid #171717;outline-offset:3px;}`}>
+              Visit {dao.name} website ↗
+            </a>}
+          <p className={css`font-size:14px;margin-top:20px;color:#4b5563`}>Community information is curated in ActivityDAO's directory. Social feeds, events and treasury data may use external providers and can be unavailable.</p>
+        </section>;
       case 'Feed':
         return <Feed farcaster_channel={dao.farcaster_channel ?? ''} emoji={dao.emoji} />;
       case 'Treasury':
@@ -589,47 +538,29 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
     }
   };
 
-  // Render tabs based on hasMatchingEvents
+  // The Overview and Events tabs are always available without a Farcaster or API prerequisite.
   const renderTabs = () => {
     const tabs = [
+      { name: 'Overview', icon: FaGlobe },
       ...(hasFeed ? [{ name: 'Feed', icon: FaRss }] : []),
       ...(hasTreasury ? [{ name: 'Treasury', icon: FaMoneyBillWave }] : []),
-      ...(hasMatchingEvents ? [{ name: 'Events', icon: FaCalendarAlt }] : [])
+      { name: 'Events', icon: FaCalendarAlt }
     ];
-
-    if (tabs.length === 0) {
-      return null;
-    }
-
     return (
-      <div
-        className={css`
-          display: flex;
-          gap: 1rem;
-          margin-bottom: 2rem;
-        `}
-      >
+      <div role="tablist" aria-label={`${dao.name} sections`} className={css`
+        width:100%;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;
+        font-family:var(--font-hanken-grotesk);
+      `}>
         {tabs.map(({ name, icon: Icon }) => (
-          <button
-            key={name}
-            onClick={() => setActiveTab(name as 'Feed' | 'Treasury' | 'Events')}
-            className={css`
-              padding: 0.5rem 1rem;
-              background-color: ${activeTab === name ? '#e0e0e0' : '#f0f0f0'};
-              border: none;
-              border-radius: 4px;
-              font-size: 1rem;
-              cursor: pointer;
-              display: flex;
-              align-items: center;
-              gap: 0.5rem;
-              &:hover {
-                background-color: #e0e0e0;
-              }
-            `}
-          >
-            <Icon size={16} />
-            {name}
+          <button key={name} type="button" role="tab"
+            id={`dao-tab-${name.toLowerCase()}`} aria-controls="dao-tab-panel"
+            aria-selected={activeTab === name}
+            onClick={() => setActiveTab(name as 'Overview' | 'Feed' | 'Treasury' | 'Events')}
+            className={css`min-height:44px;padding:10px 16px;background:${activeTab === name ? '#facc15' : '#f4f4f4'};
+              color:#171717;border:1px solid #bbb;border-radius:24px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;
+              &:focus-visible {outline:3px solid #171717;outline-offset:3px;}
+            `}>
+            <Icon size={16} aria-hidden="true" />{name}
           </button>
         ))}
       </div>
@@ -647,6 +578,11 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
         font-family: var(--font-dynapuff);
       `}
     >
+      <Head>
+        <title>{dao.name} | ActivityDAO Community Directory</title>
+        <meta name="description" content={dao.description.slice(0, 155)} />
+        <link rel="canonical" href={`https://activity-dao-omega.vercel.app/dao/${dao.id}`} />
+      </Head>
       {/* Centered navbar */}
       <div
         className={css`
@@ -827,7 +763,8 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
           width: 100%;
           max-width: 1200px;
           margin: 0 auto;
-          padding: 2rem 0;
+          padding: clamp(1rem, 3vw, 2rem);
+          box-sizing: border-box;
         `}
       >
 
@@ -845,9 +782,11 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
         {renderTabs()}
 
         {/* Tab content */}
-        <div
+        <div id="dao-tab-panel" role="tabpanel" aria-labelledby={`dao-tab-${activeTab.toLowerCase()}`}
           className={css`
             width: 100%;
+            min-width: 0;
+            overflow-wrap: anywhere;
             min-height: 300px;
             background-color: #f9f9f9;
             padding: 1rem;
@@ -865,22 +804,12 @@ const DAOPage: NextPage<DAOPageProps> = ({ dao }) => {
 };
 
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const id = context.query.id as string | undefined;
-  
-  let dao: DAO | undefined;
-
-  if (id) {
-    dao = daoData.find(dao => dao.id === id) as DAO;
-  }
-
-  if (!dao) {
-    dao = daoData[0] as DAO;
-  }
-
-  return {
-    props: { dao },
-  };
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const id = params?.id;
+  if (typeof id !== 'string') return { notFound: true };
+  const dao = daoData.find(entry => entry.id === id);
+  if (!dao) return { notFound: true };
+  return { props: { dao } };
 };
 
 export default DAOPage;
