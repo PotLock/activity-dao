@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { css } from "@emotion/css";
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { 
   TextField, 
   Checkbox, 
@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import daoData from "../data/daos.json";
 import { FaTwitter, FaGithub, FaGlobe } from "react-icons/fa";
-import CardSkeleton from './card-skeleton';
 import { Button as MuiButton } from "@mui/material"; // Rename to avoid conflict
 
 const pastelColors = [
@@ -57,8 +56,6 @@ type DAO = {
 };
 
 const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   const maturityTags = (dao.maturity || []).slice(-3).reverse();
 
   return (
@@ -82,9 +79,7 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
         gap: var(--gap-lg);
         max-width: 100%;
         transition: all 0.3s ease;
-        ${isHovered && `
-          background-color: var(--color-yellow-64);
-        `}
+        &:hover, &:focus-within { background-color: var(--color-yellow-64); }
         ${mode === 'explore' ? `
           width: calc(50% - 1.33rem); // Wider cards for explore mode
         ` : ''}
@@ -92,8 +87,6 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
           width: 100% !important; // Full width on mobile for both modes
         }
       `}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     > 
       <div
         className={css`
@@ -121,9 +114,9 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
               object-fit: cover;
             `}
             alt={dao.name}
-            src={dao.icon}
+            src={dao.icon.startsWith("/") || /^https?:\/\//.test(dao.icon) ? dao.icon : `/${dao.icon}`}
           />
-          <h1
+          <h3
             className={css`
               margin: 0;
               position: relative;
@@ -145,7 +138,7 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
             `}
           >
             {dao.name}
-          </h1>
+          </h3>
           <div
             className={css`
               display: flex;
@@ -174,7 +167,11 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
             ))}
           </div>
         </div>
-        <a href={`/dao/${dao.id}`} className={css`
+        <a href={dao.id === "injera-dao" ? dao.url : `/dao/${dao.id}`}
+          target={dao.id === "injera-dao" ? "_blank" : undefined}
+          rel={dao.id === "injera-dao" ? "noopener noreferrer" : undefined}
+          aria-label={dao.id === "injera-dao" ? "Visit InjeraDAO website" : `View ${dao.name} details`}
+          className={css`
           text-decoration: none;
           color: inherit;
         `}>
@@ -186,7 +183,7 @@ const DAOCard = ({ dao, mode }: { dao: DAO; mode: 'explore' | 'home' }) => {
               overflow: hidden;
               flex-shrink: 0;
             `}
-            alt="View DAO"
+            alt=""
             src="/vertical-container.svg"
           />
         </a>
@@ -288,34 +285,26 @@ type DAOsDescriptionType = {
 
 const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode = "explore" }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredDAOs, setFilteredDAOs] = useState(daoData);
   const [selectedMaturity, setSelectedMaturity] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   const allMaturityTags = Array.from(new Set(daoData.flatMap(dao => dao.maturity)));
   const allTags = Array.from(new Set(daoData.flatMap(dao => dao.tags)));
 
-  useEffect(() => {
-    const filtered = daoData.filter(dao => {
-      const matchesSearch = 
-        dao.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        dao.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesMaturity = selectedMaturity.length === 0 || 
-        selectedMaturity.every(tag => dao.maturity.includes(tag));
-      
-      const matchesTags = selectedTags.length === 0 || 
-        selectedTags.every(tag => dao.tags.includes(tag));
-
-      return matchesSearch && matchesMaturity && matchesTags;
-    }).map(dao => ({
-      ...dao,
-      id: dao.id || `dao-${dao.name.toLowerCase().replace(/\s+/g, '-')}` // Generate an id if it doesn't exist
-    }));
-    setFilteredDAOs(filtered);
-    setIsLoading(false);
-  }, [searchTerm, selectedMaturity, selectedTags]);
+  // The directory is first-party JSON: compute its initial results during SSR,
+  // rather than flashing artificial skeleton cards until hydration.
+  const filteredDAOs = useMemo(() => daoData.filter(dao => {
+    const query = searchTerm.trim().toLowerCase();
+    const matchesSearch = !query ||
+      dao.name.toLowerCase().includes(query) ||
+      dao.description.toLowerCase().includes(query) ||
+      dao.tags.some(tag => tag.toLowerCase().includes(query));
+    const matchesMaturity = selectedMaturity.length === 0 ||
+      selectedMaturity.every(tag => dao.maturity.includes(tag));
+    const matchesTags = selectedTags.length === 0 ||
+      selectedTags.every(tag => dao.tags.includes(tag));
+    return matchesSearch && matchesMaturity && matchesTags;
+  }), [searchTerm, selectedMaturity, selectedTags]);
 
   const handleSubmitDAO = () => {
     window.open('https://github.com/PotLock/activity-dao/edit/main/data/daos.json', '_blank');
@@ -554,19 +543,7 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
           font-family: var(--font-dynapuff);
         `}
       >
-        {isLoading ? (
-          // Display skeleton loaders while loading
-          Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className={css`
-              width: calc(33.33% - 1.33rem);
-              ${mode === 'explore' ? `
-                width: calc(50% - 1.33rem);
-              ` : ''}
-            `}>
-              <CardSkeleton />
-            </div>
-          ))
-        ) : filteredDAOs.length > 0 ? (
+        {filteredDAOs.length > 0 ? (
           filteredDAOs.map((dao, index) => (
             <DAOCard key={dao.id || `dao-${index}`} dao={dao} mode={mode} />
           ))
@@ -578,7 +555,7 @@ const DAOsDescription: NextPage<DAOsDescriptionType> = ({ className = "" , mode 
             color: var(--wwwgetminjiapp-black);
             padding: 2rem;
           `}>
-            No DAOs found
+            No communities match your filters. Try another search or clear the selected tags.
           </div>
         )}
       </div>
