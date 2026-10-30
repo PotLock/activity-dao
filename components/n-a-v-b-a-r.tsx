@@ -89,7 +89,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
           `}
         >
           {/* Logo */}
-          <div
+          <a href="/#home" aria-label="ActivityDAO home"
             className={css`
               display: flex;
               flex-direction: column;
@@ -97,11 +97,13 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
               justify-content: flex-start;
               padding: var(--padding-xl-3) var(--padding-6xs) 0rem 0rem;
               cursor: pointer;
+              text-decoration: none;
+              color: inherit;
+              &:focus-visible { outline:3px solid #171717;outline-offset:5px; }
               @media screen and (max-width: 1050px) {
                 padding: 0;
               }
             `}
-            onClick={() => window.location.href = '/#home'}
           >
             <div
               className={css`
@@ -159,7 +161,7 @@ const NAVBAR: NextPage<NAVBARType> = ({ className = "" }) => {
                 />
               </div>
             </div>
-          </div>
+          </a>
 
           {/* Desktop Nav Links */}
           <nav
