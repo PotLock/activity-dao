@@ -493,14 +493,14 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
   const [timeFilter, setTimeFilter] = useState("upcoming");
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery');
   const [hasMatchingEvents, setHasMatchingEvents] = useState(true);
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<Event[]>(() => staticEvents.map(event => ({ ...event, isFeatured: true })) as Event[]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     search: "",
     location: null as EventLocation | null,
     time: "upcoming"
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useImperativeHandle(ref, () => ({
@@ -518,7 +518,6 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
 
   useEffect(() => {
     console.log("Fetching events...");
-    setIsLoading(true);
     setError(null);
     fetchUpcomingEvents().then(fetchedEvents => {
       console.log("Fetched events:", fetchedEvents);
