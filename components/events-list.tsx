@@ -873,12 +873,21 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 ? `No events found for ${daoMode || interestMode}. Try a different filter or explore other communities.`
                 : "No events match your filters. Try another date, location, or keyword."}
             </p>
-            <button type="button" onClick={clearFilters}
-              className={css`min-height:44px;padding:10px 20px;background:#facc15;border:0;
-                border-radius:24px;font-weight:700;cursor:pointer;color:#171717;
-                &:focus-visible {outline:3px solid #715513;outline-offset:3px;}`}>
-              Clear filters
-            </button>
+            {daoMode || interestMode ? (
+              <a href="/events" className={css`
+                display:inline-flex;align-items:center;min-height:44px;
+                padding:10px 20px;background:#facc15;color:#171717;text-decoration:none;
+                border-radius:24px;font-weight:700;
+                &:focus-visible {outline:3px solid #715513;outline-offset:3px;}
+              `}>Browse all events</a>
+            ) : (
+              <button type="button" onClick={clearFilters}
+                className={css`min-height:44px;padding:10px 20px;background:#facc15;border:0;
+                  border-radius:24px;font-weight:700;cursor:pointer;color:#171717;
+                  &:focus-visible {outline:3px solid #715513;outline-offset:3px;}`}>
+                Clear filters
+              </button>
+            )}
           </div>
         )}
       </div>
