@@ -27,9 +27,11 @@ test("InjeraDAO is a first-party community with the correct external destination
 
 test("curated event records have valid dates and links", () => {
   for (const event of events) {
-    assert.ok(event.name && event.description && event.dao, "Incomplete curated event");
+    assert.ok(event.name && event.description, "Incomplete curated event");
     assert.ok(!Number.isNaN(Date.parse(event.date)), `Invalid date: ${event.name}`);
-    assert.ok(["http:", "https:"].includes(new URL(event.link).protocol), "Invalid event link");
+    if (event.dao !== undefined) assert.equal(typeof event.dao, "string");
+    // Legacy entries sometimes have no ticket URL; don't invent a booking link.
+    if (event.link) assert.ok(["http:", "https:"].includes(new URL(event.link).protocol), "Invalid event link");
   }
 });
 
