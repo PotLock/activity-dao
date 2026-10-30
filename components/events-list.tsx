@@ -493,7 +493,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
   const [timeFilter, setTimeFilter] = useState("upcoming");
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery');
   const [hasMatchingEvents, setHasMatchingEvents] = useState(true);
-  const [events, setEvents] = useState<Event[]>(() => staticEvents.map(event => ({ ...event, isFeatured: true })) as Event[]);
+  const [events, setEvents] = useState<Event[]>(() => staticEvents.filter(event => { const date = new Date(event.date); return !Number.isNaN(date.getTime()) && date.getTime() >= Date.now() - 86400000; }).map(event => ({ ...event, isFeatured: true })) as Event[]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     search: "",
@@ -526,7 +526,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
       }
       // Combine fetched events with static events, marking static events as featured
       const combinedEvents = [
-        ...staticEvents.map(event => ({ ...event, isFeatured: true })),
+        ...staticEvents.filter(event => { const date = new Date(event.date); return !Number.isNaN(date.getTime()) && date.getTime() >= Date.now() - 86400000; }).map(event => ({ ...event, isFeatured: true })),
         ...fetchedEvents
       ];
       setEvents(combinedEvents);
