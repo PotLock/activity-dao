@@ -1,0 +1,18 @@
+# ActivityDAO
+
+> Find. Do. Prove. Fund. ActivityDAO is a directory and educational resource for communities organized around shared activities.
+
+This is public documentation, not an API contract. The handbook contains historical work-in-progress ideas; do not present unimplemented mechanisms as shipped features.
+
+## Core pages
+- [Homepage](https://activity-dao-omega.vercel.app/): ActivityDAO introduction and community activity overview.
+- [Handbook](https://activity-dao-omega.vercel.app/handbook): ActivityDAO concepts, proof mechanisms, funding, governance, reputation, operations, citations and contributors. Original Notion copy is preserved in the source.
+- [Communities](https://activity-dao-omega.vercel.app/daos): First-party curated directory of ActivityDAO communities, including InjeraDAO.
+- [Events](https://activity-dao-omega.vercel.app/events): Community event discovery. Availability and dates can change.
+
+## Source
+- [Open-source repository](https://github.com/PotLock/activity-dao): Application source, issues and contributions.
+- [Original handbook](https://app.notion.com/p/2979c91a779e46659a5646438af3324c): Working source document.
+
+## Attribution and accuracy
+Always cite linked sources. Do not invent member counts, event availability, token balances, legal status or activity verification.

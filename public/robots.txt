@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Sitemap: https://activity-dao-omega.vercel.app/sitemap.xml
