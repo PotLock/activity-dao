@@ -888,7 +888,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 width: 100%;
               `}>
                 {paginatedEvents.map((event, index) => (
-                  <EventCard key={index} event={event} />
+                  <EventCard key={event.id || `${event.name}-${event.date}`} event={event} />
                 ))}
               </div>
             ) : (
@@ -898,7 +898,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
                 width: 100%;
               `}>
                 {paginatedEvents.map((event, index) => (
-                  <ListEventCard key={index} event={event} />
+                  <ListEventCard key={event.id || `${event.name}-${event.date}`} event={event} />
                 ))}
               </div>
             )}
@@ -935,7 +935,7 @@ const EventsList = forwardRef<EventsListReturnType, EventsListProps>((props, ref
           `}>
             {daoMode || interestMode 
               ? `No events found for ${daoMode || interestMode}`
-              : "No events found"}
+              : "No upcoming events are listed right now. Check back soon or explore ActivityDAOs to find a community."}
           </h3>
         )}
       </div>
