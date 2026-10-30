@@ -1,29 +1,82 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { css } from "@emotion/css";
 import { useMemo, useState } from "react";
+import { css } from "@emotion/css";
+import part1 from "../data/handbook/part-1.json";
+import part2 from "../data/handbook/part-2.json";
+import part3 from "../data/handbook/part-3.json";
+import part4 from "../data/handbook/part-4.json";
+import part5 from "../data/handbook/part-5.json";
+import part6 from "../data/handbook/part-6.json";
+import part7 from "../data/handbook/part-7.json";
 
 const source = "https://app.notion.com/p/2979c91a779e46659a5646438af3324c";
-const sections = [
-  { id: "ethos", title: "Ethos", body: "Touch more grass. Be with more people. Fund activities as public goods. Build community-run ecosystems around activities people love." },
-  { id: "what-is", title: "What is an Activity DAO?", body: "An Activity DAO is a decentralized community committed to making an activity happen and persist. Funding, coordination, reputation and governance support the activity—not the other way around." },
-  { id: "mechanism", title: "Mechanism design", body: "The three foundations are organizing activities, verifying participation, and funding ongoing activity. Communities can choose mechanisms suited to their activity." },
-  { id: "proof", title: "Proof of participation", body: "Evidence can include attendance, frequency, and activity-specific performance. Verification should be transparent, privacy-conscious, and open to dispute." },
-  { id: "trust", title: "Reputation and referrals", body: "Referral relationships and a web of trust can help communities coordinate and recognize meaningful contributions. Safeguards are necessary before assigning penalties." },
-  { id: "maturity", title: "Maturity and resilience", body: "ActivityDAOs can evolve from informal gatherings to durable, community-funded networks with transparent processes and reduced dependence on individual organizers." },
-];
+const chapters = [part1, part2, part3, part4, part5, part6, part7].flatMap(part => part.chapters).map((chapter, index) => ({
+  ...chapter,
+  id: `chapter-${index + 1}`,
+}));
+const cleanText = (raw: string) => raw
+  .replace(/<image[^>]*source="([^"]+)"[^>]*\/>/g, "[Original Notion image: $1]")
+  .replace(/<video[^>]*source="([^"]+)"[^>]*\/>/g, "[Original video: $1]")
+  .replace(/<database[^>]*url="([^"]+)"[^>]*>[\s\S]*?<\/database>/g, "[Original Notion database: $1]")
+  .replace(/<mention[^>]*url="([^"]+)"[^>]*\/>/g, "[Notion reference: $1]")
+  .replace(/<[^>]*>/g, "")
+  .replace(/\\\{/g, "{").replace(/\\\}/g, "}");
 const Handbook: NextPage = () => {
   const [query, setQuery] = useState("");
-  const matches = useMemo(() => sections.filter(section => `${section.title} ${section.body}`.toLowerCase().includes(query.trim().toLowerCase())), [query]);
-  return <main className={css`min-height:100vh;background:#fffdf3;color:#171717;font-family:system-ui,sans-serif;padding:clamp(20px,5vw,72px)`}>
-  <Head><meta name="robots" content="index,follow,max-snippet:-1" /><meta property="og:type" content="article" /><meta property="og:title" content="ActivityDAO Handbook" /><meta property="og:description" content="Learn how activity-based communities coordinate, verify participation and sustain funding." /><title>ActivityDAO Handbook | Build communities around doing</title><meta name="description" content="Explore ActivityDAO principles, proof of participation, funding, reputation and community governance." /></Head>
-  <nav aria-label="Breadcrumb"><Link href="/">ActivityDAO</Link> / Handbook</nav>
-  <header className={css`max-width:900px;margin:64px auto 36px`}><p>📗 THE ACTIVITY PROLIFERATION COOKBOOK</p><h1 className={css`font-size:clamp(40px,7vw,78px);line-height:1.05;margin:12px 0`}>A handbook for doing things together.</h1><p className={css`font-size:22px;line-height:1.5`}>Find. Do. Prove. Fund. Build resilient communities around shared activities.</p><a href={source} target="_blank" rel="noopener noreferrer">Read the original working handbook ↗</a></header>
-  <div className={css`max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:28px`}>
-    <aside aria-label="On this page" className={css`background:#ffe58c;border-radius:24px;padding:24px;align-self:start`}><h2>Chapters</h2><label htmlFor="chapter-search">Search the handbook</label><input id="chapter-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Find a topic" className={css`width:100%;padding:12px;margin:12px 0;border-radius:10px;border:2px solid #171717;background:white;color:#171717`} /><ol>{matches.map(s=><li key={s.id} className={css`margin:12px 0`}><a href={`#${s.id}`}>{s.title}</a></li>)}</ol></aside>
-    <article className={css`min-width:0`}>{matches.length === 0 && <p role="status">No chapters match. Try a different keyword.</p>}{matches.map(s=><section key={s.id} id={s.id} className={css`padding:24px 0;border-bottom:1px solid #ddd;scroll-margin-top:24px`}><h2 className={css`font-size:clamp(26px,4vw,38px)`}>{s.title}</h2><p className={css`font-size:18px;line-height:1.8`}>{s.body}</p></section>)}<p>This is an introductory web edition. The linked Notion handbook contains additional working material, diagrams, examples, and references.</p></article>
-  </div>
-</main>;
+  const [expanded, setExpanded] = useState<string[]>(chapters.map(chapter => chapter.id));
+  const [verbatim, setVerbatim] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const visible = useMemo(() => chapters.filter(chapter =>
+    (chapter.title + " " + cleanText(chapter.content)).toLowerCase().includes(query.trim().toLowerCase())
+  ), [query]);
+  const copySection = async (id: string, content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopyStatus(id);
+    } catch {
+      setCopyStatus(null);
+    }
+  };
+  const toggle = (id: string) => setExpanded(previous =>
+    previous.includes(id) ? previous.filter(item => item !== id) : [...previous, id]);
+  return <main className={css`min-height:100vh;background:#fffdf3;color:#171717;font-family:system-ui,sans-serif;padding:clamp(20px,4vw,64px)`}>
+    <Head>
+      <title>ActivityDAO Handbook | The Activity Proliferation Cookbook</title>
+      <meta name="description" content="Read the ActivityDAO handbook: activity funding, proof of participation, governance, reputation, and community operations." />
+      <meta name="robots" content="index,follow,max-snippet:-1" />
+      <meta property="og:title" content="ActivityDAO Handbook" />
+      <meta property="og:description" content="The Activity Proliferation Cookbook — original handbook and practical community-building mechanisms." />
+    </Head>
+    <nav aria-label="Breadcrumb"><Link href="/">ActivityDAO</Link> / Handbook</nav>
+    <header className={css`max-width:1000px;margin:48px auto`}>
+      <p>📗 THE ACTIVITY PROLIFERATION COOKBOOK</p>
+      <h1 className={css`font-size:clamp(36px,6vw,72px);line-height:1.1;margin:12px 0`}>The ActivityDAO Handbook</h1>
+      <p className={css`font-size:clamp(17px,2vw,22px);line-height:1.5`}>Explore the original handbook section by section. This historical working draft is preserved from Notion; references and proposed features are not necessarily current.</p>
+      <a href={source} target="_blank" rel="noopener noreferrer">Original Notion handbook ↗</a>
+    </header>
+    <div className={css`max-width:1120px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:24px`}>
+      <aside className={css`background:#ffe58c;border-radius:20px;padding:24px;align-self:start;min-width:0`}>
+        <label htmlFor="handbook-search">Search all {chapters.length} sections</label>
+        <input id="handbook-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search chapters and content" className={css`display:block;width:100%;min-height:44px;padding:10px;margin:12px 0;border:2px solid #171717;border-radius:8px`} />
+        <div className={css`display:flex;flex-wrap:wrap;gap:8px;margin:12px 0`}><button type="button" onClick={() => setExpanded(chapters.map(chapter => chapter.id))} className={css`padding:10px;border-radius:8px;cursor:pointer`}>Expand all</button><button type="button" onClick={() => setExpanded([])} className={css`padding:10px;border-radius:8px;cursor:pointer`}>Collapse all</button></div><button type="button" onClick={() => setVerbatim(!verbatim)} aria-pressed={verbatim} className={css`padding:10px;border-radius:8px;cursor:pointer`}>{verbatim ? "Readable view" : "Show exact Notion markup"}</button>
+        <nav aria-label="Handbook chapters"><ol className={css`padding-left:20px;line-height:1.8`}>{visible.map(chapter => <li key={chapter.id}><a href={`#${chapter.id}`}>{chapter.title}</a></li>)}</ol></nav>
+      </aside>
+      <article className={css`min-width:0`}>
+        <p role="status">{visible.length} of {chapters.length} sections shown</p>
+        {visible.length === 0 && <p>No matching sections. Try another keyword.</p>}
+        {visible.map(chapter => <section id={chapter.id} key={chapter.id} className={css`background:white;border:1px solid #e7dfc9;border-radius:18px;padding:clamp(16px,3vw,28px);margin-bottom:18px;scroll-margin-top:24px`}>
+          <h2 className={css`font-size:clamp(22px,3vw,32px);overflow-wrap:anywhere`}>{chapter.title}</h2>
+          <button type="button" aria-expanded={expanded.includes(chapter.id)} aria-controls={`${chapter.id}-content`} onClick={() => toggle(chapter.id)} className={css`border:1px solid #171717;background:#ffe58c;border-radius:8px;padding:10px 16px;cursor:pointer;min-height:44px`}>{expanded.includes(chapter.id) ? "Collapse section" : "Read section"}</button>
+          <div className={css`display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;align-items:center`}><button type="button" onClick={() => copySection(chapter.id, chapter.content)} className={css`border:1px solid #171717;border-radius:8px;background:white;padding:10px 16px;min-height:44px;cursor:pointer`}>{copyStatus === chapter.id ? "Copied original copy" : "Copy original copy"}</button><a href={`#${chapter.id}`} className={css`padding:10px`}>Section permalink</a></div>
+          <div id={`${chapter.id}-content`} hidden={!expanded.includes(chapter.id)}>
+            <pre className={css`white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font:inherit;line-height:1.7;margin-top:20px`}>{verbatim ? chapter.content : cleanText(chapter.content)}</pre>
+          </div>
+        </section>)}
+        <p>Some images, embedded databases and interactive Notion blocks are represented as source references in the readable view. Use the exact-markup view or original Notion page to inspect their provenance.</p>
+      </article>
+    </div>
+  </main>;
 };
 export default Handbook;
