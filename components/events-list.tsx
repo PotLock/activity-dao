@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import dynamic from 'next/dynamic';
 import { Event, EventLocation } from '../types/event'; // Add this import
-import interests from '../data/interests.json';
 
 const MapComponent = dynamic(() => import('./MapComponent'), { ssr: false });
 const curatedEvents: Event[] = staticEvents
@@ -365,117 +364,20 @@ function editDistance(s1: string, s2: string): number {
 }
 
 // Define the GraphQL client
-const endpoint = 'https://graph.sola.day/v1/graphql';
-
+// Fetch through ActivityDAO's cacheable server adapter, not directly from Sola in the browser.
+// Curated JSON renders on the first paint even when this provider is unavailable.
 async function fetchUpcomingEvents(): Promise<Event[]> {
-  const currentTime = new Date().toISOString();
-  const oneYearLater = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString();
-
-  const query = `
-    query FetchUpcomingEvents($currentTime: timestamp!, $oneYearLater: timestamp!) {
-      events(
-        where: {
-          display: {_neq: "private"},
-          start_time: {_gte: $currentTime, _lte: $oneYearLater},
-          status: {_in: ["open", "new", "normal"]}
-        },
-        order_by: {start_time: asc},
-        limit: 100
-      ) {
-        id
-        title
-        start_time
-        end_time
-        location
-        participants_count
-        cover_url
-        owner {
-          username
-          image_url
-        }
-      }
-    }
-  `;
-
-  const variables = {
-    currentTime: currentTime.split('.')[0] + 'Z',
-    oneYearLater: oneYearLater.split('.')[0] + 'Z'
-  };
-
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
   try {
-    console.log("Fetching events...");
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    let response: Response;
-    try {
-      response = await fetch(endpoint, {
-      signal: controller.signal,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
-      });
-    } finally {
-      clearTimeout(timeout);
-    }
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    // Avoid logging potentially large third-party responses in production.
-    
-    if (!data.data || !data.data.events || data.data.events.length === 0) {
-      console.log("No events received from API");
-      return [];
-    }
-
-    const filteredEvents = data.data.events.filter((event: any) => {
-      const eventText = `${event.title} ${event.description || ''} ${event.owner?.username || ''}`.toLowerCase();
-      const eventWords = eventText.split(/\s+/);
-      
-      for (const interest of interests) {
-        const interestWords = interest.id_slug.toLowerCase().split(/\s+/);
-        for (const interestWord of interestWords) {
-          for (const eventWord of eventWords) {
-            const similarity = stringSimilarity(eventWord, interestWord);
-            if (similarity >= 0.7) {
-              console.log(`Event "${event.title}" matched:
-                Interest: ${interest.id_slug}
-                Matched words: "${eventWord}" ~ "${interestWord}"
-                Similarity: ${similarity.toFixed(2)}
-              `);
-              return true;
-            }
-          }
-        }
-      }
-      return false;
-    });
-
-    console.log(`Filtered ${filteredEvents.length} events out of ${data.data.events.length} total events`);
-
-    const mappedEvents = filteredEvents.map((event: any) => ({
-      date: event.start_time,
-      name: event.title,
-      location: event.location || 'Location not specified',
-      link: `https://app.sola.day/event/detail/${event.id}`,
-      image: event.cover_url || 'https://pbs.twimg.com/profile_banners/1635444352959885313/1729576236/1500x500',
-      dao: event.owner?.username || 'Unknown',
-      description: `Event by ${event.owner?.username || 'Unknown'}`,
-      id: event.id,
-    }));
-
-
-    return mappedEvents;
-  } catch (error) {
-    console.error('Error fetching events:', error);
+    const response = await fetch("/api/events", { signal: controller.signal });
+    if (!response.ok) return [];
+    const payload: { events?: Event[] } = await response.json();
+    return Array.isArray(payload.events) ? payload.events : [];
+  } catch {
     return [];
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
