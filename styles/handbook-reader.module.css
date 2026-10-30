@@ -99,3 +99,101 @@
 @media (prefers-reduced-motion: reduce) {
   .page *, .page *::before, .page *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
 }
+
+/* Reader continuity: a subtle progress rail and a stable control bar. */
+.progressTrack {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 4px;
+  z-index: 1200;
+  background: rgba(108, 84, 16, .14);
+  pointer-events: none;
+}
+.progressFill {
+  height: 100%;
+  max-width: 100%;
+  background: #e6ad19;
+  transition: width 120ms ease-out;
+}
+.readerBar {
+  position: sticky;
+  top: 12px;
+  z-index: 9;
+  background: rgba(255, 253, 247, .97);
+  backdrop-filter: blur(8px);
+}
+.readerScale {
+  display: inline-flex;
+  min-width: 18px;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+}
+.actionDivider {
+  width: 1px;
+  height: 26px;
+  margin: 0 5px;
+  background: #d9cfb2;
+}
+.sectionFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #eee5d2;
+  margin-top: 24px;
+  padding-top: 16px;
+}
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  text-decoration: none;
+  color: #3d3215;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 9px;
+  padding: 9px 12px;
+}
+.navLink:hover { background: #fff2c5; }
+.navLink:focus-visible { outline: 3px solid #715513; outline-offset: 2px; }
+.tocLinkActive {
+  border-left: 3px solid #a77b10;
+  padding-left: 6px;
+  background: rgba(246, 190, 36, .26);
+}
+.prose { text-wrap: pretty; }
+.prose :where(h2,h3,h4) { text-wrap: balance; }
+@media (max-width: 900px) {
+  .sidebar, .sidebarCollapsed {
+    position: sticky;
+    top: 8px;
+    z-index: 20;
+    max-height: min(72vh, 620px);
+    overflow-y: auto;
+  }
+  .readerBar { top: 76px; }
+  .section { scroll-margin-top: 160px; }
+}
+@media (max-width: 620px) {
+  .sectionHeader {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .sectionActions {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  .sectionHeading { font-size: clamp(23px, 6vw, 29px); }
+  .readerBar { align-items: stretch; }
+  .readerActions { gap: 5px; }
+  .readerStatus { padding: 0; }
+  .sectionFooter { align-items: stretch; }
+  .navLink { padding: 10px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .progressFill { transition: none; }
+}
