@@ -165,9 +165,25 @@ const Handbook: NextPage = () => {
         <p className={styles.eyebrow}>📗 The Activity Proliferation Cookbook</p>
         <h1 className={styles.heroTitle}>The ActivityDAO Handbook</h1>
         <p className={styles.heroDescription}>
-          Find. Do. Prove. Fund. Explore how people build sustainable communities around
-          shared activities, with the original handbook text kept intact.
+          Explore how people build sustainable communities around shared activities,
+          with all 26 original handbook sections kept intact.
         </p>
+        <ol className={styles.activityFlow} aria-label="ActivityDAO participation cycle">
+          {[
+            { step: "Find", description: "Discover your community" },
+            { step: "Do", description: "Make the activity happen" },
+            { step: "Prove", description: "Recognize participation" },
+            { step: "Fund", description: "Sustain the activity" }
+          ].map((item, index) => (
+            <li key={item.step} className={styles.activityStep}>
+              <span className={styles.stepNumber}>{String(index + 1).padStart(2, "0")}</span>
+              <span className={styles.stepCopy}>
+                <strong>{item.step}</strong>
+                <small>{item.description}</small>
+              </span>
+            </li>
+          ))}
+        </ol>
         <a className={styles.sourceLink} href={source} target="_blank" rel="noopener noreferrer">
           Original Notion handbook <FaExternalLinkAlt size={12} aria-hidden="true" />
         </a>
@@ -350,6 +366,10 @@ const Handbook: NextPage = () => {
           <footer className={styles.footer}>
             Media and Notion database embeds are linked or attributed to their original source.
             Exact original copy remains available through the source-view icon.
+            <p className={styles.contributePrompt}>
+              Found an outdated reference or a formatting issue?
+              {" "}<a href="https://github.com/PotLock/activity-dao/issues/new" target="_blank" rel="noopener noreferrer">Suggest an improvement</a>.
+            </p>
             <p><a href="#handbook-top" className={styles.backToTop}><FaArrowUp aria-hidden="true" /> Back to top</a></p>
           </footer>
         </main>
