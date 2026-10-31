@@ -25,7 +25,7 @@ export default function HandbookMaturityIndex() {
     if (!rail || rail.scrollWidth <= rail.clientWidth) return;
     const button = rail.querySelector<HTMLButtonElement>(`[data-stage-index="${selected}"]`);
     if (!button) return;
-    const left = button.offsetLeft - rail.offsetLeft - (rail.clientWidth - button.clientWidth) / 2;
+    const left = rail.scrollLeft + button.getBoundingClientRect().left - rail.getBoundingClientRect().left - (rail.clientWidth - button.clientWidth) / 2;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     rail.scrollTo({ left: Math.max(0, left), behavior: reduceMotion ? "auto" : "smooth" });
   }, [selected]);
