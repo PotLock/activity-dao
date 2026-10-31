@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import HandbookMaturityIndex from "../components/HandbookMaturityIndex";
+import maturityIndex from "../data/handbook/maturity-index.json";
 import {
   FaArrowUp, FaBars, FaBookOpen, FaCheck, FaChevronDown, FaChevronLeft, FaChevronUp,
   FaChevronRight, FaCode, FaCompress, FaCopy, FaExpand,
@@ -29,7 +30,9 @@ const chapters = [part1, part2, part3, part4, part5, part6, part7]
     id: "chapter-" + (index + 1),
     number: index + 1,
     readable: handbookMarkdown(chapter.content),
-    searchable: handbookSearchText(chapter.content),
+    searchable: handbookSearchText(chapter.content) + (chapter.title === "Maturity Index"
+      ? " " + maturityIndex.entries.map(stage => [stage.name, stage.traits, stage.example].join(" ")).join(" ").toLowerCase()
+      : ""),
     readMinutes: Math.max(1, Math.ceil(handbookSearchText(chapter.content).split(/\s+/).filter(Boolean).length / 200))
   }));
 
