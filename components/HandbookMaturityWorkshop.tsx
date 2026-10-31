@@ -11,7 +11,7 @@ export default function HandbookMaturityWorkshop() {
   const [community, setCommunity] = useState("");
   const [stage, setStage] = useState(0);
   const [evidence, setEvidence] = useState<Evidence>({});
-  const [note, setNote] = useState("");
+  const [notes, setNotes] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState(false);
   const current = stages[stage];
   const completed = stages.filter(item => evidence[item.url]).length;
@@ -25,15 +25,18 @@ export default function HandbookMaturityWorkshop() {
       "Stages marked with evidence: " + completed + " of " + stages.length,
       checked.length ? "Marked stages:\n" + checked.join("\n") : "No stages marked yet.",
       "Stage being reviewed: " + String(current.ranking) + " — " + current.name,
-      note.trim() ? "Notes:\n" + note.trim() : "",
+      stages.filter(item => notes[item.url]?.trim()).length
+        ? "Evidence notes by stage:\n" + stages.filter(item => notes[item.url]?.trim())
+          .map(item => String(item.ranking) + ": " + item.name + " — " + notes[item.url].trim()).join("\n")
+        : "",
     ].filter(Boolean).join("\n\n");
-  }, [community, stage, evidence, note, completed, current]);
+  }, [community, stage, evidence, notes, completed, current]);
 
   const copySummary = async () => {
     try { await navigator.clipboard.writeText(summary); setCopied(true); }
     catch { setCopied(false); }
   };
-  const clear = () => { setCommunity("");setStage(0);setEvidence({});setNote("");setCopied(false); };
+  const clear = () => { setCommunity("");setStage(0);setEvidence({});setNotes({});setCopied(false); };
 
   return (
     <aside className={styles.root} aria-labelledby="maturity-workshop-heading">
@@ -74,8 +77,8 @@ export default function HandbookMaturityWorkshop() {
         <p className={styles.guidance}>Marking this box is a private planning note, not verification. Maturity can be non-linear; an unchecked earlier stage does not prevent you from reviewing later stages.</p>
       </div>
       <label className={styles.field}>
-        Evidence notes and next action (optional)
-        <textarea value={note} onChange={event => {setNote(event.target.value);setCopied(false);}}
+        Evidence notes and next action for {current.name} (optional)
+        <textarea value={notes[current.url] || ""} onChange={event => {setNotes(previous => ({...previous,[current.url]:event.target.value}));setCopied(false);}}
           maxLength={2500} rows={3} placeholder="What evidence do we have? What should we do next?" />
       </label>
       <div className={styles.actions}>
