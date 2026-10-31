@@ -91,3 +91,12 @@ test("handbook flywheel and model images reuse original public landing assets", 
     assert.equal(signature.toString("hex"), "89504e470d0a1a0a", "Invalid PNG header: " + file);
   }
 });
+
+test("handbook activity path uses the existing landing-page images", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  for (const filename of ["active-card-explore.png", "active-card-event.png", "active-card-proof.png", "active-card-fund.png"]) {
+    const buffer = fs.readFileSync(path.join(__dirname, "..", "public", filename));
+    assert.equal(buffer.subarray(0, 8).toString("hex"), "89504e470d0a1a0a", "Missing or invalid landing PNG: " + filename);
+  }
+});
