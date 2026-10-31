@@ -9,7 +9,7 @@ import maturityIndex from "../data/handbook/maturity-index.json";
 import {
   FaArrowUp, FaBars, FaBookOpen, FaCheck, FaChevronDown, FaChevronLeft, FaChevronUp,
   FaChevronRight, FaCode, FaCompress, FaCopy, FaExpand,
-  FaExternalLinkAlt, FaLink, FaTimes, FaMinus, FaPlus, FaArrowLeft, FaArrowRight
+  FaExternalLinkAlt, FaLink, FaTimes, FaMinus, FaPlus, FaArrowLeft, FaArrowRight, FaPrint
 } from "react-icons/fa";
 import preamble from "../data/handbook/preamble.json";
 import part1 from "../data/handbook/part-1.json";
@@ -293,6 +293,12 @@ const Handbook: NextPage = () => {
                 aria-label="Increase handbook text size" disabled={textSize === 2}
                 onClick={() => setTextSize(previous => Math.min(2, previous + 1))}>
                 <FaPlus aria-hidden="true" />
+              </button>
+              <span className={styles.actionDivider} aria-hidden="true" />
+              <button type="button" className={styles.iconButton}
+                title="Print or save handbook as PDF" aria-label="Print or save handbook as PDF"
+                onClick={() => window.print()}>
+                <FaPrint aria-hidden="true" />
               </button>
               <span className={styles.actionDivider} aria-hidden="true" />
               <span className={styles.readerStatus}>View:</span>
