@@ -23,6 +23,12 @@ const cleanText = (raw: string) => raw
   .replace(/<mention[^>]*url="([^"]+)"[^>]*\/>/g, "[Notion reference: $1]")
   .replace(/<[^>]*>/g, "")
   .replace(/\\\{/g, "{").replace(/\\\}/g, "}");
+const ReadingContent = ({ content, verbatim }: { content: string; verbatim: boolean }) => {
+  if (verbatim) return <pre className={css`white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font:inherit;line-height:1.65`}>{content}</pre>;
+  return <div className={css`font-size:clamp(16px,1.5vw,18px);line-height:1.85;color:#29251d;overflow-wrap:anywhere;& p{margin:0 0 1.1em};& a{color:#704500;text-decoration:underline}`}>
+    {cleanText(content).split(/\n\s*\n/).filter(Boolean).map((paragraph, index) => <p key={index} className={css`white-space:pre-line`}>{paragraph.trim()}</p>)}
+  </div>;
+};
 const Handbook: NextPage = () => {
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<string[]>(chapters.map(chapter => chapter.id));
@@ -56,22 +62,22 @@ const Handbook: NextPage = () => {
       <p className={css`font-size:clamp(17px,2vw,22px);line-height:1.5`}>Explore the original handbook section by section. This historical working draft is preserved from Notion; references and proposed features are not necessarily current.</p>
       <a href={source} target="_blank" rel="noopener noreferrer">Original Notion handbook ↗</a>
     </header>
-    <div className={css`max-width:1120px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:24px`}>
-      <aside className={css`background:#ffe58c;border-radius:20px;padding:24px;align-self:start;min-width:0`}>
+    <div className={css`max-width:1200px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:24px;@media(min-width:850px){grid-template-columns:minmax(230px,290px) minmax(0,1fr);align-items:start}`}>
+      <aside className={css`background:#ffe58c;border-radius:20px;padding:24px;align-self:start;min-width:0;@media(min-width:850px){position:sticky;top:24px;max-height:calc(100vh - 48px);overflow-y:auto}`}>
         <label htmlFor="handbook-search">Search all {chapters.length} sections</label>
         <input id="handbook-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search chapters and content" className={css`display:block;width:100%;min-height:44px;padding:10px;margin:12px 0;border:2px solid #171717;border-radius:8px`} />
         <div className={css`display:flex;flex-wrap:wrap;gap:8px;margin:12px 0`}><button type="button" onClick={() => setExpanded(chapters.map(chapter => chapter.id))} className={css`padding:10px;border-radius:8px;cursor:pointer`}>Expand all</button><button type="button" onClick={() => setExpanded([])} className={css`padding:10px;border-radius:8px;cursor:pointer`}>Collapse all</button></div><button type="button" onClick={() => setVerbatim(!verbatim)} aria-pressed={verbatim} className={css`padding:10px;border-radius:8px;cursor:pointer`}>{verbatim ? "Readable view" : "Show exact Notion markup"}</button>
-        <nav aria-label="Handbook chapters"><ol className={css`padding-left:20px;line-height:1.8`}>{visible.map(chapter => <li key={chapter.id}><a href={`#${chapter.id}`}>{chapter.title}</a></li>)}</ol></nav>
+        <nav aria-label="Handbook chapters"><ol className={css`padding-left:20px;line-height:1.8;font-size:14px;& li{margin-bottom:8px};& a{color:#231e15;text-underline-offset:3px}`}>{visible.map(chapter => <li key={chapter.id}><a href={`#${chapter.id}`}>{chapter.title}</a></li>)}</ol></nav>
       </aside>
       <article className={css`min-width:0`}>
         <p role="status">{visible.length} of {chapters.length} sections shown</p>
         {visible.length === 0 && <p>No matching sections. Try another keyword.</p>}
-        {visible.map(chapter => <section id={chapter.id} key={chapter.id} className={css`background:white;border:1px solid #e7dfc9;border-radius:18px;padding:clamp(16px,3vw,28px);margin-bottom:18px;scroll-margin-top:24px`}>
+        {visible.map(chapter => <section id={chapter.id} key={chapter.id} className={css`background:white;border:1px solid #e7dfc9;border-radius:18px;padding:clamp(18px,3vw,36px);margin-bottom:20px;scroll-margin-top:24px;box-shadow:0 4px 20px rgba(40,30,10,.04)`}>
           <h2 className={css`font-size:clamp(22px,3vw,32px);overflow-wrap:anywhere`}>{chapter.title}</h2>
           <button type="button" aria-expanded={expanded.includes(chapter.id)} aria-controls={`${chapter.id}-content`} onClick={() => toggle(chapter.id)} className={css`border:1px solid #171717;background:#ffe58c;border-radius:8px;padding:10px 16px;cursor:pointer;min-height:44px`}>{expanded.includes(chapter.id) ? "Collapse section" : "Read section"}</button>
           <div className={css`display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;align-items:center`}><button type="button" onClick={() => copySection(chapter.id, chapter.content)} className={css`border:1px solid #171717;border-radius:8px;background:white;padding:10px 16px;min-height:44px;cursor:pointer`}>{copyStatus === chapter.id ? "Copied original copy" : "Copy original copy"}</button><a href={`#${chapter.id}`} className={css`padding:10px`}>Section permalink</a></div>
-          <div id={`${chapter.id}-content`} hidden={!expanded.includes(chapter.id)}>
-            <pre className={css`white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font:inherit;line-height:1.7;margin-top:20px`}>{verbatim ? chapter.content : cleanText(chapter.content)}</pre>
+          <div id={`${chapter.id}-content`} hidden={!expanded.includes(chapter.id)} className={css`margin-top:22px;padding-top:18px;border-top:1px solid #eee6d6`}>
+            <ReadingContent content={chapter.content} verbatim={verbatim} />
           </div>
         </section>)}
         <p>Some images, embedded databases and interactive Notion blocks are represented as source references in the readable view. Use the exact-markup view or original Notion page to inspect their provenance.</p>
