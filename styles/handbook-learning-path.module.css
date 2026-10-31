@@ -1,0 +1,18 @@
+.root {margin:22px 0 30px;padding:clamp(15px,2.4vw,24px);background:#fff8e5;border:1px solid #e6d7af;border-radius:17px;min-width:0;color:#252117}
+.intro {max-width:70ch;margin-bottom:19px}
+.intro span {font-size:11px;letter-spacing:.11em;font-weight:800;color:#796428}
+.intro h3 {font-size:clamp(21px,2.8vw,28px);line-height:1.3;margin:8px 0 9px}
+.intro p {font-size:14px;line-height:1.65;color:#5b533f;margin:0}
+.grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0;margin:0;list-style:none}
+.card {background:#fff;border:1px solid #e4dac8;border-radius:13px;overflow:hidden;min-width:0;display:flex}
+.card figure {margin:0;display:flex;flex-direction:column;width:100%;min-width:0}
+.image {min-height:138px;max-height:230px;display:grid;place-items:center;overflow:hidden;padding:10px;background:#f9f8f3}
+.image img {width:100%;height:100%;max-height:210px;object-fit:contain}
+.card figcaption {flex:1;display:flex;flex-direction:column;align-items:flex-start;padding:16px}
+.number {font-weight:850;color:#83662a;font-size:11px;letter-spacing:.08em}
+.card h4 {font-size:clamp(17px,2.1vw,21px);margin:7px 0;line-height:1.3;color:#1f211b}
+.card p {font-size:13px;line-height:1.6;color:#5c574c;margin:0 0 13px}
+.card a {margin-top:auto;display:inline-flex;align-items:center;min-height:44px;font-size:13px;font-weight:800;color:#234c7c;text-underline-offset:3px}
+.card a:hover {color:#113358}
+.card a:focus-visible {outline:3px solid #876314;outline-offset:3px;border-radius:4px}
+@media(max-width:640px){.root{padding:14px}.grid{grid-template-columns:1fr}.image{min-height:100px;max-height:180px}.image img{max-height:160px}}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import HandbookMaturityIndex from "../components/HandbookMaturityIndex";
+import HandbookLearningPath from "../components/HandbookLearningPath";
 import maturityIndex from "../data/handbook/maturity-index.json";
 import {
   FaArrowUp, FaBars, FaBookOpen, FaCheck, FaChevronDown, FaChevronLeft, FaChevronUp,
@@ -354,6 +355,7 @@ const Handbook: NextPage = () => {
                       <div className={styles.prose} style={{ fontSize: [16, 18, 20][textSize] }}>
                         <ReactMarkdown>{chapter.readable || "See the original Notion handbook for this section."}</ReactMarkdown>
                       </div>
+                      {chapter.title === "What is An Activity DAO?" && <HandbookLearningPath />}
                       {chapter.title === "Maturity Index" && <HandbookMaturityIndex />}
                       {chapter.title === "Mechanism Design" && (
                         <section aria-labelledby="handbook-model-diagrams" className={styles.diagramSection}>
