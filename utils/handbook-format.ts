@@ -14,6 +14,18 @@ const externalLink = (url: string | undefined, label: string): string =>
     ? "[" + label + "](" + url + ")"
     : "[" + label + "](" + sourceUrl + ")";
 
+// Preserve a useful label for Notion file blocks, whose private asset URI cannot
+// be treated as a public website URL.
+const fileLabel = (source: string | undefined): string => {
+  const name = source?.match(/[?&]name=([^&"]+)/)?.[1];
+  if (!name) return "Original illustration";
+  try {
+    return decodeURIComponent(name).replace(/[_-]+/g, " ").replace(/\.[^.]+$/, "").trim().slice(0, 110) || "Original illustration";
+  } catch {
+    return "Original illustration";
+  }
+};
+
 export function handbookMarkdown(raw: string): string {
   return raw
     .replace(/\r\n/g, "\n")
@@ -27,8 +39,9 @@ export function handbookMarkdown(raw: string): string {
       externalLink(attribute(attrs, "url"), "Notion reference"))
     .replace(/<video\b([^>]*)\/>/gi, (_match, attrs: string) =>
       "\n\n> **Video:** " + externalLink(attribute(attrs, "source"), "Watch source recording") + "\n\n")
-    .replace(/<image\b[^>]*\/>/gi,
-      "\n\n> **Illustration:** See the image in the [original handbook](" + sourceUrl + ").\n\n")
+    .replace(/<image\b([^>]*)\/>/gi, (_match, attrs: string) =>
+      "\n\n> **Illustration — " + fileLabel(attribute(attrs, "source")) +
+      ":** See the original visual in the [source handbook](" + sourceUrl + ").\n\n")
     .replace(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi, (_match, level: string, inner: string) =>
       "\n\n" + "#".repeat(Math.min(6, Number(level) + 1)) + " " + inner.trim() + "\n\n")
     .replace(/<callout\b[^>]*>([\s\S]*?)<\/callout>/gi, (_match, inner: string) =>
