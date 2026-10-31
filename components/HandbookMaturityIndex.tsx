@@ -6,6 +6,7 @@ import styles from "../styles/handbook-maturity.module.css";
 
 type Stage = typeof source.entries[number];
 
+const linkedRecordNames: Record<string, string> = source.linkedRecordNames;
 const stages = source.entries.filter(stage => stage.ranking !== null);
 const otherStages = source.entries.filter(stage => stage.ranking === null);
 const normalize = (text: string): string =>
@@ -63,7 +64,7 @@ export default function HandbookMaturityIndex() {
             <details>
               <summary>{stage.tools.length} linked tool records</summary>
               <ul>{stage.tools.filter(validNotionUrl).map((url, index) =>
-                <li key={url}><a href={url} target="_blank" rel="noopener noreferrer">Notion tool record {index + 1}</a></li>
+                <li key={url}><a href={url} target="_blank" rel="noopener noreferrer">{linkedRecordNames[url] || `Notion tool record ${index + 1}`}</a></li>
               )}</ul>
             </details>
           )}
@@ -71,7 +72,7 @@ export default function HandbookMaturityIndex() {
             <details>
               <summary>{stage.communities.length} linked community records</summary>
               <ul>{stage.communities.filter(validNotionUrl).map((url, index) =>
-                <li key={url}><a href={url} target="_blank" rel="noopener noreferrer">Notion community record {index + 1}</a></li>
+                <li key={url}><a href={url} target="_blank" rel="noopener noreferrer">{linkedRecordNames[url] || `Notion community record ${index + 1}`}</a></li>
               )}</ul>
             </details>
           )}
