@@ -272,3 +272,82 @@
 .originalDraftContent p { margin: 0 0 12px; }
 .originalDraftContent p:last-child { margin-bottom: 0; }
 .originalDraftContent blockquote { border-left: 3px solid #d7a529; padding-left: 10px; margin: 12px 0; }
+
+/* Reuse the original landing-page graphics inside the handbook reading flow. */
+.diagramSection {
+  margin: 28px 0;
+  border: 1px solid #e9dcb8;
+  border-radius: 19px;
+  padding: clamp(15px, 2.6vw, 26px);
+  background: #fff8e5;
+  min-width: 0;
+}
+.diagramIntro { max-width: 72ch; margin-bottom: 18px; }
+.diagramIntro h3 { font-size: clamp(21px, 2.6vw, 29px); line-height: 1.25; margin: 7px 0 10px; color: #282317; }
+.diagramIntro p { margin: 0; line-height: 1.65; font-size: 15px; color: #574c37; }
+.diagramGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: clamp(10px, 2vw, 18px);
+}
+.diagramCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  min-width: 0;
+  border-radius: 13px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e6ddc8;
+}
+.diagramCard > a {
+  display: grid;
+  place-items: center;
+  background: #fff;
+  padding: clamp(8px, 1.6vw, 16px);
+  min-width: 0;
+  min-height: 180px;
+  cursor: zoom-in;
+}
+.diagramCard > a:focus-visible, .diagramCard figcaption a:focus-visible {
+  outline: 3px solid #705413;
+  outline-offset: -3px;
+}
+.diagramCard img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+}
+.diagramCard figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 15px;
+  border-top: 1px solid #ede6d7;
+  font-size: 13px;
+  color: #5a5448;
+  line-height: 1.55;
+}
+.diagramCard figcaption strong {
+  font-size: 16px;
+  color: #242014;
+}
+.diagramCard figcaption a {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 7px;
+  font-weight: 750;
+  color: #315783;
+  min-height: 40px;
+}
+@media (max-width: 690px) {
+  .diagramGrid { grid-template-columns: 1fr; }
+  .diagramCard > a { min-height: 120px; }
+  .diagramCard img { max-height: 360px; }
+}
