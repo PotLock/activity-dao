@@ -351,3 +351,32 @@
   .diagramCard > a { min-height: 120px; }
   .diagramCard img { max-height: 360px; }
 }
+
+/* An accessible offline/print view of the original handbook.
+   Expanded/hidden chapter bodies are revealed on paper without mutating reader state. */
+@media print {
+  @page { margin: 14mm; }
+  .page { padding: 0; background: white; color: #171717; font-family: Georgia, serif; }
+  .breadcrumb, .skipLink, .progressTrack, .sidebar, .readerBar,
+  .sectionActions, .sectionFooter, .backToTop, .contributePrompt { display: none !important; }
+  .hero { max-width: none; margin: 0 0 18px; }
+  .heroTitle { color: #171717; font-size: 30pt; }
+  .heroDescription { max-width: none; font-size: 11pt; line-height: 1.45; }
+  .workspace, .workspaceOpen, .workspaceCollapsed { display: block; max-width: none; }
+  .article { width: 100%; max-width: none; padding: 0; }
+  .section { background: white; border: 0; border-bottom: 1px solid #ddd; border-radius: 0;
+    box-shadow: none; margin: 0 0 16px; padding: 15px 0; break-before: auto; }
+  .sectionHeader { display: flex; }
+  .sectionHeading { font-size: 18pt; }
+  .sectionBody, .sectionBody[hidden] { display: block !important; margin-top: 8px; padding-top: 8px; }
+  .prose { max-width: none; color: black; font: 11pt/1.55 Georgia,serif !important; }
+  .prose a::after { content: " (" attr(href) ")"; font-size: 8pt; overflow-wrap: anywhere; }
+  .diagramSection { border-color: #bbb; background: white; }
+  .diagramGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .diagramCard { break-inside: avoid; }
+  .diagramCard > a { min-height: 80px; }
+  .diagramCard img { max-height: 130mm; }
+  .activityStep { background: white !important; border-color: #bbb; }
+  .sourceCode { white-space: pre-wrap; font-size: 9pt; }
+  .footer { margin: 12px 0; font-size: 9pt; }
+}
