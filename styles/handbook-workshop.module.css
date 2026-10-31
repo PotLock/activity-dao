@@ -25,3 +25,9 @@
 .footnote {color:#68715f;font-size:12px;line-height:1.6;margin:15px 0 0}
 @media(max-width:640px){.controls {grid-template-columns:1fr;gap:1px}.actions button {flex:1 1 160px}.root{padding:14px}}
 @media(prefers-reduced-motion:reduce){.progressTrack span{transition:none}}
+
+@media print {
+  .root { background: white; border-color: #bbb; break-inside: avoid; }
+  .actions, .progressTrack { display: none !important; }
+  .controls { grid-template-columns: 1fr 1fr; }
+}
