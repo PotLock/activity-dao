@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { flushSync } from "react-dom";
 import ReactMarkdown from "react-markdown";
 import HandbookMaturityIndex from "../components/HandbookMaturityIndex";
 import HandbookLearningPath from "../components/HandbookLearningPath";
@@ -119,6 +120,17 @@ const Handbook: NextPage = () => {
     setActiveSection(id);
     setExpanded(previous => previous.includes(id) ? previous : [...previous, id]);
     setMobileTocOpen(false);
+  };
+
+  // Print the complete formatted handbook rather than silently omitting chapters
+  // hidden by search results or the raw-markup reader mode.
+  const printFullHandbook = () => {
+    flushSync(() => {
+      setQuery("");
+      setSourceMode(false);
+      setExpanded(chapters.map(chapter => chapter.id));
+    });
+    window.print();
   };
 
   const copyOriginal = async (id: string, content: string) => {
@@ -296,8 +308,8 @@ const Handbook: NextPage = () => {
               </button>
               <span className={styles.actionDivider} aria-hidden="true" />
               <button type="button" className={styles.iconButton}
-                title="Print or save handbook as PDF" aria-label="Print or save handbook as PDF"
-                onClick={() => window.print()}>
+                title="Print complete handbook or save as PDF" aria-label="Print complete handbook or save as PDF"
+                onClick={printFullHandbook}>
                 <FaPrint aria-hidden="true" />
               </button>
               <span className={styles.actionDivider} aria-hidden="true" />
