@@ -169,5 +169,27 @@
       "communities": [],
       "tools": []
     }
-  ]
+  ],
+  "linkedRecordNames": {
+    "https://app.notion.com/p/114c1f4ba97e80c5a733ea48618ed2c0": "Farcaster",
+    "https://app.notion.com/p/114c1f4ba97e8050a9c4c724e8d31fc1": "Lens",
+    "https://app.notion.com/p/114c1f4ba97e803a9329e601207ba101": "Mask Network / Firefly",
+    "https://app.notion.com/p/114c1f4ba97e80f6b188ebe1e6183ccd": "Charmverse",
+    "https://app.notion.com/p/114c1f4ba97e80cfaa11fa225f09f872": "deForm",
+    "https://app.notion.com/p/114c1f4ba97e80a19327de6d4148d3a1": "POAP",
+    "https://app.notion.com/p/114c1f4ba97e8045873bf19ba0f5566b": "Bracket.game",
+    "https://app.notion.com/p/114c1f4ba97e802f9647f0295834af69": "Keypom",
+    "https://app.notion.com/p/11fc1f4ba97e804ea670d17558186bec": "Unlock Protocol",
+    "https://app.notion.com/p/114c1f4ba97e80f0b5e3cadc70396181": "Jucebox",
+    "https://app.notion.com/p/114c1f4ba97e80df83b8cb2885373e96": "SAFE",
+    "https://app.notion.com/p/114c1f4ba97e80078647e7ab7cf63715": "Snapshot",
+    "https://app.notion.com/p/114c1f4ba97e8072be5fc97191892641": "Realms",
+    "https://app.notion.com/p/114c1f4ba97e80819f63cf026a26a4b1": "Aragon",
+    "https://app.notion.com/p/12fc1f4ba97e80ba888adeab232ff38b": "Commit Protocol",
+    "https://app.notion.com/p/114c1f4ba97e8069bc10d3b08e16d00c": "SOAP",
+    "https://app.notion.com/p/114c1f4ba97e805581abfa3daf263929": "Guild.xyz",
+    "https://app.notion.com/p/114c1f4ba97e804584b6e46397595910": "Collab.land",
+    "https://app.notion.com/p/84e47887d52f4057bb91ea85ba261876": "Nouns Builder",
+    "https://app.notion.com/p/120c1f4ba97e80afbaf5ff6447c012c0": "Potlock Protocol"
+  }
 }
