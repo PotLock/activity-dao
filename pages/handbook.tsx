@@ -31,6 +31,7 @@ const ReadingContent = ({ content, verbatim }: { content: string; verbatim: bool
 };
 const Handbook: NextPage = () => {
   const [query, setQuery] = useState("");
+  const [navigationOpen, setNavigationOpen] = useState(false);
   const [expanded, setExpanded] = useState<string[]>(chapters.map(chapter => chapter.id));
   const [verbatim, setVerbatim] = useState(false);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
@@ -62,8 +63,9 @@ const Handbook: NextPage = () => {
       <p className={css`font-size:clamp(17px,2vw,22px);line-height:1.5`}>Explore the original handbook section by section. This historical working draft is preserved from Notion; references and proposed features are not necessarily current.</p>
       <a href={source} target="_blank" rel="noopener noreferrer">Original Notion handbook ↗</a>
     </header>
+    <button type="button" aria-expanded={navigationOpen} aria-controls="handbook-navigation" onClick={() => setNavigationOpen(!navigationOpen)} className={css`display:block;margin:0 auto 18px;padding:12px 18px;background:#ffe58c;border:2px solid #171717;border-radius:12px;min-height:44px;cursor:pointer;@media(min-width:850px){display:none}`}>{navigationOpen ? "Hide chapters" : "Browse chapters"}</button>
     <div className={css`max-width:1200px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:24px;@media(min-width:850px){grid-template-columns:minmax(230px,290px) minmax(0,1fr);align-items:start}`}>
-      <aside className={css`background:#ffe58c;border-radius:20px;padding:24px;align-self:start;min-width:0;@media(min-width:850px){position:sticky;top:24px;max-height:calc(100vh - 48px);overflow-y:auto}`}>
+      <aside id="handbook-navigation" className={css`background:#ffe58c;border-radius:20px;padding:24px;align-self:start;min-width:0;@media(min-width:850px){position:sticky;top:24px;max-height:calc(100vh - 48px);overflow-y:auto}`} style={{ display: navigationOpen ? undefined : undefined }}>
         <label htmlFor="handbook-search">Search all {chapters.length} sections</label>
         <input id="handbook-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search chapters and content" className={css`display:block;width:100%;min-height:44px;padding:10px;margin:12px 0;border:2px solid #171717;border-radius:8px`} />
         <div className={css`display:flex;flex-wrap:wrap;gap:8px;margin:12px 0`}><button type="button" onClick={() => setExpanded(chapters.map(chapter => chapter.id))} className={css`padding:10px;border-radius:8px;cursor:pointer`}>Expand all</button><button type="button" onClick={() => setExpanded([])} className={css`padding:10px;border-radius:8px;cursor:pointer`}>Collapse all</button></div><button type="button" onClick={() => setVerbatim(!verbatim)} aria-pressed={verbatim} className={css`padding:10px;border-radius:8px;cursor:pointer`}>{verbatim ? "Readable view" : "Show exact Notion markup"}</button>
