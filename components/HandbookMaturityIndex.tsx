@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { FaArrowLeft, FaArrowRight, FaCheckCircle, FaExternalLinkAlt, FaListOl } from "react-icons/fa";
 import source from "../data/handbook/maturity-index.json";
@@ -16,7 +16,19 @@ const validNotionUrl = (url: string): boolean => /^https:\/\/app\.notion\.com\/p
 export default function HandbookMaturityIndex() {
   const [selected, setSelected] = useState(0);
   const [showAll, setShowAll] = useState(false);
+  const railRef = useRef<HTMLOListElement | null>(null);
   const stage = stages[selected] as Stage;
+  // Keep the selected stage in view when navigating beyond the mobile rail.
+  // Scroll the rail itself, not the entire page.
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || rail.scrollWidth <= rail.clientWidth) return;
+    const button = rail.querySelector<HTMLButtonElement>(`[data-stage-index="${selected}"]`);
+    if (!button) return;
+    const left = button.offsetLeft - rail.offsetLeft - (rail.clientWidth - button.clientWidth) / 2;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    rail.scrollTo({ left: Math.max(0, left), behavior: reduceMotion ? "auto" : "smooth" });
+  }, [selected]);
   return (
     <section aria-labelledby="maturity-explorer-heading" className={styles.root}>
       <div className={styles.headingRow}>
@@ -33,10 +45,11 @@ export default function HandbookMaturityIndex() {
         </a>
       </div>
 
-      <ol className={styles.stageRail} aria-label="Select a maturity stage">
+      <ol ref={railRef} className={styles.stageRail} aria-label="Select a maturity stage">
         {stages.map((item, index) => (
           <li key={item.url}>
             <button type="button" onClick={() => setSelected(index)}
+              data-stage-index={index}
               aria-pressed={selected === index}
               className={[styles.stageButton, selected === index ? styles.stageSelected : ""].join(" ")}>
               <span className={styles.stageRank}>{String(item.ranking).padStart(2, "0")}</span>
