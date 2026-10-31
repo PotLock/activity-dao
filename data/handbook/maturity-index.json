@@ -1,0 +1,210 @@
+{
+  "source": "https://app.notion.com/p/c36f37c9cfdd4520851647e2ade76426",
+  "dataSource": "collection://e9394cab-3a28-4342-8fb3-99fb45b4bee6",
+  "description": "Verbatim maturity index row fields and relation URLs imported from the handbook's Notion database. Rankings are source-defined; unranked entries remain unranked.",
+  "entries": [
+    {
+      "name": "Idea",
+      "ranking": 0,
+      "traits": "An Idea",
+      "example": "community to smoke blunts",
+      "url": "https://app.notion.com/p/154802d4fb5b41f78c90d756ed1cef56",
+      "communities": [],
+      "tools": [
+        "https://app.notion.com/p/114c1f4ba97e80c5a733ea48618ed2c0",
+        "https://app.notion.com/p/114c1f4ba97e8050a9c4c724e8d31fc1",
+        "https://app.notion.com/p/114c1f4ba97e803a9329e601207ba101",
+        "https://app.notion.com/p/114c1f4ba97e80f6b188ebe1e6183ccd",
+        "https://app.notion.com/p/114c1f4ba97e80cfaa11fa225f09f872"
+      ]
+    },
+    {
+      "name": "Do the Thing",
+      "ranking": 1,
+      "traits": "People do the activity",
+      "example": "people get together to smoke blunts",
+      "url": "https://app.notion.com/p/cf1b5870840e42119dfec43c8199eba5",
+      "communities": [],
+      "tools": [
+        "https://app.notion.com/p/114c1f4ba97e80a19327de6d4148d3a1",
+        "https://app.notion.com/p/114c1f4ba97e8045873bf19ba0f5566b",
+        "https://app.notion.com/p/114c1f4ba97e80c5a733ea48618ed2c0",
+        "https://app.notion.com/p/114c1f4ba97e8050a9c4c724e8d31fc1",
+        "https://app.notion.com/p/114c1f4ba97e803a9329e601207ba101",
+        "https://app.notion.com/p/114c1f4ba97e802f9647f0295834af69",
+        "https://app.notion.com/p/114c1f4ba97e80f6b188ebe1e6183ccd",
+        "https://app.notion.com/p/114c1f4ba97e80cfaa11fa225f09f872",
+        "https://app.notion.com/p/11fc1f4ba97e804ea670d17558186bec"
+      ]
+    },
+    {
+      "name": "Regular thing",
+      "ranking": 2,
+      "traits": "People regularly do the activity",
+      "example": "blunt sesh every friday at 4:20",
+      "url": "https://app.notion.com/p/b096168daef64fe48d4feca191eac410",
+      "communities": [
+        "https://app.notion.com/p/a8c06142944948d1ba1b35100b8f0e41",
+        "https://app.notion.com/p/2c98d3a9b3a6453e866d363e000b19f2",
+        "https://app.notion.com/p/e90e61eb8f734fffa3988835db6d756d",
+        "https://app.notion.com/p/110c1f4ba97e80d9add5c86a9bdd4f98"
+      ],
+      "tools": []
+    },
+    {
+      "name": "Treasury",
+      "ranking": 3,
+      "traits": "Shared wallet, multisig, or DAO address",
+      "example": "send \\$ to multisg for blunt seshes every friday",
+      "url": "https://app.notion.com/p/c10adc0101994af38169626f2e8fb8e5",
+      "communities": [
+        "https://app.notion.com/p/f5a7a4d5a43f4483b8e491e645fc3f9f",
+        "https://app.notion.com/p/ebf21b8919614a5aaae63507cbfc3f50"
+      ],
+      "tools": [
+        "https://app.notion.com/p/114c1f4ba97e80f0b5e3cadc70396181",
+        "https://app.notion.com/p/114c1f4ba97e80df83b8cb2885373e96",
+        "https://app.notion.com/p/114c1f4ba97e80078647e7ab7cf63715",
+        "https://app.notion.com/p/114c1f4ba97e8072be5fc97191892641",
+        "https://app.notion.com/p/114c1f4ba97e80819f63cf026a26a4b1",
+        "https://app.notion.com/p/12fc1f4ba97e80ba888adeab232ff38b"
+      ]
+    },
+    {
+      "name": "Proving / Membership",
+      "ranking": 4,
+      "traits": "Way to proof on-chain activity happened offchain",
+      "example": "<p>\nproof that people smoked through OG validators via proof of sesh (web of trust) \n</p>",
+      "url": "https://app.notion.com/p/538fac4349f146de8ead1974755df4b1",
+      "communities": [
+        "https://app.notion.com/p/110c1f4ba97e8096bd68e39197d7c2a7"
+      ],
+      "tools": [
+        "https://app.notion.com/p/114c1f4ba97e80a19327de6d4148d3a1",
+        "https://app.notion.com/p/114c1f4ba97e8069bc10d3b08e16d00c",
+        "https://app.notion.com/p/114c1f4ba97e805581abfa3daf263929",
+        "https://app.notion.com/p/114c1f4ba97e804584b6e46397595910",
+        "https://app.notion.com/p/11fc1f4ba97e804ea670d17558186bec"
+      ]
+    },
+    {
+      "name": "Replenishing Treasury",
+      "ranking": 5,
+      "traits": "A treasury with a funding mechanism around activity",
+      "example": "re-up mechanism to fund mored sesh (in this case regular OUNCE auction for sesh fund)",
+      "url": "https://app.notion.com/p/8148cf45b83d4e1b8227a07eed536547",
+      "communities": [
+        "https://app.notion.com/p/58abd945d512497aab0a4c544ff15389",
+        "https://app.notion.com/p/1bd4eff0e8bd4f4290f36d8d4b2cf137",
+        "https://app.notion.com/p/110c1f4ba97e8096bd68e39197d7c2a7"
+      ],
+      "tools": [
+        "https://app.notion.com/p/84e47887d52f4057bb91ea85ba261876",
+        "https://app.notion.com/p/114c1f4ba97e80f0b5e3cadc70396181",
+        "https://app.notion.com/p/120c1f4ba97e80afbaf5ff6447c012c0",
+        "https://app.notion.com/p/120c1f4ba97e80e2a22dcf428c0fdcea"
+      ]
+    },
+    {
+      "name": "Proof Attribution + Incentives",
+      "ranking": 6,
+      "traits": "Way to proof who did activity with incentives for provers, that create membership at scale",
+      "example": "proof of sesh with on chain referrals integrated into re-up funding mechanism",
+      "url": "https://app.notion.com/p/4cd7c278daf641ba8ba0a7e5cb491383",
+      "communities": [
+        "https://app.notion.com/p/b8ad2546ff874a1b91cfbfbb195bcc0e"
+      ],
+      "tools": [
+        "https://app.notion.com/p/114c1f4ba97e808185b9dd4d195a60f5",
+        "https://app.notion.com/p/114c1f4ba97e8045873bf19ba0f5566b",
+        "https://app.notion.com/p/aaa755a9c2d34f5b8fba2e9f80fa27f5",
+        "https://app.notion.com/p/643aaa7d75384f8fa9fa523a7134120b",
+        "https://app.notion.com/p/114c1f4ba97e802f9647f0295834af69"
+      ]
+    },
+    {
+      "name": "Regen Treasury w Proof Rewards",
+      "ranking": 7,
+      "traits": "Regenerative treasury with mechanisms for provers and activity organizers",
+      "example": "<p>\n treasury is getting replenished with demand as proof of people continue to onboard new members via proof of sesh  throw down\n</p>",
+      "url": "https://app.notion.com/p/eb16681ab2b2494190442f46f6a78e32",
+      "communities": [],
+      "tools": [
+        "https://app.notion.com/p/114c1f4ba97e803683a5f6856e5be116"
+      ]
+    },
+    {
+      "name": "Funded & Automated",
+      "ranking": 8,
+      "traits": "Sufficiently funded treasury, proving mechanisms automated w fraud and training systems",
+      "example": "proofing system is built with reputaiton based training AI proof models.",
+      "url": "https://app.notion.com/p/5c8adae8097f47adbf4e5826860032fb",
+      "communities": [],
+      "tools": []
+    },
+    {
+      "name": "Global Scale",
+      "ranking": 9,
+      "traits": "Global distribution, localized communities",
+      "example": "localized chapters, and global distribution across major events and new members contribution and throwing down",
+      "url": "https://app.notion.com/p/1958d0e4d3404394b57d1f6f1d2914e5",
+      "communities": [],
+      "tools": []
+    },
+    {
+      "name": "Diversification",
+      "ranking": 10,
+      "traits": "Product spinouts, advanced development, multiple revenue streams",
+      "example": "Blunt DAO gets into cannabis shops, experiences, and advocacy.",
+      "url": "https://app.notion.com/p/663690cae40e420cb6819221bb6c31c0",
+      "communities": [],
+      "tools": []
+    },
+    {
+      "name": "Legal Entity Protecting Members",
+      "ranking": null,
+      "traits": "",
+      "example": "",
+      "url": "https://app.notion.com/p/110c1f4ba97e80b18387c020b709dc9e",
+      "communities": [],
+      "tools": []
+    }
+  ],
+  "linkedRecordNames": {
+    "https://app.notion.com/p/114c1f4ba97e80c5a733ea48618ed2c0": "Farcaster",
+    "https://app.notion.com/p/114c1f4ba97e8050a9c4c724e8d31fc1": "Lens",
+    "https://app.notion.com/p/114c1f4ba97e803a9329e601207ba101": "Mask Network / Firefly",
+    "https://app.notion.com/p/114c1f4ba97e80f6b188ebe1e6183ccd": "Charmverse",
+    "https://app.notion.com/p/114c1f4ba97e80cfaa11fa225f09f872": "deForm",
+    "https://app.notion.com/p/114c1f4ba97e80a19327de6d4148d3a1": "POAP",
+    "https://app.notion.com/p/114c1f4ba97e8045873bf19ba0f5566b": "Bracket.game",
+    "https://app.notion.com/p/114c1f4ba97e802f9647f0295834af69": "Keypom",
+    "https://app.notion.com/p/11fc1f4ba97e804ea670d17558186bec": "Unlock Protocol",
+    "https://app.notion.com/p/114c1f4ba97e80f0b5e3cadc70396181": "Jucebox",
+    "https://app.notion.com/p/114c1f4ba97e80df83b8cb2885373e96": "SAFE",
+    "https://app.notion.com/p/114c1f4ba97e80078647e7ab7cf63715": "Snapshot",
+    "https://app.notion.com/p/114c1f4ba97e8072be5fc97191892641": "Realms",
+    "https://app.notion.com/p/114c1f4ba97e80819f63cf026a26a4b1": "Aragon",
+    "https://app.notion.com/p/12fc1f4ba97e80ba888adeab232ff38b": "Commit Protocol",
+    "https://app.notion.com/p/114c1f4ba97e8069bc10d3b08e16d00c": "SOAP",
+    "https://app.notion.com/p/114c1f4ba97e805581abfa3daf263929": "Guild.xyz",
+    "https://app.notion.com/p/114c1f4ba97e804584b6e46397595910": "Collab.land",
+    "https://app.notion.com/p/84e47887d52f4057bb91ea85ba261876": "Nouns Builder",
+    "https://app.notion.com/p/120c1f4ba97e80afbaf5ff6447c012c0": "Potlock Protocol",
+    "https://app.notion.com/p/120c1f4ba97e80e2a22dcf428c0fdcea": "Allo Protocol",
+    "https://app.notion.com/p/114c1f4ba97e808185b9dd4d195a60f5": "Polymarket",
+    "https://app.notion.com/p/aaa755a9c2d34f5b8fba2e9f80fa27f5": "BuddyLink",
+    "https://app.notion.com/p/643aaa7d75384f8fa9fa523a7134120b": "Jokerace",
+    "https://app.notion.com/p/114c1f4ba97e803683a5f6856e5be116": "Trustful",
+    "https://app.notion.com/p/a8c06142944948d1ba1b35100b8f0e41": "🧖‍♀️ Spa DAO",
+    "https://app.notion.com/p/2c98d3a9b3a6453e866d363e000b19f2": "🧇 WafflesDAO",
+    "https://app.notion.com/p/e90e61eb8f734fffa3988835db6d756d": "🛀 Sauna DAO",
+    "https://app.notion.com/p/110c1f4ba97e80d9add5c86a9bdd4f98": "🌟 Block Ravers (Raves)",
+    "https://app.notion.com/p/f5a7a4d5a43f4483b8e491e645fc3f9f": "💨 SmokeDAO",
+    "https://app.notion.com/p/ebf21b8919614a5aaae63507cbfc3f50": "🍚 Jolle’ DAO / Food Nouns DAO - Jolof Rice",
+    "https://app.notion.com/p/110c1f4ba97e8096bd68e39197d7c2a7": "🚬 BluntDAO",
+    "https://app.notion.com/p/58abd945d512497aab0a4c544ff15389": "🍕 Pizza DAO",
+    "https://app.notion.com/p/1bd4eff0e8bd4f4290f36d8d4b2cf137": "☕ Grounds DAO (Coffee)",
+    "https://app.notion.com/p/b8ad2546ff874a1b91cfbfbb195bcc0e": "🌳 TreeDAO (Treegens)"
+  }
+}
