@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import { FaArrowLeft, FaArrowRight, FaCheckCircle, FaExternalLinkAlt, FaListOl } from "react-icons/fa";
 import source from "../data/handbook/maturity-index.json";
 import styles from "../styles/handbook-maturity.module.css";
+import HandbookMaturityWorkshop from "./HandbookMaturityWorkshop";
 
 type Stage = typeof source.entries[number];
 
@@ -129,6 +130,7 @@ export default function HandbookMaturityIndex() {
           </p>)}
         </details>
       )}
+      <HandbookMaturityWorkshop />
       <p className={styles.provenance}>The stage names, rankings, traits, examples and linked record URLs are imported from the handbook's original Notion database. The interactive navigation is a new reading aid; no stage has been invented or renumbered.</p>
     </section>
   );
