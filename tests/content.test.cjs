@@ -59,3 +59,34 @@ test("handbook preserves the original WIP preamble and original artwork referenc
   assert.match(handbookPreamble.content, /The Activity Proliferation Cookbook/);
   assert.match(handbookPreamble.content, /CommunityActivtiesAreAPublicGood\.png/);
 });
+
+test("the handbook maturity index imports every ranked and unranked Notion row", () => {
+  const index = require("../data/handbook/maturity-index.json");
+  assert.equal(index.source, "https://app.notion.com/p/c36f37c9cfdd4520851647e2ade76426");
+  assert.equal(index.entries.length, 12);
+  const ranked = index.entries.filter(stage => stage.ranking !== null);
+  assert.deepEqual(ranked.map(stage => stage.ranking), Array.from({ length: 11 }, (_, index) => index));
+  const unranked = index.entries.filter(stage => stage.ranking === null);
+  assert.ok(unranked.some(stage => stage.name === "Legal Entity Protecting Members"));
+  const names = index.entries.map(stage => stage.name);
+  assert.equal(new Set(names).size, names.length);
+  for (const stage of index.entries) {
+    assert.ok(stage.name && stage.traits !== undefined && stage.example !== undefined);
+    assert.ok(stage.url.startsWith("https://app.notion.com/p/"), "Invalid source page");
+    assert.ok(Array.isArray(stage.tools) && Array.isArray(stage.communities));
+    for (const link of [...stage.tools, ...stage.communities]) {
+      assert.ok(link.startsWith("https://app.notion.com/p/"), "Invalid relation URL");
+    }
+  }
+});
+
+test("handbook flywheel and model images reuse original public landing assets", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  for (const file of ["ActivityDAOModelGraphic.png", "ActivityDAOFlywheelGraphic.png"]) {
+    const target = path.join(__dirname, "..", "public", file);
+    assert.ok(fs.existsSync(target), "Missing landing image: " + file);
+    const signature = fs.readFileSync(target).subarray(0, 8);
+    assert.equal(signature.toString("hex"), "89504e470d0a1a0a", "Invalid PNG header: " + file);
+  }
+});
