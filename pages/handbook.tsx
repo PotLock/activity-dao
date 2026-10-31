@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import HandbookMaturityIndex from "../components/HandbookMaturityIndex";
 import {
   FaArrowUp, FaBars, FaBookOpen, FaCheck, FaChevronDown, FaChevronLeft, FaChevronUp,
   FaChevronRight, FaCode, FaCompress, FaCopy, FaExpand,
@@ -346,9 +347,43 @@ const Handbook: NextPage = () => {
                   {sourceMode ? (
                     <pre className={styles.sourceCode}>{chapter.content}</pre>
                   ) : (
-                    <div className={styles.prose} style={{ fontSize: [16, 18, 20][textSize] }}>
-                      <ReactMarkdown>{chapter.readable || "See the original Notion handbook for this section."}</ReactMarkdown>
-                    </div>
+                    <>
+                      <div className={styles.prose} style={{ fontSize: [16, 18, 20][textSize] }}>
+                        <ReactMarkdown>{chapter.readable || "See the original Notion handbook for this section."}</ReactMarkdown>
+                      </div>
+                      {chapter.title === "Maturity Index" && <HandbookMaturityIndex />}
+                      {chapter.title === "Mechanism Design" && (
+                        <section aria-labelledby="handbook-model-diagrams" className={styles.diagramSection}>
+                          <div className={styles.diagramIntro}>
+                            <span className={styles.sectionNumber}>Illustrations from the ActivityDAO landing page</span>
+                            <h3 id="handbook-model-diagrams">How the model and flywheel work together</h3>
+                            <p>The original site visualizes two complementary ideas: the community participation, proof, and funding model; and the feedback loop supporting repeated activities.</p>
+                          </div>
+                          <div className={styles.diagramGrid}>
+                            <figure className={styles.diagramCard}>
+                              <a href="/ActivityDAOModelGraphic.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size ActivityDAO model illustration">
+                                <img src="/ActivityDAOModelGraphic.png" alt="ActivityDAO model illustrating the relationship between community activity, participation proof, and funding" loading="lazy" decoding="async" />
+                              </a>
+                              <figcaption>
+                                <strong>ActivityDAO model</strong>
+                                <span>Participation, validation and funding work together to sustain activities.</span>
+                                <a href="/ActivityDAOModelGraphic.png" target="_blank" rel="noopener noreferrer">Full-size image <FaExternalLinkAlt size={10} aria-hidden="true" /></a>
+                              </figcaption>
+                            </figure>
+                            <figure className={styles.diagramCard}>
+                              <a href="/ActivityDAOFlywheelGraphic.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size ActivityDAO flywheel illustration">
+                                <img src="/ActivityDAOFlywheelGraphic.png" alt="ActivityDAO flywheel illustrating the repeating cycle of community engagement, validation, funding and growth" loading="lazy" decoding="async" />
+                              </a>
+                              <figcaption>
+                                <strong>ActivityDAO flywheel</strong>
+                                <span>Repeated activity and proof create opportunities to attract support and maintain community momentum.</span>
+                                <a href="/ActivityDAOFlywheelGraphic.png" target="_blank" rel="noopener noreferrer">Full-size image <FaExternalLinkAlt size={10} aria-hidden="true" /></a>
+                              </figcaption>
+                            </figure>
+                          </div>
+                        </section>
+                      )}
+                    </>
                   )}
                   <nav className={styles.sectionFooter} aria-label={"Navigate from " + chapter.title}>
                     {index > 0 ? (
