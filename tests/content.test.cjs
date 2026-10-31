@@ -76,6 +76,7 @@ test("the handbook maturity index imports every ranked and unranked Notion row",
     assert.ok(Array.isArray(stage.tools) && Array.isArray(stage.communities));
     for (const link of [...stage.tools, ...stage.communities]) {
       assert.ok(link.startsWith("https://app.notion.com/p/"), "Invalid relation URL");
+      assert.ok(index.linkedRecordNames[link], "Missing Notion source label for " + link);
     }
   }
 });
