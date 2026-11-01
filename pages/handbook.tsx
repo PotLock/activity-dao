@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { css } from "@emotion/css";
+import ReactMarkdown from "react-markdown";
 import part1 from "../data/handbook/part-1.json";
 import part2 from "../data/handbook/part-2.json";
 import part3 from "../data/handbook/part-3.json";
@@ -25,8 +26,19 @@ const cleanText = (raw: string) => raw
   .replace(/\\\{/g, "{").replace(/\\\}/g, "}");
 const ReadingContent = ({ content, verbatim }: { content: string; verbatim: boolean }) => {
   if (verbatim) return <pre className={css`white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font:inherit;line-height:1.65`}>{content}</pre>;
-  return <div className={css`font-size:clamp(16px,1.5vw,18px);line-height:1.85;color:#29251d;overflow-wrap:anywhere;& p{margin:0 0 1.1em};& a{color:#704500;text-decoration:underline}`}>
-    {cleanText(content).split(/\n\s*\n/).filter(Boolean).map((paragraph, index) => <p key={index} className={css`white-space:pre-line`}>{paragraph.trim()}</p>)}
+  return <div className={css`
+    font-size:clamp(16px,1.5vw,18px);line-height:1.8;color:#29251d;overflow-wrap:anywhere;
+    & p{margin:0 0 1.15em} & ul,& ol{padding-left:1.6em;margin:0 0 1.4em}
+    & li{margin:0.35em 0} & h1,& h2,& h3{line-height:1.3;margin:1.5em 0 .55em}
+    & h1{font-size:1.65em} & h2{font-size:1.4em} & h3{font-size:1.2em}
+    & blockquote{border-left:4px solid #e9b949;padding:8px 18px;margin:18px 0;background:#fff9e9}
+    & a{color:#704500;text-decoration:underline;text-underline-offset:3px}
+    & code{white-space:pre-wrap;overflow-wrap:anywhere;background:#f5f0e6;padding:2px 5px;border-radius:4px}
+    & hr{border:0;border-top:1px solid #e7dfc9;margin:24px 0}
+  `}>
+    <ReactMarkdown components={{
+      a: ({href, children}) => <a href={href} target={href?.startsWith("http") ? "_blank" : undefined} rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}>{children}</a>,
+    }}>{cleanText(content)}</ReactMarkdown>
   </div>;
 };
 const Handbook: NextPage = () => {
